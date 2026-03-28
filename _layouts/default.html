@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{ page.title }} — {{ site.title }}</title>
+  <meta name="description" content="{{ page.description | default: site.description }}">
   <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
   <script>
     MathJax = {
@@ -24,14 +25,14 @@
     </div>
   </nav>
 
-  <main class="container">
+  <main class="container site-main">
     {{ content }}
   </main>
 
   <footer class="site-footer">
     <div class="container">
       <p>🏔️ Treasure Hunting & Remote Sensing in Central Asia — Educational Resource</p>
-      <p>Built for explorers, researchers, and engineers interested in Central Asian geospatial analysis.</p>
+      <p>Built for learners who want a rigorous, math-first understanding of hidden signals in landscapes and materials.</p>
     </div>
   </footer>
 

@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{ page.title }} — {{ site.title }}</title>
+  <meta name="description" content="{{ page.description | default: site.description }}">
   <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
   <script>
     MathJax = {
@@ -24,40 +25,44 @@
     </div>
   </nav>
 
-  <main class="container">
-    <div class="tutorial-header">
-      <div class="breadcrumb">
-        <a href="{{ '/' | relative_url }}">Home</a> &rsaquo;
-        {% if page.category == 'treasure-hunting' %}
-          <a href="{{ '/tutorials/treasure-hunting/' | relative_url }}">Treasure Hunting</a>
-        {% else %}
-          <a href="{{ '/tutorials/sar-remote-sensing/' | relative_url }}">SAR & Remote Sensing</a>
+  <main class="container site-main">
+      <article class="tutorial-header">
+        <div class="breadcrumb">
+          <a href="{{ '/' | relative_url }}">Home</a> &rsaquo;
+          {% if page.category == 'treasure-hunting' %}
+            <a href="{{ '/tutorials/treasure-hunting/' | relative_url }}">Treasure Hunting</a>
+          {% else %}
+            <a href="{{ '/tutorials/sar-remote-sensing/' | relative_url }}">SAR & Remote Sensing</a>
+          {% endif %}
+          &rsaquo; {{ page.title }}
+        </div>
+        <h1>{{ page.title }}</h1>
+        {% if page.description %}
+          <p class="tutorial-summary">{{ page.description }}</p>
         {% endif %}
-        &rsaquo; {{ page.title }}
-      </div>
-      <h1>{{ page.title }}</h1>
-      {% if page.difficulty %}
-        <span class="badge badge-{{ page.difficulty }}">{{ page.difficulty | capitalize }}</span>
-      {% endif %}
-      {% if page.estimated_time %}
-        <span class="badge badge-time">⏱️ {{ page.estimated_time }}</span>
-      {% endif %}
-    </div>
+        {% if page.difficulty %}
+          <span class="badge badge-{{ page.difficulty }}">{{ page.difficulty | capitalize }}</span>
+        {% endif %}
+        {% if page.estimated_time %}
+          <span class="badge badge-time">⏱️ {{ page.estimated_time }}</span>
+        {% endif %}
+      </article>
 
-    <div class="tutorial-body">
-      <div class="toc-sidebar">
-        <h3>Contents</h3>
-        <div id="toc"></div>
+      <div class="tutorial-body">
+        <div class="toc-sidebar">
+          <h3>Contents</h3>
+          <div id="toc"></div>
+        </div>
+        <article class="tutorial-content">
+          {{ content }}
+        </article>
       </div>
-      <div class="tutorial-content">
-        {{ content }}
-      </div>
-    </div>
-  </main>
+    </main>
 
   <footer class="site-footer">
     <div class="container">
       <p>🏔️ Treasure Hunting & Remote Sensing in Central Asia — Educational Resource</p>
+      <p>Built for learners who want a rigorous, math-first understanding of hidden signals in landscapes and materials.</p>
     </div>
   </footer>
 

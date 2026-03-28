@@ -30,6 +30,10 @@ body {
   line-height: 1.7;
 }
 
+.site-main {
+  min-height: calc(100vh - 180px);
+}
+
 /* ---- Navigation ---- */
 .top-nav {
   background: var(--primary);
@@ -83,6 +87,54 @@ body {
 }
 .hero h1 { font-size: 2.8rem; margin-bottom: 1rem; }
 .hero p { font-size: 1.2rem; opacity: 0.9; max-width: 700px; margin: 0 auto; }
+.hero .lead { max-width: 820px; }
+.hero-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 1.5rem;
+}
+.cta-button {
+  display: inline-block;
+  background: var(--accent);
+  color: #1d1d1d;
+  text-decoration: none;
+  font-weight: 700;
+  padding: 0.8rem 1.2rem;
+  border-radius: 999px;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.16);
+}
+.cta-button:hover { transform: translateY(-1px); }
+.cta-secondary {
+  background: rgba(255,255,255,0.12);
+  color: white;
+  border: 1px solid rgba(255,255,255,0.25);
+}
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.2rem;
+  margin: 2rem 0;
+}
+.feature-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.4rem;
+  box-shadow: var(--shadow);
+}
+.feature-card h2 {
+  font-size: 1.15rem;
+  color: var(--primary);
+  margin-bottom: 0.6rem;
+}
+.feature-card p {
+  color: var(--text-light);
+  margin-bottom: 0;
+}
 
 /* ---- Section Cards ---- */
 .sections-grid {
@@ -105,6 +157,13 @@ body {
 }
 .section-card h2 { color: var(--primary); margin-bottom: 0.5rem; }
 .section-card p { color: var(--text-light); margin-bottom: 1.5rem; }
+.featured-card { border-top: 4px solid var(--accent); }
+.featured-link {
+  color: var(--primary);
+  font-weight: 700;
+  text-decoration: none;
+}
+.featured-link:hover { text-decoration: underline; }
 
 /* ---- Tutorial List ---- */
 .tutorial-list { list-style: none; }
@@ -128,6 +187,45 @@ body {
   margin-top: 0.2rem;
 }
 
+.roadmap-list { list-style: none; }
+.roadmap-list li {
+  margin: 0.8rem 0;
+  padding: 1rem;
+  background: var(--code-bg);
+  border-radius: var(--radius);
+  border-left: 4px solid var(--accent);
+}
+.roadmap-list a {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 600;
+}
+.roadmap-list a:hover { text-decoration: underline; }
+.roadmap-list .desc {
+  display: block;
+  font-size: 0.9rem;
+  color: var(--text-light);
+  margin-top: 0.3rem;
+}
+.status-pill {
+  display: inline-block;
+  margin-left: 0.5rem;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.status-live {
+  background: #d4edda;
+  color: #155724;
+}
+.status-planned {
+  background: #eef1f5;
+  color: #5f6b7a;
+}
+
 /* ---- Tutorial Page ---- */
 .tutorial-header {
   margin-bottom: 2rem;
@@ -141,6 +239,11 @@ body {
 }
 .breadcrumb a { color: var(--primary); text-decoration: none; }
 .breadcrumb a:hover { text-decoration: underline; }
+.tutorial-summary {
+  max-width: 900px;
+  color: var(--text-light);
+  margin-bottom: 0.9rem;
+}
 
 .tutorial-body {
   display: grid;
@@ -189,6 +292,13 @@ body {
   margin: 0.5rem 0 1.5rem 1.5rem;
 }
 .tutorial-content li { margin-bottom: 0.3rem; }
+.tutorial-content blockquote {
+  border-left: 4px solid var(--accent);
+  padding: 0.8rem 1rem;
+  background: #fffdf6;
+  color: var(--text-light);
+  margin: 1rem 0 1.4rem;
+}
 
 /* ---- Badges ---- */
 .badge {
@@ -304,6 +414,20 @@ pre code {
   text-align: center;
 }
 
+.checklist {
+  margin: 1rem 0 1.4rem 0;
+  padding-left: 0;
+  list-style: none;
+}
+.checklist li {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.8rem 1rem;
+  margin-bottom: 0.6rem;
+  box-shadow: var(--shadow);
+}
+
 /* ---- Tables ---- */
 table {
   width: 100%;
@@ -343,4 +467,5 @@ tr:hover { background: var(--code-bg); }
   .toc-sidebar { position: static; }
   .nav-container { padding: 0.8rem 1rem; }
   .sections-grid { grid-template-columns: 1fr; }
+  .hero-actions { flex-direction: column; align-items: center; }
 }
