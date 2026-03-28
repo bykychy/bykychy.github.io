@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ page.title }} — {{ site.title }}</title>
+  <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+  <script>
+    MathJax = {
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+</head>
+<body>
+  <nav class="top-nav">
+    <div class="nav-container">
+      <a href="{{ '/' | relative_url }}" class="nav-logo">🏔️ Central Asia Explorer</a>
+      <div class="nav-links">
+        <a href="{{ '/tutorials/treasure-hunting/' | relative_url }}">⛏️ Treasure Hunting</a>
+        <a href="{{ '/tutorials/sar-remote-sensing/' | relative_url }}">🛰️ SAR & Remote Sensing</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container">
+    <div class="tutorial-header">
+      <div class="breadcrumb">
+        <a href="{{ '/' | relative_url }}">Home</a> &rsaquo;
+        {% if page.category == 'treasure-hunting' %}
+          <a href="{{ '/tutorials/treasure-hunting/' | relative_url }}">Treasure Hunting</a>
+        {% else %}
+          <a href="{{ '/tutorials/sar-remote-sensing/' | relative_url }}">SAR & Remote Sensing</a>
+        {% endif %}
+        &rsaquo; {{ page.title }}
+      </div>
+      <h1>{{ page.title }}</h1>
+      {% if page.difficulty %}
+        <span class="badge badge-{{ page.difficulty }}">{{ page.difficulty | capitalize }}</span>
+      {% endif %}
+      {% if page.estimated_time %}
+        <span class="badge badge-time">⏱️ {{ page.estimated_time }}</span>
+      {% endif %}
+    </div>
+
+    <div class="tutorial-body">
+      <div class="toc-sidebar">
+        <h3>Contents</h3>
+        <div id="toc"></div>
+      </div>
+      <div class="tutorial-content">
+        {{ content }}
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>🏔️ Treasure Hunting & Remote Sensing in Central Asia — Educational Resource</p>
+    </div>
+  </footer>
+
+  <script>
+    // Auto-generate TOC
+    const toc = document.getElementById('toc');
+    const headings = document.querySelectorAll('.tutorial-content h2, .tutorial-content h3');
+    const ul = document.createElement('ul');
+    headings.forEach((h, i) => {
+      h.id = h.id || 'section-' + i;
+      const li = document.createElement('li');
+      li.className = h.tagName === 'H3' ? 'toc-sub' : '';
+      const a = document.createElement('a');
+      a.href = '#' + h.id;
+      a.textContent = h.textContent;
+      li.appendChild(a);
+      ul.appendChild(li);
+    });
+    toc.appendChild(ul);
+
+    // Solution toggles
+    document.querySelectorAll('.solution-toggle').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const sol = btn.nextElementSibling;
+        sol.style.display = sol.style.display === 'none' ? 'block' : 'none';
+        btn.textContent = sol.style.display === 'none' ? '▶ Show Solution' : '▼ Hide Solution';
+      });
+    });
+  </script>
+</body>
+</html>

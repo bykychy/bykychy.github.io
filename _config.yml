@@ -1,0 +1,33 @@
+title: "Treasure Hunting & Remote Sensing in Central Asia"
+description: "Comprehensive tutorials on metal detection, electromagnetic survey, GPR, SAR remote sensing, and geospatial analysis for Central Asia"
+baseurl: ""
+url: "https://bykychy.github.io"
+theme: null
+markdown: kramdown
+kramdown:
+  math_engine: mathjax
+
+plugins:
+  - jekyll-seo-tag
+
+exclude:
+  - README.md
+  - Gemfile
+  - Gemfile.lock
+
+collections:
+  tutorials:
+    output: true
+    permalink: /:collection/:path/
+
+defaults:
+  - scope:
+      path: "tutorials/treasure-hunting"
+    values:
+      layout: tutorial
+      category: treasure-hunting
+  - scope:
+      path: "tutorials/sar-remote-sensing"
+    values:
+      layout: tutorial
+      category: sar-remote-sensing

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ page.title }} — {{ site.title }}</title>
+  <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+  <script>
+    MathJax = {
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+</head>
+<body>
+  <nav class="top-nav">
+    <div class="nav-container">
+      <a href="{{ '/' | relative_url }}" class="nav-logo">🏔️ Central Asia Explorer</a>
+      <div class="nav-links">
+        <a href="{{ '/tutorials/treasure-hunting/' | relative_url }}">⛏️ Treasure Hunting</a>
+        <a href="{{ '/tutorials/sar-remote-sensing/' | relative_url }}">🛰️ SAR & Remote Sensing</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container">
+    {{ content }}
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>🏔️ Treasure Hunting & Remote Sensing in Central Asia — Educational Resource</p>
+      <p>Built for explorers, researchers, and engineers interested in Central Asian geospatial analysis.</p>
+    </div>
+  </footer>
+
+  <script>
+    document.querySelectorAll('.solution-toggle').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const sol = btn.nextElementSibling;
+        sol.style.display = sol.style.display === 'none' ? 'block' : 'none';
+        btn.textContent = sol.style.display === 'none' ? '▶ Show Solution' : '▼ Hide Solution';
+      });
+    });
+  </script>
+</body>
+</html>
