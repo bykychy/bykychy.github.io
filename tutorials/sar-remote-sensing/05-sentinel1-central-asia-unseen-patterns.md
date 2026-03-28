@@ -4,6 +4,8 @@ title: "How Sentinel SAR Data Can Reveal Interesting Patterns in Central Asia"
 description: "A math-first tutorial on how Sentinel-1 SAR reveals roughness, moisture, geometry, and repeating structure across Central Asia, with 30 exercises and solutions."
 difficulty: intermediate
 estimated_time: "2-3 hours"
+series: sar-remote-sensing
+order: 4
 ---
 
 ## Why this tutorial matters

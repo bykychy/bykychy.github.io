@@ -14,60 +14,141 @@
   </script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
 </head>
-<body>
+<body class="page-tutorial">
   <nav class="top-nav">
     <div class="nav-container">
-      <a href="{{ '/' | relative_url }}" class="nav-logo">🏔️ Central Asia Explorer</a>
+      <a href="{{ '/' | relative_url }}" class="nav-logo">Central Asia Signals</a>
       <div class="nav-links">
-        <a href="{{ '/tutorials/treasure-hunting/' | relative_url }}">⛏️ Treasure Hunting</a>
-        <a href="{{ '/tutorials/sar-remote-sensing/' | relative_url }}">🛰️ SAR & Remote Sensing</a>
+        <a href="{{ '/tutorials/treasure-hunting/' | relative_url }}">Treasure Hunting</a>
+        <a href="{{ '/tutorials/sar-remote-sensing/' | relative_url }}">SAR & Remote Sensing</a>
       </div>
     </div>
   </nav>
 
+  {% assign series_pages = site.pages | where: "series", page.series | sort: "order" %}
+  {% assign series_title = "Tutorial sequence" %}
+  {% assign series_url = "/" %}
+  {% if page.series == 'treasure-hunting' %}
+    {% assign series_title = 'Treasure Hunting Sequence' %}
+    {% assign series_url = '/tutorials/treasure-hunting/' %}
+  {% elsif page.series == 'sar-remote-sensing' %}
+    {% assign series_title = 'SAR & Remote Sensing Sequence' %}
+    {% assign series_url = '/tutorials/sar-remote-sensing/' %}
+  {% endif %}
+  {% assign previous_page = nil %}
+  {% assign next_page = nil %}
+  {% for doc in series_pages %}
+    {% if doc.url == page.url %}
+      {% assign prev_index = forloop.index0 | minus: 1 %}
+      {% assign next_index = forloop.index0 | plus: 1 %}
+      {% if prev_index >= 0 %}
+        {% assign previous_page = series_pages[prev_index] %}
+      {% endif %}
+      {% if next_index < series_pages.size %}
+        {% assign next_page = series_pages[next_index] %}
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+
   <main class="container site-main">
-      <article class="tutorial-header">
-        <div class="breadcrumb">
-          <a href="{{ '/' | relative_url }}">Home</a> &rsaquo;
-          {% if page.category == 'treasure-hunting' %}
-            <a href="{{ '/tutorials/treasure-hunting/' | relative_url }}">Treasure Hunting</a>
-          {% else %}
-            <a href="{{ '/tutorials/sar-remote-sensing/' | relative_url }}">SAR & Remote Sensing</a>
-          {% endif %}
-          &rsaquo; {{ page.title }}
-        </div>
-        <h1>{{ page.title }}</h1>
-        {% if page.description %}
-          <p class="tutorial-summary">{{ page.description }}</p>
+    <article class="tutorial-header">
+      <div class="eyebrow">Curated tutorial</div>
+      <div class="breadcrumb">
+        <a href="{{ '/' | relative_url }}">Home</a> &rsaquo;
+        {% if page.category == 'treasure-hunting' %}
+          <a href="{{ '/tutorials/treasure-hunting/' | relative_url }}">Treasure Hunting</a>
+        {% else %}
+          <a href="{{ '/tutorials/sar-remote-sensing/' | relative_url }}">SAR & Remote Sensing</a>
         {% endif %}
+        &rsaquo; {{ page.title }}
+      </div>
+      <h1>{{ page.title }}</h1>
+      {% if page.description %}
+        <p class="tutorial-summary">{{ page.description }}</p>
+      {% endif %}
+      <div class="meta-strip">
         {% if page.difficulty %}
           <span class="badge badge-{{ page.difficulty }}">{{ page.difficulty | capitalize }}</span>
         {% endif %}
         {% if page.estimated_time %}
-          <span class="badge badge-time">⏱️ {{ page.estimated_time }}</span>
+          <span class="badge badge-time">{{ page.estimated_time }}</span>
         {% endif %}
-      </article>
+      </div>
+      {% if page.order and series_pages.size > 0 %}
+        <div class="series-context">
+          <span class="series-index-chip">Part {{ page.order }} of {{ series_pages.size }}</span>
+          <span>{{ series_title }}</span>
+        </div>
+      {% endif %}
+    </article>
 
-      <div class="tutorial-body">
-        <div class="toc-sidebar">
-          <h3>Contents</h3>
+    <div class="tutorial-body">
+      <aside class="toc-sidebar">
+        {% if series_pages.size > 0 %}
+          <div class="series-panel">
+            <div class="eyebrow">Reading path</div>
+            <p class="series-panel-title">{{ series_title }}</p>
+            <ol class="series-list">
+              {% for doc in series_pages %}
+                <li class="{% if doc.url == page.url %}is-active{% endif %}">
+                  <a href="{{ doc.url | relative_url }}">
+                    <span class="series-step-number">0{{ doc.order }}</span>
+                    <span>{{ doc.title }}</span>
+                  </a>
+                </li>
+              {% endfor %}
+            </ol>
+          </div>
+        {% endif %}
+        <div class="toc-panel">
+          <div class="eyebrow">On this page</div>
           <div id="toc"></div>
         </div>
-        <article class="tutorial-content">
-          {{ content }}
-        </article>
-      </div>
-    </main>
+      </aside>
+      <article class="tutorial-content">
+        {{ content }}
+      </article>
+    </div>
+
+    {% if series_pages.size > 0 %}
+      <nav class="sequence-nav" aria-label="Tutorial sequence">
+        {% if previous_page %}
+          <div class="sequence-card">
+            <p class="sequence-label">Previous</p>
+            <a class="sequence-link" href="{{ previous_page.url | relative_url }}">{{ previous_page.title }}</a>
+            <p>Return to the earlier exhibit in this sequence.</p>
+          </div>
+        {% else %}
+          <div class="sequence-card is-empty" aria-hidden="true"></div>
+        {% endif %}
+
+        <div class="sequence-card center-card">
+          <p class="sequence-label">Series gallery</p>
+          <a class="sequence-link" href="{{ series_url | relative_url }}">{{ series_title }}</a>
+          <p>Jump back to the overview or continue the curated route.</p>
+        </div>
+
+        {% if next_page %}
+          <div class="sequence-card">
+            <p class="sequence-label">Next</p>
+            <a class="sequence-link" href="{{ next_page.url | relative_url }}">{{ next_page.title }}</a>
+            <p>Continue to the next exhibit in this sequence.</p>
+          </div>
+        {% else %}
+          <div class="sequence-card is-empty" aria-hidden="true"></div>
+        {% endif %}
+      </nav>
+    {% endif %}
+  </main>
 
   <footer class="site-footer">
-    <div class="container">
-      <p>🏔️ Treasure Hunting & Remote Sensing in Central Asia — Educational Resource</p>
-      <p>Built for learners who want a rigorous, math-first understanding of hidden signals in landscapes and materials.</p>
+    <div class="container footer-inner">
+      <p class="footer-mark">Central Asia Signals</p>
+      <p>Built for learners who want precise, evidence-based reading of hidden patterns.</p>
     </div>
   </footer>
 
   <script>
-    // Auto-generate TOC
     const toc = document.getElementById('toc');
     const headings = document.querySelectorAll('.tutorial-content h2, .tutorial-content h3');
     const ul = document.createElement('ul');
@@ -83,12 +164,11 @@
     });
     toc.appendChild(ul);
 
-    // Solution toggles
     document.querySelectorAll('.solution-toggle').forEach(btn => {
       btn.addEventListener('click', () => {
         const sol = btn.nextElementSibling;
         sol.style.display = sol.style.display === 'none' ? 'block' : 'none';
-        btn.textContent = sol.style.display === 'none' ? '▶ Show Solution' : '▼ Hide Solution';
+        btn.textContent = sol.style.display === 'none' ? 'Show solution' : 'Hide solution';
       });
     });
   </script>

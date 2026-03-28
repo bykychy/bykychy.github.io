@@ -14,13 +14,13 @@
   </script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
 </head>
-<body>
+<body class="page-default">
   <nav class="top-nav">
     <div class="nav-container">
-      <a href="{{ '/' | relative_url }}" class="nav-logo">🏔️ Central Asia Explorer</a>
+      <a href="{{ '/' | relative_url }}" class="nav-logo">Central Asia Signals</a>
       <div class="nav-links">
-        <a href="{{ '/tutorials/treasure-hunting/' | relative_url }}">⛏️ Treasure Hunting</a>
-        <a href="{{ '/tutorials/sar-remote-sensing/' | relative_url }}">🛰️ SAR & Remote Sensing</a>
+        <a href="{{ '/tutorials/treasure-hunting/' | relative_url }}">Treasure Hunting</a>
+        <a href="{{ '/tutorials/sar-remote-sensing/' | relative_url }}">SAR & Remote Sensing</a>
       </div>
     </div>
   </nav>
@@ -30,9 +30,9 @@
   </main>
 
   <footer class="site-footer">
-    <div class="container">
-      <p>🏔️ Treasure Hunting & Remote Sensing in Central Asia — Educational Resource</p>
-      <p>Built for learners who want a rigorous, math-first understanding of hidden signals in landscapes and materials.</p>
+    <div class="container footer-inner">
+      <p class="footer-mark">Central Asia Signals</p>
+      <p>A museum-style learning space for SAR, electromagnetic sensing, GPR, X-ray fluorescence, and mathematical interpretation.</p>
     </div>
   </footer>
 
@@ -41,7 +41,7 @@
       btn.addEventListener('click', () => {
         const sol = btn.nextElementSibling;
         sol.style.display = sol.style.display === 'none' ? 'block' : 'none';
-        btn.textContent = sol.style.display === 'none' ? '▶ Show Solution' : '▼ Hide Solution';
+        btn.textContent = sol.style.display === 'none' ? 'Show solution' : 'Hide solution';
       });
     });
   </script>

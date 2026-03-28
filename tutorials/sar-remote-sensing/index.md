@@ -1,50 +1,59 @@
 ---
 layout: default
 title: "SAR & Remote Sensing"
-description: "Math-first tutorials on Sentinel SAR and remote sensing for Central Asia."
+description: "Museum-style, math-first tutorials on Sentinel SAR and remote sensing for Central Asia."
 ---
 
-# 🛰️ SAR & Remote Sensing
+# SAR & Remote Sensing
 
-This series focuses on how Synthetic Aperture Radar helps you infer hidden structure from the surface: roughness, moisture, slope, orientation, seasonal change, and repeated geometry. The emphasis is mathematical and practical, with examples from Central Asia.
+This gallery is about seeing landscape structure through radar logic: backscatter, slope, roughness, moisture, and temporal change. The current anchor tutorial is a full Sentinel-1 lesson focused on Central Asia.
+
+<div class="path-grid">
+  <div class="path-card">
+    <div class="eyebrow">Suggested route</div>
+    <h2>Read the SAR sequence in this order</h2>
+    <p>Begin with image formation, then process data, then learn phase-based change, and only then move to regional interpretation.</p>
+    <ol class="path-steps">
+      <li><span class="path-step-num">01</span><div><a class="path-step-link" href="{{ '/tutorials/sar-remote-sensing/01-sar-fundamentals' | relative_url }}">SAR Fundamentals</a><span class="desc">Geometry, radar equation, resolution, and speckle.</span></div></li>
+      <li><span class="path-step-num">02</span><div><a class="path-step-link" href="{{ '/tutorials/sar-remote-sensing/02-sentinel1-data-processing' | relative_url }}">Sentinel-1 Data Processing</a><span class="desc">Calibration, terrain correction, filtering, and units.</span></div></li>
+      <li><span class="path-step-num">03</span><div><a class="path-step-link" href="{{ '/tutorials/sar-remote-sensing/03-insar-change-detection' | relative_url }}">InSAR & Change Detection</a><span class="desc">Phase, coherence, wrapping, and line-of-sight deformation.</span></div></li>
+      <li><span class="path-step-num">04</span><div><a class="path-step-link" href="{{ '/tutorials/sar-remote-sensing/05-sentinel1-central-asia-unseen-patterns' | relative_url }}">Sentinel-1 Central Asia Interpretation</a><span class="desc">Use the full toolkit on regional landscape questions.</span></div></li>
+    </ol>
+    <a class="cta-button" href="{{ '/tutorials/sar-remote-sensing/01-sar-fundamentals' | relative_url }}">Start this route</a>
+  </div>
+</div>
 
 <div class="info-box note">
-  <strong>🛰️ About Sentinel-1</strong>
-  Sentinel-1 is an ESA Copernicus mission, not a NASA mission. It provides free, open-access C-band SAR data with repeat coverage that is extremely useful for Central Asia. NASA, ESA, and the broader SAR science community all contribute important methods, training, and interpretation frameworks.
+  <strong>About Sentinel-1</strong>
+  Sentinel-1 is an ESA Copernicus mission. It is not a NASA satellite, but NASA research and the broader radar community contribute many important methods used to interpret SAR scientifically.
 </div>
 
 <div class="section-card featured-card">
-  <h2>Start here</h2>
-  <p>The strongest current lesson in this section is the Central Asia interpretation tutorial below. It explains what radar can reveal, where the limits are, and how to reason from backscatter patterns without making impossible claims about “seeing through everything.”</p>
-  <p><a class="featured-link" href="{{ '/tutorials/sar-remote-sensing/05-sentinel1-central-asia-unseen-patterns' | relative_url }}">Read: How Sentinel SAR data can reveal interesting patterns in Central Asia</a></p>
+  <div class="eyebrow">Anchor lesson</div>
+  <h2>Start with the Sentinel-1 interpretation tutorial</h2>
+  <p><a class="featured-link" href="{{ '/tutorials/sar-remote-sensing/05-sentinel1-central-asia-unseen-patterns' | relative_url }}">How Sentinel SAR Data Can Reveal Interesting Patterns in Central Asia</a></p>
+  <p>It explains what SAR can reveal indirectly, how to compare seasons and geometries, and how to think mathematically about backscatter and change. The full SAR sequence is now live below.</p>
 </div>
 
 <ul class="roadmap-list">
   <li>
-    <a href="{{ '/tutorials/sar-remote-sensing/05-sentinel1-central-asia-unseen-patterns' | relative_url }}">Available now: How Sentinel SAR data can reveal interesting patterns in Central Asia</a>
+    <a href="{{ '/tutorials/sar-remote-sensing/01-sar-fundamentals' | relative_url }}">SAR Fundamentals</a>
     <span class="status-pill status-live">Live</span>
-    <span class="desc">Central Asia examples, backscatter logic, math foundations, and 30 exercises with solutions.</span>
+    <span class="desc">Synthetic aperture, radar equation, geometry, resolution, polarization, and speckle.</span>
   </li>
   <li>
-    <strong>Planned:</strong> SAR Fundamentals
-    <span class="status-pill status-planned">Planned</span>
-    <span class="desc">Synthetic aperture idea, radar equation, image geometry, resolution, and speckle.</span>
-  </li>
-  <li>
-    <strong>Planned:</strong> Sentinel-1 Data Processing
-    <span class="status-pill status-planned">Planned</span>
+    <a href="{{ '/tutorials/sar-remote-sensing/02-sentinel1-data-processing' | relative_url }}">Sentinel-1 Data Processing</a>
+    <span class="status-pill status-live">Live</span>
     <span class="desc">Calibration, filtering, terrain correction, dB conversion, and export workflow.</span>
   </li>
   <li>
-    <strong>Planned:</strong> InSAR & Change Detection
-    <span class="status-pill status-planned">Planned</span>
-    <span class="desc">Coherence estimation, interferometric phase, displacement logic, and time series analysis.</span>
+    <a href="{{ '/tutorials/sar-remote-sensing/03-insar-change-detection' | relative_url }}">InSAR & Change Detection</a>
+    <span class="status-pill status-live">Live</span>
+    <span class="desc">Phase, coherence, line-of-sight displacement, and deformation logic.</span>
+  </li>
+  <li>
+    <a href="{{ '/tutorials/sar-remote-sensing/05-sentinel1-central-asia-unseen-patterns' | relative_url }}">Sentinel-1 Central Asia interpretation</a>
+    <span class="status-pill status-live">Live</span>
+    <span class="desc">Backscatter, moisture, geometry, temporal statistics, and 30 exercises.</span>
   </li>
 </ul>
-
-## What this series will teach
-
-- How to turn radar brightness into a physical hypothesis.
-- How incidence angle, polarization, and season affect interpretation.
-- How to compare dry versus wet scenes, smooth versus rough surfaces, and natural versus engineered patterns.
-- How to reason carefully about hidden or subtle targets without overstating what C-band SAR can do.

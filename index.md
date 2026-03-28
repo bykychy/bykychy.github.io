@@ -1,108 +1,206 @@
 ---
 layout: default
 title: "Home"
-description: "A math-first learning site about treasure hunting technology, X-ray and electromagnetic sensing, and Sentinel SAR analysis in Central Asia."
+description: "A math-first learning site about treasure hunting technology, X-ray and electromagnetic sensing, GPR, and Sentinel SAR analysis in Central Asia."
 ---
 
 <div class="hero">
-  <h1>🏔️ Hidden Signals of Central Asia</h1>
-  <p class="lead">Learn how SAR, X-ray, and electromagnetic methods help researchers detect structure, moisture, roughness, buried geometry, and material contrast across the landscapes of Central Asia.</p>
+  <div class="eyebrow">Curated series</div>
+  <h1>Hidden Signals of Central Asia</h1>
+  <p class="lead">An editorial, math-first collection of tutorials on SAR, electromagnetic survey, ground-penetrating radar, and X-ray fluorescence for reading patterns that ordinary imagery and intuition often miss.</p>
   <div class="hero-actions">
-    <a class="cta-button" href="{{ '/tutorials/sar-remote-sensing/' | relative_url }}">Explore SAR tutorials</a>
-    <a class="cta-button cta-secondary" href="{{ '/tutorials/sar-remote-sensing/05-sentinel1-central-asia-unseen-patterns' | relative_url }}">Start the Sentinel lesson</a>
+    <a class="cta-button" href="{{ '/tutorials/sar-remote-sensing/' | relative_url }}">Enter the SAR gallery</a>
+    <a class="cta-button cta-secondary" href="{{ '/tutorials/treasure-hunting/' | relative_url }}">Enter the field methods gallery</a>
   </div>
 </div>
 
 <div class="feature-grid">
   <div class="feature-card">
-    <h2>🛰️ Sentinel-1 SAR</h2>
-    <p>See how radar backscatter changes with roughness, slope, orientation, moisture, and season. This is the strongest current part of the site, with a full tutorial focused on Central Asia.</p>
+    <div class="eyebrow">Sensor logic</div>
+    <h2>Radar, X-ray, and conductivity as evidence</h2>
+    <p>Each tutorial explains what the instrument truly measures, what it can only suggest indirectly, and where interpretation usually goes wrong.</p>
+  </div>
+  <div class="feature-card">
+    <div class="eyebrow">Central Asia</div>
+    <h2>Deserts, deltas, mountains, and Silk Road landscapes</h2>
+    <p>The examples are rooted in irrigation systems, paleochannels, burial landscapes, alluvial fans, mining regions, and dryland archaeology.</p>
+  </div>
+  <div class="feature-card">
+    <div class="eyebrow">Mathematics</div>
+    <h2>Learn to reason, not just click</h2>
+    <p>Every flagship tutorial is built around units, ratios, wave behavior, signal comparison, and 30 graded exercises with solutions.</p>
+  </div>
+</div>
+
+<div class="path-grid">
+  <div class="path-card">
+    <div class="eyebrow">Reading path one</div>
+    <h2>Treasure-hunting field methods</h2>
+    <p>Move from close-range conductive targeting to broader conductivity mapping, then into geometry and composition.</p>
+    <ol class="path-steps">
+      <li>
+        <span class="path-step-num">01</span>
+        <div>
+          <a class="path-step-link" href="{{ '/tutorials/treasure-hunting/04-metal-detection-fundamentals-central-asia' | relative_url }}">Metal Detection Fundamentals</a>
+          <span class="desc">Start with target response, discrimination, and ground balance.</span>
+        </div>
+      </li>
+      <li>
+        <span class="path-step-num">02</span>
+        <div>
+          <a class="path-step-link" href="{{ '/tutorials/treasure-hunting/01-electromagnetic-survey-central-asia-unseen-conductivity' | relative_url }}">Electromagnetic Survey Methods</a>
+          <span class="desc">Scale up from single targets to conductivity structure across a site.</span>
+        </div>
+      </li>
+      <li>
+        <span class="path-step-num">03</span>
+        <div>
+          <a class="path-step-link" href="{{ '/tutorials/treasure-hunting/02-ground-penetrating-radar-central-asia' | relative_url }}">Ground-Penetrating Radar</a>
+          <span class="desc">Shift from contrast to shallow subsurface geometry.</span>
+        </div>
+      </li>
+      <li>
+        <span class="path-step-num">04</span>
+        <div>
+          <a class="path-step-link" href="{{ '/tutorials/treasure-hunting/03-xrf-central-asia-material-signatures' | relative_url }}">X-Ray Fluorescence Field Analysis</a>
+          <span class="desc">Finish with material signatures and elemental reasoning.</span>
+        </div>
+      </li>
+    </ol>
+    <a class="cta-button" href="{{ '/tutorials/treasure-hunting/04-metal-detection-fundamentals-central-asia' | relative_url }}">Start path one</a>
   </div>
 
-  <div class="feature-card">
-    <h2>⚡ Electromagnetic methods</h2>
-    <p>Build intuition for metal detection, conductivity mapping, and field-survey mathematics so you can reason from signals instead of guesswork.</p>
-  </div>
-
-  <div class="feature-card">
-    <h2>🧪 X-ray and material sensing</h2>
-    <p>Understand how X-ray and geochemical methods classify material differences, and how those measurements complement radar and electromagnetic observations.</p>
+  <div class="path-card">
+    <div class="eyebrow">Reading path two</div>
+    <h2>SAR and change analysis</h2>
+    <p>Build from radar image formation to processing, deformation logic, and Central Asia interpretation.</p>
+    <ol class="path-steps">
+      <li>
+        <span class="path-step-num">01</span>
+        <div>
+          <a class="path-step-link" href="{{ '/tutorials/sar-remote-sensing/01-sar-fundamentals' | relative_url }}">SAR Fundamentals</a>
+          <span class="desc">Learn geometry, resolution, speckle, and the radar equation first.</span>
+        </div>
+      </li>
+      <li>
+        <span class="path-step-num">02</span>
+        <div>
+          <a class="path-step-link" href="{{ '/tutorials/sar-remote-sensing/02-sentinel1-data-processing' | relative_url }}">Sentinel-1 Data Processing</a>
+          <span class="desc">Turn raw data into calibrated, terrain-aware products.</span>
+        </div>
+      </li>
+      <li>
+        <span class="path-step-num">03</span>
+        <div>
+          <a class="path-step-link" href="{{ '/tutorials/sar-remote-sensing/03-insar-change-detection' | relative_url }}">InSAR & Change Detection</a>
+          <span class="desc">Use phase and coherence to think about motion and stability.</span>
+        </div>
+      </li>
+      <li>
+        <span class="path-step-num">04</span>
+        <div>
+          <a class="path-step-link" href="{{ '/tutorials/sar-remote-sensing/05-sentinel1-central-asia-unseen-patterns' | relative_url }}">Sentinel-1 Central Asia Interpretation</a>
+          <span class="desc">Apply the whole stack to real regional questions.</span>
+        </div>
+      </li>
+    </ol>
+    <a class="cta-button" href="{{ '/tutorials/sar-remote-sensing/01-sar-fundamentals' | relative_url }}">Start path two</a>
   </div>
 </div>
 
 <div class="section-card featured-card">
-  <h2>Featured tutorial</h2>
-  <p><strong>How Sentinel SAR data can reveal interesting patterns in Central Asia</strong> is now live. It explains what radar can and cannot reveal, shows a practical interpretation workflow, and includes 30 exercises with solutions from a mathematical perspective.</p>
-  <p><a class="featured-link" href="{{ '/tutorials/sar-remote-sensing/05-sentinel1-central-asia-unseen-patterns' | relative_url }}">Read the tutorial</a></p>
+  <div class="eyebrow">Now on display</div>
+  <h2>Eight flagship tutorials are now live</h2>
+  <ul class="tutorial-list">
+    <li>
+      <a href="{{ '/tutorials/treasure-hunting/04-metal-detection-fundamentals-central-asia' | relative_url }}">How Metal Detection Reveals Hidden Targets in Central Asia</a>
+      <span class="desc">VLF and pulse-induction logic, ground balance, discrimination, and target patterns.</span>
+    </li>
+    <li>
+      <a href="{{ '/tutorials/treasure-hunting/01-electromagnetic-survey-central-asia-unseen-conductivity' | relative_url }}">How Electromagnetic Survey Reveals Unseen Conductivity Patterns</a>
+      <span class="desc">Induction physics, apparent conductivity, depth response, and site logic.</span>
+    </li>
+    <li>
+      <a href="{{ '/tutorials/treasure-hunting/02-ground-penetrating-radar-central-asia' | relative_url }}">How Ground-Penetrating Radar Reveals Hidden Geometry</a>
+      <span class="desc">Travel time, dielectric constant, hyperbolas, and archaeological structure.</span>
+    </li>
+    <li>
+      <a href="{{ '/tutorials/treasure-hunting/03-xrf-central-asia-material-signatures' | relative_url }}">How X-Ray Fluorescence Reveals Material Signatures</a>
+      <span class="desc">Elemental fingerprints, counts, calibration thinking, and material inference.</span>
+    </li>
+    <li>
+      <a href="{{ '/tutorials/sar-remote-sensing/01-sar-fundamentals' | relative_url }}">How SAR Fundamentals Help Reveal Hidden Structure in Central Asia</a>
+      <span class="desc">Radar equation, geometry, resolution, polarization, and speckle.</span>
+    </li>
+    <li>
+      <a href="{{ '/tutorials/sar-remote-sensing/02-sentinel1-data-processing' | relative_url }}">How Sentinel-1 Data Processing Reveals Cleaner Signals in Central Asia</a>
+      <span class="desc">Calibration, filtering, terrain correction, and interpretation-ready backscatter.</span>
+    </li>
+    <li>
+      <a href="{{ '/tutorials/sar-remote-sensing/03-insar-change-detection' | relative_url }}">How InSAR and Change Detection Reveal Motion and Stability in Central Asia</a>
+      <span class="desc">Phase, coherence, LOS displacement, and deformation reasoning.</span>
+    </li>
+    <li>
+      <a href="{{ '/tutorials/sar-remote-sensing/05-sentinel1-central-asia-unseen-patterns' | relative_url }}">How Sentinel SAR Data Can Reveal Interesting Patterns in Central Asia</a>
+      <span class="desc">Backscatter, moisture, geometry, and temporal interpretation with 30 exercises.</span>
+    </li>
+  </ul>
 </div>
 
 <div class="sections-grid">
-
   <div class="section-card">
-    <h2>⛏️ Treasure Hunting Technologies</h2>
-    <p>Learn the physics, engineering, and survey logic behind instruments used to detect hidden structure and material contrast across steppes, valleys, and Silk Road corridors.</p>
+    <div class="eyebrow">Gallery one</div>
+    <h2>Treasure Hunting Technologies</h2>
+    <p>These lessons focus on near-surface and subsurface evidence: conductivity, radar travel time, elemental composition, and field interpretation discipline.</p>
     <ul class="roadmap-list">
       <li>
-        <strong>Planned:</strong> Metal Detection Fundamentals
-        <span class="status-pill status-planned">Planned</span>
-        <span class="desc">VLF and pulse-induction theory, eddy-current math, discrimination, and ground balancing.</span>
-      </li>
-      <li>
-        <strong>Planned:</strong> Electromagnetic Survey Methods
-        <span class="status-pill status-planned">Planned</span>
-        <span class="desc">Conductivity mapping, depth response, frequency-domain versus time-domain methods.</span>
-      </li>
-      <li>
-        <strong>Planned:</strong> Ground Penetrating Radar
-        <span class="status-pill status-planned">Planned</span>
-        <span class="desc">Wave propagation, antenna tradeoffs, radargrams, hyperbola fitting, and depth estimation.</span>
-      </li>
-      <li>
-        <strong>Planned:</strong> X-Ray Fluorescence Field Analysis
-        <span class="status-pill status-planned">Planned</span>
-        <span class="desc">X-ray interaction physics, elemental fingerprinting, and field geochemistry logic.</span>
-      </li>
-    </ul>
-    <p><a class="featured-link" href="{{ '/tutorials/treasure-hunting/' | relative_url }}">View the treasure-hunting roadmap</a></p>
-  </div>
-
-  <div class="section-card">
-    <h2>🛰️ SAR & Remote Sensing</h2>
-    <p>Dive into Synthetic Aperture Radar using open Sentinel-1 data and a math-first approach to interpreting backscatter, geometry, and time-varying patterns across Central Asia.</p>
-    <ul class="roadmap-list">
-      <li>
-        <a href="{{ '/tutorials/sar-remote-sensing/05-sentinel1-central-asia-unseen-patterns' | relative_url }}">Available now: How Sentinel SAR data reveals interesting patterns in Central Asia</a>
+        <a href="{{ '/tutorials/treasure-hunting/04-metal-detection-fundamentals-central-asia' | relative_url }}">Metal Detection Fundamentals</a>
         <span class="status-pill status-live">Live</span>
-        <span class="desc">Interpretation workflow, Central Asia case ideas, and 30 exercises with solutions.</span>
+        <span class="desc">VLF and pulse-induction theory, eddy-current math, ground balance, and discrimination.</span>
       </li>
       <li>
-        <strong>Planned:</strong> SAR Fundamentals
-        <span class="status-pill status-planned">Planned</span>
-        <span class="desc">Radar equation, image geometry, resolution, speckle, and polarization basics.</span>
+        <a href="{{ '/tutorials/treasure-hunting/01-electromagnetic-survey-central-asia-unseen-conductivity' | relative_url }}">Electromagnetic Survey Methods</a>
+        <span class="status-pill status-live">Live</span>
+        <span class="desc">A full Central Asia lesson with mathematical foundations and 30 exercises.</span>
       </li>
       <li>
-        <strong>Planned:</strong> Sentinel-1 Data Processing
-        <span class="status-pill status-planned">Planned</span>
-        <span class="desc">Calibration, filtering, terrain correction, and export workflow.</span>
+        <a href="{{ '/tutorials/treasure-hunting/02-ground-penetrating-radar-central-asia' | relative_url }}">Ground-Penetrating Radar</a>
+        <span class="status-pill status-live">Live</span>
+        <span class="desc">Dry-soil radar interpretation, hyperbolas, depth estimation, and survey logic.</span>
       </li>
       <li>
-        <strong>Planned:</strong> InSAR and change detection
-        <span class="status-pill status-planned">Planned</span>
-        <span class="desc">Coherence, interferometric phase, displacement, and terrain applications.</span>
+        <a href="{{ '/tutorials/treasure-hunting/03-xrf-central-asia-material-signatures' | relative_url }}">X-Ray Fluorescence Field Analysis</a>
+        <span class="status-pill status-live">Live</span>
+        <span class="desc">Material signatures, counts, noise, and practical elemental reasoning.</span>
       </li>
     </ul>
-    <p><a class="featured-link" href="{{ '/tutorials/sar-remote-sensing/' | relative_url }}">View the SAR series</a></p>
   </div>
 
-</div>
-
-<div class="section-card" style="margin-top: 2rem;">
-  <h2>📐 A math-first learning path</h2>
-  <p>Each major lesson on this site is being built to include:</p>
-  <ul class="tutorial-list">
-    <li><strong>Physics and signal logic</strong> <span class="desc">Why the sensor responds the way it does, not just how to click buttons.</span></li>
-    <li><strong>Mathematical foundations</strong> <span class="desc">Equations, units, ratios, decibel conversions, and interpretation from first principles.</span></li>
-    <li><strong>Central Asian examples</strong> <span class="desc">Alluvial fans, irrigation systems, drylands, mountain slopes, glaciers, and archaeological landscapes.</span></li>
-    <li><strong>30 exercises per flagship tutorial</strong> <span class="desc">10 easy, 10 medium, and 10 hard problems with solutions to build mastery.</span></li>
-  </ul>
+  <div class="section-card">
+    <div class="eyebrow">Gallery two</div>
+    <h2>SAR & Remote Sensing</h2>
+    <p>This gallery starts with Sentinel-1 as a rigorous way to read moisture, roughness, slope effects, and repeated landscape structure across Central Asia.</p>
+    <ul class="roadmap-list">
+      <li>
+        <a href="{{ '/tutorials/sar-remote-sensing/01-sar-fundamentals' | relative_url }}">SAR Fundamentals</a>
+        <span class="status-pill status-live">Live</span>
+        <span class="desc">Radar equation, geometry, resolution, speckle, and polarization basics.</span>
+      </li>
+      <li>
+        <a href="{{ '/tutorials/sar-remote-sensing/02-sentinel1-data-processing' | relative_url }}">Sentinel-1 Data Processing</a>
+        <span class="status-pill status-live">Live</span>
+        <span class="desc">Calibration, terrain correction, filtering, dB conversion, and export workflow.</span>
+      </li>
+      <li>
+        <a href="{{ '/tutorials/sar-remote-sensing/03-insar-change-detection' | relative_url }}">InSAR & Change Detection</a>
+        <span class="status-pill status-live">Live</span>
+        <span class="desc">Coherence, phase, deformation, line-of-sight motion, and time-series reasoning.</span>
+      </li>
+      <li>
+        <a href="{{ '/tutorials/sar-remote-sensing/05-sentinel1-central-asia-unseen-patterns' | relative_url }}">Sentinel-1 Central Asia interpretation</a>
+        <span class="status-pill status-live">Live</span>
+        <span class="desc">The current anchor lesson for the SAR series.</span>
+      </li>
+    </ul>
+  </div>
 </div>
