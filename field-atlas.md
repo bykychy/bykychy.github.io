@@ -27,6 +27,10 @@ permalink: /field-atlas/
     </div>
     <ul class="atlas-links">
       <li>
+        <a href="{{ '/tutorials/sar-remote-sensing/04-time-series-change-detection' | relative_url }}">Time-Series Analysis & Change Detection</a>
+        <span class="desc">Best for tracking seasonal irrigation cycles and long-term hydrological change.</span>
+      </li>
+      <li>
         <a href="{{ '/tutorials/sar-remote-sensing/05-sentinel1-central-asia-unseen-patterns' | relative_url }}">Sentinel-1 Central Asia Interpretation</a>
         <span class="desc">Best regional starting point for wetness and subtle landscape structure.</span>
       </li>

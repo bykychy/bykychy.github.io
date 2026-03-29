@@ -17,7 +17,8 @@ This gallery is about seeing landscape structure through radar logic: backscatte
       <li><span class="path-step-num">01</span><div><a class="path-step-link" href="{{ '/tutorials/sar-remote-sensing/01-sar-fundamentals' | relative_url }}">SAR Fundamentals</a><span class="desc">Geometry, radar equation, resolution, and speckle.</span></div></li>
       <li><span class="path-step-num">02</span><div><a class="path-step-link" href="{{ '/tutorials/sar-remote-sensing/02-sentinel1-data-processing' | relative_url }}">Sentinel-1 Data Processing</a><span class="desc">Calibration, terrain correction, filtering, and units.</span></div></li>
       <li><span class="path-step-num">03</span><div><a class="path-step-link" href="{{ '/tutorials/sar-remote-sensing/03-insar-change-detection' | relative_url }}">InSAR & Change Detection</a><span class="desc">Phase, coherence, wrapping, and line-of-sight deformation.</span></div></li>
-      <li><span class="path-step-num">04</span><div><a class="path-step-link" href="{{ '/tutorials/sar-remote-sensing/05-sentinel1-central-asia-unseen-patterns' | relative_url }}">Sentinel-1 Central Asia Interpretation</a><span class="desc">Use the full toolkit on regional landscape questions.</span></div></li>
+      <li><span class="path-step-num">04</span><div><a class="path-step-link" href="{{ '/tutorials/sar-remote-sensing/04-time-series-change-detection' | relative_url }}">Time-Series Analysis</a><span class="desc">Temporal statistics, seasonal decomposition, and anomaly detection.</span></div></li>
+      <li><span class="path-step-num">05</span><div><a class="path-step-link" href="{{ '/tutorials/sar-remote-sensing/05-sentinel1-central-asia-unseen-patterns' | relative_url }}">Sentinel-1 Central Asia Interpretation</a><span class="desc">Use the full toolkit on regional landscape questions.</span></div></li>
     </ol>
     <a class="cta-button" href="{{ '/tutorials/sar-remote-sensing/01-sar-fundamentals' | relative_url }}">Start this route</a>
   </div>
@@ -50,6 +51,11 @@ This gallery is about seeing landscape structure through radar logic: backscatte
     <a href="{{ '/tutorials/sar-remote-sensing/03-insar-change-detection' | relative_url }}">InSAR & Change Detection</a>
     <span class="status-pill status-live">Live</span>
     <span class="desc">Phase, coherence, line-of-sight displacement, and deformation logic.</span>
+  </li>
+  <li>
+    <a href="{{ '/tutorials/sar-remote-sensing/04-time-series-change-detection' | relative_url }}">Time-Series Analysis & Change Detection</a>
+    <span class="status-pill status-live">Live</span>
+    <span class="desc">Temporal statistics, seasonal decomposition, harmonic analysis, and anomaly detection.</span>
   </li>
   <li>
     <a href="{{ '/tutorials/sar-remote-sensing/05-sentinel1-central-asia-unseen-patterns' | relative_url }}">Sentinel-1 Central Asia interpretation</a>

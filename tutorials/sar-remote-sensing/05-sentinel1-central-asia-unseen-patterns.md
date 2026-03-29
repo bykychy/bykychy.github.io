@@ -5,7 +5,7 @@ description: "A math-first tutorial on how Sentinel-1 SAR reveals roughness, moi
 difficulty: intermediate
 estimated_time: "2-3 hours"
 series: sar-remote-sensing
-order: 4
+order: 5
 ---
 
 ## Why this tutorial matters

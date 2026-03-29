@@ -6,6 +6,7 @@
   <title>{{ page.title }} — {{ site.title }}</title>
   <meta name="description" content="{{ page.description | default: site.description }}">
   <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
   <script>
     MathJax = {
       tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] },
@@ -15,7 +16,7 @@
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
 </head>
 <body class="page-default">
-  <nav class="top-nav">
+  <nav class="top-nav" id="top-nav">
     <div class="nav-container">
       <a href="{{ '/' | relative_url }}" class="nav-logo">Central Asia Signals</a>
       <div class="nav-links">
@@ -32,12 +33,33 @@
 
   <footer class="site-footer">
     <div class="container footer-inner">
-      <p class="footer-mark">Central Asia Signals</p>
-      <p>A museum-style learning space for SAR, electromagnetic sensing, GPR, X-ray fluorescence, and mathematical interpretation.</p>
+      <div>
+        <p class="footer-mark">Central Asia Signals</p>
+        <p>A museum-style learning space for SAR, electromagnetic sensing, GPR, X-ray fluorescence, and mathematical interpretation.</p>
+      </div>
+      <ul class="footer-links">
+        <li><a href="{{ '/tutorials/sar-remote-sensing/' | relative_url }}">SAR Tutorials</a></li>
+        <li><a href="{{ '/tutorials/treasure-hunting/' | relative_url }}">Field Methods</a></li>
+        <li><a href="{{ '/field-atlas/' | relative_url }}">Atlas</a></li>
+      </ul>
     </div>
   </footer>
 
   <script>
+    // Navigation scroll effect
+    const nav = document.getElementById('top-nav');
+    let lastScroll = 0;
+    window.addEventListener('scroll', () => {
+      const currentScroll = window.pageYOffset;
+      if (currentScroll > 50) {
+        nav.classList.add('scrolled');
+      } else {
+        nav.classList.remove('scrolled');
+      }
+      lastScroll = currentScroll;
+    });
+
+    // Solution toggles
     document.querySelectorAll('.solution-toggle').forEach(btn => {
       btn.addEventListener('click', () => {
         const sol = btn.nextElementSibling;

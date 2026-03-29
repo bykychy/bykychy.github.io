@@ -74,7 +74,7 @@ description: "A math-first learning site about treasure hunting technology, X-ra
   <div class="path-card">
     <div class="eyebrow">Reading path two</div>
     <h2>SAR and change analysis</h2>
-    <p>Build from radar image formation to processing, deformation logic, and Central Asia interpretation.</p>
+    <p>Build from radar image formation to processing, deformation logic, time-series methods, and Central Asia interpretation.</p>
     <ol class="path-steps">
       <li>
         <span class="path-step-num">01</span>
@@ -100,6 +100,13 @@ description: "A math-first learning site about treasure hunting technology, X-ra
       <li>
         <span class="path-step-num">04</span>
         <div>
+          <a class="path-step-link" href="{{ '/tutorials/sar-remote-sensing/04-time-series-change-detection' | relative_url }}">Time-Series Analysis</a>
+          <span class="desc">Apply temporal statistics and seasonal decomposition.</span>
+        </div>
+      </li>
+      <li>
+        <span class="path-step-num">05</span>
+        <div>
           <a class="path-step-link" href="{{ '/tutorials/sar-remote-sensing/05-sentinel1-central-asia-unseen-patterns' | relative_url }}">Sentinel-1 Central Asia Interpretation</a>
           <span class="desc">Apply the whole stack to real regional questions.</span>
         </div>
@@ -111,7 +118,7 @@ description: "A math-first learning site about treasure hunting technology, X-ra
 
 <div class="section-card featured-card">
   <div class="eyebrow">Now on display</div>
-  <h2>Eight flagship tutorials are now live</h2>
+  <h2>Nine flagship tutorials are now live</h2>
   <ul class="tutorial-list">
     <li>
       <a href="{{ '/tutorials/treasure-hunting/04-metal-detection-fundamentals-central-asia' | relative_url }}">How Metal Detection Reveals Hidden Targets in Central Asia</a>
@@ -140,6 +147,10 @@ description: "A math-first learning site about treasure hunting technology, X-ra
     <li>
       <a href="{{ '/tutorials/sar-remote-sensing/03-insar-change-detection' | relative_url }}">How InSAR and Change Detection Reveal Motion and Stability in Central Asia</a>
       <span class="desc">Phase, coherence, LOS displacement, and deformation reasoning.</span>
+    </li>
+    <li>
+      <a href="{{ '/tutorials/sar-remote-sensing/04-time-series-change-detection' | relative_url }}">How Time-Series Analysis Reveals Landscape Dynamics in Central Asia</a>
+      <span class="desc">Temporal statistics, seasonal decomposition, anomaly detection, and multi-temporal workflows.</span>
     </li>
     <li>
       <a href="{{ '/tutorials/sar-remote-sensing/05-sentinel1-central-asia-unseen-patterns' | relative_url }}">How Sentinel SAR Data Can Reveal Interesting Patterns in Central Asia</a>
@@ -196,6 +207,11 @@ description: "A math-first learning site about treasure hunting technology, X-ra
         <a href="{{ '/tutorials/sar-remote-sensing/03-insar-change-detection' | relative_url }}">InSAR & Change Detection</a>
         <span class="status-pill status-live">Live</span>
         <span class="desc">Coherence, phase, deformation, line-of-sight motion, and time-series reasoning.</span>
+      </li>
+      <li>
+        <a href="{{ '/tutorials/sar-remote-sensing/04-time-series-change-detection' | relative_url }}">Time-Series Analysis</a>
+        <span class="status-pill status-live">Live</span>
+        <span class="desc">Temporal statistics, seasonal decomposition, anomaly detection, and multi-year workflows.</span>
       </li>
       <li>
         <a href="{{ '/tutorials/sar-remote-sensing/05-sentinel1-central-asia-unseen-patterns' | relative_url }}">Sentinel-1 Central Asia interpretation</a>
