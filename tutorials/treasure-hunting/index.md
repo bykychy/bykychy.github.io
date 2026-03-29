@@ -39,7 +39,7 @@ This gallery focuses on sensing methods that help reveal hidden geometry, buried
 
 <div class="section-card featured-card">
   <div class="eyebrow">Now on display</div>
-  <h2>Eleven live field-method tutorials</h2>
+  <h2>Sixteen live field-method tutorials</h2>
   <ul class="tutorial-list">
     <li>
       <a href="{{ '/tutorials/treasure-hunting/04-metal-detection-fundamentals-central-asia' | relative_url }}">How Metal Detection Reveals Hidden Targets in Central Asia</a>
@@ -84,6 +84,22 @@ This gallery focuses on sensing methods that help reveal hidden geometry, buried
     <li>
       <a href="{{ '/tutorials/treasure-hunting/11-field-documentation-reporting' | relative_url }}">How Proper Documentation Preserves Survey Value</a>
       <span class="desc">Field notes, metadata standards, data management, and professional reporting.</span>
+    </li>
+    <li>
+      <a href="{{ '/tutorials/treasure-hunting/12-gpr-advanced-processing' | relative_url }}">How Advanced GPR Processing Reveals Subsurface Detail</a>
+      <span class="desc">Migration, attribute analysis, 3D visualization, and signal processing.</span>
+    </li>
+    <li>
+      <a href="{{ '/tutorials/treasure-hunting/14-terrestrial-laser-scanning' | relative_url }}">How Terrestrial Laser Scanning Documents Sites</a>
+      <span class="desc">Point clouds, registration, mesh generation, and heritage documentation.</span>
+    </li>
+    <li>
+      <a href="{{ '/tutorials/treasure-hunting/15-gravity-surveying' | relative_url }}">How Gravity Surveying Reveals Density Contrasts</a>
+      <span class="desc">Bouguer anomalies, terrain corrections, and microgravity for voids.</span>
+    </li>
+    <li>
+      <a href="{{ '/tutorials/treasure-hunting/16-borehole-geophysical-logging' | relative_url }}">How Borehole Logging Reveals Stratigraphy</a>
+      <span class="desc">Gamma-ray, resistivity, sonic logs, and geological characterization.</span>
     </li>
   </ul>
 </div>
@@ -148,5 +164,25 @@ This gallery focuses on sensing methods that help reveal hidden geometry, buried
     <a href="{{ '/tutorials/treasure-hunting/11-field-documentation-reporting' | relative_url }}">Field Documentation & Reporting</a>
     <span class="status-pill status-live">Live</span>
     <span class="desc">Field notes, metadata standards, data management, archiving, and professional reports.</span>
+  </li>
+  <li>
+    <a href="{{ '/tutorials/treasure-hunting/12-gpr-advanced-processing' | relative_url }}">Advanced GPR Processing</a>
+    <span class="status-pill status-live">Live</span>
+    <span class="desc">Signal processing, migration, attribute analysis, 3D GPR, and stratigraphic interpretation.</span>
+  </li>
+  <li>
+    <a href="{{ '/tutorials/treasure-hunting/14-terrestrial-laser-scanning' | relative_url }}">Terrestrial Laser Scanning</a>
+    <span class="status-pill status-live">Live</span>
+    <span class="desc">TLS survey design, point cloud processing, mesh generation, and heritage documentation.</span>
+  </li>
+  <li>
+    <a href="{{ '/tutorials/treasure-hunting/15-gravity-surveying' | relative_url }}">Gravity Surveying</a>
+    <span class="status-pill status-live">Live</span>
+    <span class="desc">Bouguer anomalies, terrain corrections, microgravity, and void detection.</span>
+  </li>
+  <li>
+    <a href="{{ '/tutorials/treasure-hunting/16-borehole-geophysical-logging' | relative_url }}">Borehole Geophysical Logging</a>
+    <span class="status-pill status-live">Live</span>
+    <span class="desc">Gamma-ray, resistivity, sonic, density logs, and stratigraphic correlation.</span>
   </li>
 </ul>

@@ -118,47 +118,35 @@ description: "A math-first learning site about treasure hunting technology, X-ra
 
 <div class="section-card featured-card">
   <div class="eyebrow">Now on display</div>
-  <h2>Twenty-six flagship tutorials are now live</h2>
+  <h2>Thirty-eight flagship tutorials are now live</h2>
   <ul class="tutorial-list">
     <li>
       <a href="{{ '/tutorials/treasure-hunting/04-metal-detection-fundamentals-central-asia' | relative_url }}">How Metal Detection Reveals Hidden Targets in Central Asia</a>
       <span class="desc">VLF and pulse-induction logic, ground balance, discrimination, and target patterns.</span>
     </li>
     <li>
-      <a href="{{ '/tutorials/treasure-hunting/01-electromagnetic-survey-central-asia-unseen-conductivity' | relative_url }}">How Electromagnetic Survey Reveals Unseen Conductivity Patterns</a>
-      <span class="desc">Induction physics, apparent conductivity, depth response, and site logic.</span>
-    </li>
-    <li>
       <a href="{{ '/tutorials/treasure-hunting/02-ground-penetrating-radar-central-asia' | relative_url }}">How Ground-Penetrating Radar Reveals Hidden Geometry</a>
       <span class="desc">Travel time, dielectric constant, hyperbolas, and archaeological structure.</span>
-    </li>
-    <li>
-      <a href="{{ '/tutorials/treasure-hunting/05-magnetometry-archaeological-prospection' | relative_url }}">How Magnetometry Reveals Buried Archaeological Features</a>
-      <span class="desc">Magnetic susceptibility, flux density, gradiometer surveys, and feature detection.</span>
     </li>
     <li>
       <a href="{{ '/tutorials/treasure-hunting/08-electrical-resistivity-tomography' | relative_url }}">How Electrical Resistivity Reveals Subsurface Structure</a>
       <span class="desc">ERT arrays, apparent resistivity, inversion, and depth sections.</span>
     </li>
     <li>
-      <a href="{{ '/tutorials/treasure-hunting/09-seismic-near-surface' | relative_url }}">How Seismic Methods Reveal Near-Surface Geology</a>
-      <span class="desc">Refraction, reflection, MASW, and wave propagation.</span>
+      <a href="{{ '/tutorials/treasure-hunting/15-gravity-surveying' | relative_url }}">How Gravity Surveying Reveals Density Contrasts</a>
+      <span class="desc">Bouguer anomalies, terrain corrections, and microgravity for voids.</span>
     </li>
     <li>
-      <a href="{{ '/tutorials/treasure-hunting/10-multi-method-integration' | relative_url }}">How Multi-Method Integration Strengthens Survey</a>
-      <span class="desc">Combining geophysics, remote sensing, and geochemistry.</span>
+      <a href="{{ '/tutorials/treasure-hunting/12-gpr-advanced-processing' | relative_url }}">How Advanced GPR Processing Reveals Subsurface Detail</a>
+      <span class="desc">Migration, attribute analysis, 3D visualization, and signal processing.</span>
+    </li>
+    <li>
+      <a href="{{ '/tutorials/treasure-hunting/16-borehole-geophysical-logging' | relative_url }}">How Borehole Logging Reveals Stratigraphy</a>
+      <span class="desc">Gamma-ray, resistivity, sonic logs, and geological characterization.</span>
     </li>
     <li>
       <a href="{{ '/tutorials/sar-remote-sensing/01-sar-fundamentals' | relative_url }}">How SAR Fundamentals Help Reveal Hidden Structure</a>
       <span class="desc">Radar equation, geometry, resolution, polarization, and speckle.</span>
-    </li>
-    <li>
-      <a href="{{ '/tutorials/sar-remote-sensing/04-time-series-change-detection' | relative_url }}">How Time-Series Analysis Reveals Landscape Dynamics</a>
-      <span class="desc">Temporal statistics, seasonal decomposition, and anomaly detection.</span>
-    </li>
-    <li>
-      <a href="{{ '/tutorials/sar-remote-sensing/08-thermal-infrared-remote-sensing' | relative_url }}">How Thermal Infrared Reveals Temperature Patterns</a>
-      <span class="desc">Land surface temperature, emissivity, and thermal anomalies.</span>
     </li>
     <li>
       <a href="{{ '/tutorials/sar-remote-sensing/09-google-earth-engine-python' | relative_url }}">How Google Earth Engine Enables Cloud-Scale Analysis</a>
@@ -169,33 +157,37 @@ description: "A math-first learning site about treasure hunting technology, X-ra
       <span class="desc">Random Forest, SVM, CNNs, and accuracy assessment.</span>
     </li>
     <li>
-      <a href="{{ '/tutorials/sar-remote-sensing/12-sar-polarimetry' | relative_url }}">How SAR Polarimetry Reveals Scattering Mechanisms</a>
-      <span class="desc">Polarization, covariance matrices, and decomposition theorems.</span>
+      <a href="{{ '/tutorials/sar-remote-sensing/17-disaster-monitoring-remote-sensing' | relative_url }}">How Remote Sensing Monitors Natural Disasters</a>
+      <span class="desc">Earthquake damage, flood mapping, landslides, and wildfire assessment.</span>
     </li>
     <li>
-      <a href="{{ '/tutorials/sar-remote-sensing/14-archaeological-remote-sensing' | relative_url }}">How Remote Sensing Reveals Archaeological Landscapes</a>
-      <span class="desc">Crop marks, kurgans, qanats, and Silk Road prospection.</span>
+      <a href="{{ '/tutorials/sar-remote-sensing/20-land-degradation-monitoring' | relative_url }}">How Remote Sensing Monitors Land Degradation</a>
+      <span class="desc">Desertification, salinization, erosion, and vegetation trends.</span>
+    </li>
+    <li>
+      <a href="{{ '/tutorials/sar-remote-sensing/22-urban-remote-sensing' | relative_url }}">How Remote Sensing Monitors Urban Growth</a>
+      <span class="desc">Urban expansion, heat islands, and infrastructure monitoring.</span>
+    </li>
+    <li>
+      <a href="{{ '/tutorials/sar-remote-sensing/21-field-spectroscopy-hyperspectral' | relative_url }}">How Field Spectroscopy Enables Hyperspectral Analysis</a>
+      <span class="desc">Spectroradiometers, spectral libraries, and mineral identification.</span>
     </li>
     <li>
       <a href="{{ '/tutorials/sar-remote-sensing/15-python-geospatial-analysis' | relative_url }}">How Python Enables Geospatial Analysis</a>
       <span class="desc">Rasterio, geopandas, xarray, and reproducible workflows.</span>
     </li>
   </ul>
-  <p style="margin-top: 1rem; font-style: italic;">Plus 11 more tutorials covering XRF, GNSS, geochemistry, drone photogrammetry, Sentinel-2, DEM analysis, water resources, and documentation.</p>
+  <p style="margin-top: 1rem; font-style: italic;">Plus 24 more tutorials covering InSAR, time-series, Sentinel-2, thermal, DEM, polarimetry, water resources, archaeology, accuracy, XRF, magnetometry, GNSS, geochemistry, seismic, TLS, and documentation.</p>
 </div>
 
 <div class="sections-grid">
   <div class="section-card">
     <div class="eyebrow">Gallery one</div>
     <h2>Treasure Hunting Technologies</h2>
-    <p>Eleven tutorials on near-surface sensing: conductivity, radar, magnetometry, resistivity, seismic, geochemistry, and multi-method integration.</p>
+    <p>Sixteen tutorials on near-surface sensing: conductivity, radar, magnetometry, resistivity, seismic, gravity, laser scanning, and borehole logging.</p>
     <ul class="roadmap-list">
       <li>
         <a href="{{ '/tutorials/treasure-hunting/04-metal-detection-fundamentals-central-asia' | relative_url }}">Metal Detection Fundamentals</a>
-        <span class="status-pill status-live">Live</span>
-      </li>
-      <li>
-        <a href="{{ '/tutorials/treasure-hunting/01-electromagnetic-survey-central-asia-unseen-conductivity' | relative_url }}">Electromagnetic Survey Methods</a>
         <span class="status-pill status-live">Live</span>
       </li>
       <li>
@@ -203,36 +195,36 @@ description: "A math-first learning site about treasure hunting technology, X-ra
         <span class="status-pill status-live">Live</span>
       </li>
       <li>
-        <a href="{{ '/tutorials/treasure-hunting/05-magnetometry-archaeological-prospection' | relative_url }}">Magnetometry</a>
-        <span class="status-pill status-live">Live</span>
-      </li>
-      <li>
         <a href="{{ '/tutorials/treasure-hunting/08-electrical-resistivity-tomography' | relative_url }}">Electrical Resistivity</a>
         <span class="status-pill status-live">Live</span>
       </li>
       <li>
-        <a href="{{ '/tutorials/treasure-hunting/09-seismic-near-surface' | relative_url }}">Seismic Methods</a>
+        <a href="{{ '/tutorials/treasure-hunting/12-gpr-advanced-processing' | relative_url }}">Advanced GPR Processing</a>
         <span class="status-pill status-live">Live</span>
       </li>
       <li>
-        <a href="{{ '/tutorials/treasure-hunting/10-multi-method-integration' | relative_url }}">Multi-Method Integration</a>
+        <a href="{{ '/tutorials/treasure-hunting/15-gravity-surveying' | relative_url }}">Gravity Surveying</a>
+        <span class="status-pill status-live">Live</span>
+      </li>
+      <li>
+        <a href="{{ '/tutorials/treasure-hunting/14-terrestrial-laser-scanning' | relative_url }}">Terrestrial Laser Scanning</a>
+        <span class="status-pill status-live">Live</span>
+      </li>
+      <li>
+        <a href="{{ '/tutorials/treasure-hunting/16-borehole-geophysical-logging' | relative_url }}">Borehole Logging</a>
         <span class="status-pill status-live">Live</span>
       </li>
     </ul>
-    <a class="cta-button" href="{{ '/tutorials/treasure-hunting/' | relative_url }}">View all 11 tutorials →</a>
+    <a class="cta-button" href="{{ '/tutorials/treasure-hunting/' | relative_url }}">View all 16 tutorials →</a>
   </div>
 
   <div class="section-card">
     <div class="eyebrow">Gallery two</div>
     <h2>SAR & Remote Sensing</h2>
-    <p>Fifteen tutorials on satellite and drone sensing: SAR, optical, thermal, machine learning, terrain analysis, and Python workflows.</p>
+    <p>Twenty-two tutorials on satellite and drone sensing: SAR, optical, thermal, ML, disasters, degradation, spectroscopy, and Python workflows.</p>
     <ul class="roadmap-list">
       <li>
         <a href="{{ '/tutorials/sar-remote-sensing/01-sar-fundamentals' | relative_url }}">SAR Fundamentals</a>
-        <span class="status-pill status-live">Live</span>
-      </li>
-      <li>
-        <a href="{{ '/tutorials/sar-remote-sensing/04-time-series-change-detection' | relative_url }}">Time-Series Analysis</a>
         <span class="status-pill status-live">Live</span>
       </li>
       <li>
@@ -244,11 +236,15 @@ description: "A math-first learning site about treasure hunting technology, X-ra
         <span class="status-pill status-live">Live</span>
       </li>
       <li>
-        <a href="{{ '/tutorials/sar-remote-sensing/12-sar-polarimetry' | relative_url }}">SAR Polarimetry</a>
+        <a href="{{ '/tutorials/sar-remote-sensing/17-disaster-monitoring-remote-sensing' | relative_url }}">Disaster Monitoring</a>
         <span class="status-pill status-live">Live</span>
       </li>
       <li>
-        <a href="{{ '/tutorials/sar-remote-sensing/14-archaeological-remote-sensing' | relative_url }}">Archaeological RS</a>
+        <a href="{{ '/tutorials/sar-remote-sensing/20-land-degradation-monitoring' | relative_url }}">Land Degradation</a>
+        <span class="status-pill status-live">Live</span>
+      </li>
+      <li>
+        <a href="{{ '/tutorials/sar-remote-sensing/22-urban-remote-sensing' | relative_url }}">Urban Remote Sensing</a>
         <span class="status-pill status-live">Live</span>
       </li>
       <li>
@@ -256,6 +252,6 @@ description: "A math-first learning site about treasure hunting technology, X-ra
         <span class="status-pill status-live">Live</span>
       </li>
     </ul>
-    <a class="cta-button" href="{{ '/tutorials/sar-remote-sensing/' | relative_url }}">View all 15 tutorials →</a>
+    <a class="cta-button" href="{{ '/tutorials/sar-remote-sensing/' | relative_url }}">View all 22 tutorials →</a>
   </div>
 </div>

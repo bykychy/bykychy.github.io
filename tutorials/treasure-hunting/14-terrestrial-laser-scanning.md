@@ -12,6 +12,8 @@ order: 14
 
 Archaeological sites vanish. Erosion degrades mud-brick walls in Uzbekistan. Looters damage petroglyphs in Kazakhstan. Development threatens burial mounds across the steppe. Terrestrial Laser Scanning (TLS) captures millimeter-resolution 3D documentation before destruction occurs, preserving detailed geometric records for future generations.
 
+TLS revolutionizes heritage documentation by recording surface geometry with unprecedented precision. A single scan station captures millions of 3D points in minutes. For Central Asia's archaeological landscape, TLS provides the geometric foundation for conservation and research.
+
 <div class="info-box tip">
   <strong>Key idea</strong>
   TLS captures what exists today with millimeter precision. Unlike photographs, point clouds contain true 3D geometry—enabling accurate measurements and virtual sections decades after fieldwork ends.
@@ -21,19 +23,20 @@ Archaeological sites vanish. Erosion degrades mud-brick walls in Uzbekistan. Loo
 
 ### Time-of-flight scanners
 
-Time-of-flight (TOF) scanners measure distance by timing laser pulse travel. The scanner emits a pulse, records when the reflection returns, and calculates distance using: **Distance = (Speed of light × Time) ÷ 2**
+Time-of-flight (TOF) scanners measure distance by timing laser pulse travel. The scanner emits a pulse, records when the reflection returns, and calculates distance using the speed of light: **Distance = (Speed of light × Time) ÷ 2**
 
-TOF scanners excel at long ranges—up to 6 kilometers. They work well for landscapes and large monuments but offer slower measurement rates and lower precision at distance.
+TOF scanners excel at long ranges—up to 6 kilometers for some models. They work well for landscape documentation, large monuments, and survey control. However, measurement rates are slower and precision decreases with distance.
 
 | Characteristic | Typical values |
 |----------------|----------------|
 | Range | 2-6,000 m |
 | Precision | ±2-10 mm at 100 m |
 | Measurement rate | 50,000-1,000,000 pts/sec |
+| Best applications | Large sites, landscapes |
 
 ### Phase-shift scanners
 
-Phase-shift scanners measure distance by comparing the phase of emitted and returned continuous laser waves. They achieve higher precision and faster rates than TOF—ideal for architectural and artifact documentation.
+Phase-shift scanners measure distance by comparing the phase of emitted and returned continuous laser waves, achieving higher precision and faster rates than TOF.
 
 | Characteristic | Typical values |
 |----------------|----------------|
@@ -43,85 +46,161 @@ Phase-shift scanners measure distance by comparing the phase of emitted and retu
 
 <div class="info-box tip">
   <strong>Key idea</strong>
-  Phase-shift for precision at moderate ranges; time-of-flight for long-range coverage. Most archaeological projects use phase-shift scanners for their combination of speed and precision.
+  Phase-shift for precision and speed at moderate ranges; time-of-flight for long-range coverage. Most archaeological projects use phase-shift scanners for their combination of speed and precision.
 </div>
 
 ## Survey planning: designing effective coverage
 
 ### Station placement strategy
 
-Effective TLS surveys require thoughtful station placement. Each position must capture target surfaces while maintaining sufficient overlap with neighboring scans.
+Effective TLS surveys require thoughtful station placement. Each position must capture target surfaces while maintaining sufficient overlap with neighboring scans for registration.
 
 **Key placement principles:**
-- **Line-of-sight coverage**: Every surface must be visible from at least one station
-- **Overlap**: Adjacent scans should share 30-50% coverage
-- **Incidence angle**: Avoid grazing angles below 20°
-- **Range**: Stay within optimal range for required precision
+1. **Line-of-sight coverage**: Every surface must be visible from at least one station
+2. **Overlap**: Adjacent scans should share 30-50% coverage
+3. **Incidence angle**: Avoid grazing angles below 20°
+4. **Range**: Stay within optimal range for required precision
 
-### Resolution settings
+### Scan resolution settings
 
 | Resolution | Point spacing at 10 m | Typical use |
 |------------|----------------------|-------------|
 | Low | 12-25 mm | Large-scale documentation |
 | Medium | 6-12 mm | Architectural recording |
 | High | 3-6 mm | Detailed features |
-| Ultra-high | 1-3 mm | Fine carvings, inscriptions |
+| Ultra-high | 1-3 mm | Fine carvings |
 
-### Control points and targets
+<div class="info-box tip">
+  <strong>Key idea</strong>
+  Match resolution to requirements. Over-scanning wastes time; under-scanning misses critical details.
+</div>
 
-Establish control using GNSS or total station. Place minimum 4 points visible from multiple stations, distributed throughout the site. Registration targets (spheres, checkerboards) enable scan alignment—place so each scan captures 3-4 targets visible from adjacent stations.
+### Control point networks
+
+Establish control using GNSS or total station before scanning.
+
+**Control point requirements:**
+- Minimum 4 points visible from multiple stations
+- Distribution throughout site
+- Stable, well-defined positions (survey markers, architectural corners)
+- Documented with photographs and coordinates
+
+### Target types and placement
+
+Registration targets provide identifiable points for aligning multiple scans:
+
+| Target type | Size | Precision | Best use |
+|-------------|------|-----------|----------|
+| Spheres | 145 mm diameter | ±1-2 mm | Outdoor, multiple angles |
+| Checkerboard | 150×150 mm | ±1 mm | Indoor, known positions |
+| Natural targets | Variable | ±3-10 mm | When artificial targets prohibited |
+
+Place targets so each scan captures at least 3-4 targets visible from adjacent stations.
 
 ## Registration: aligning multiple scans
 
 ### Target-based registration
 
-Target-based registration uses artificial targets with known geometry. The process identifies corresponding targets across scans and calculates optimal alignment. Expect residuals of 1-3 mm for well-designed surveys.
+Target-based registration uses artificial targets to compute transformations between scans.
+
+**Workflow:**
+1. Detect targets automatically in each scan
+2. Match corresponding targets between scan pairs
+3. Compute rigid transformation
+4. Apply transformation to align scans
+
+Expect residuals of 1-3 mm for well-designed surveys.
 
 ### Cloud-to-cloud registration
 
-Cloud-to-cloud (C2C) registration aligns scans by matching overlapping geometry without targets. Iterative Closest Point (ICP) algorithms find optimal alignment by minimizing point distances.
+Cloud-to-cloud (C2C) registration aligns scans by matching overlapping geometry without targets using ICP algorithms.
+
+**Advantages:** No targets required, works with existing geometry
+**Limitations:** Requires geometric variation, may fail in symmetric areas
 
 <div class="info-box tip">
   <strong>Key idea</strong>
-  Combine target-based and cloud-to-cloud registration. Use targets for initial alignment; refine with ICP for final millimeter precision.
+  Combine target-based and cloud-to-cloud registration. Use targets for initial alignment; refine with ICP for final precision.
 </div>
 
 ### SLAM-based registration
 
-SLAM (Simultaneous Localization and Mapping) enables registration during data collection with mobile scanners. Precision reaches 10-30 mm—useful for rapid documentation where centimeter accuracy suffices.
+Simultaneous Localization and Mapping (SLAM) enables registration during data collection using mobile scanners. The system tracks scanner movement while building the 3D model incrementally.
+
+SLAM excels for rapid documentation of complex spaces—narrow corridors, multi-room structures. However, precision typically reaches 10-30 mm, below static TLS standards.
+
+### Registration quality metrics
+
+| Metric | Good value | Concern threshold |
+|--------|------------|-------------------|
+| Target residuals | <3 mm | >5 mm |
+| Cloud-to-cloud RMS | <5 mm | >10 mm |
+| Control point residuals | <10 mm | >20 mm |
 
 ## Point cloud processing
 
 ### Noise removal
 
-Raw point clouds contain noise from atmospheric interference, multi-path reflections, and edge effects. Apply statistical outlier removal, then manually inspect edges and reflective surfaces.
+Raw point clouds contain noise from atmospheric interference, multi-path reflections, edge effects, and sensor limitations.
+
+**Common noise types:**
+- **Outliers**: Isolated points far from surfaces
+- **Mixed pixels**: Points at depth discontinuities with averaged positions
+- **Multi-path reflections**: Ghost points from indirect laser paths
+- **Moving objects**: People, vehicles, vegetation
+
+Apply statistical outlier removal first, then manually inspect and clean remaining noise at edges and reflective surfaces.
 
 ### Decimation strategies
 
-| Method | Description |
-|--------|-------------|
-| Uniform | Keep every Nth point |
-| Spatial | Grid-based sampling |
-| Curvature-based | Preserve detail in curved areas |
+Full-resolution datasets may contain billions of points. Decimation reduces point count while preserving important geometry.
+
+| Method | Description | Best use |
+|--------|-------------|----------|
+| Uniform | Keep every Nth point | Simple reduction |
+| Spatial | Grid-based sampling | Uniform density output |
+| Curvature-based | Preserve detail in curved areas | Adaptive preservation |
+
+For heritage documentation, curvature-based decimation preserves detail where it matters—carved surfaces, architectural moldings—while reducing points on flat areas.
 
 <div class="info-box tip">
   <strong>Key idea</strong>
-  Preserve original data. Always keep full-resolution archives; create decimated versions for specific applications.
+  Preserve original data. Always keep full-resolution archives; create decimated versions for specific applications. Storage is cheap; recapturing lost detail is impossible.
 </div>
 
-### Classification
+### Point cloud classification
 
-Assign semantic labels to points—ground, architecture, artifacts, vegetation. This enables selective analysis and visualization. Manual refinement remains essential for archaeological applications.
+Classification assigns semantic labels to points—ground, vegetation, buildings, artifacts. This enables selective analysis and visualization.
+
+**Archaeological classification categories:**
+- Ground surface (natural terrain)
+- Architectural elements (walls, floors)
+- Excavation surfaces (trench walls, stratigraphy)
+- Artifacts and inscriptions
+- Modern elements (scaffolding, equipment)
+- Vegetation
 
 ## Mesh generation and surface reconstruction
 
 ### Point cloud to mesh conversion
 
-Meshes convert discrete points into continuous surfaces. Common algorithms include Poisson (smooth, watertight), ball-pivoting (preserves edges), and Screened Poisson (balanced).
+Meshes convert discrete points into continuous surfaces—enabling visualization, measurement, and 3D printing.
 
-### Optimization
+| Algorithm | Characteristics | Best use |
+|-----------|----------------|----------|
+| Poisson | Watertight, smooth | Complete objects |
+| Ball-pivoting | Preserves sharp features | Architectural detail |
+| Screened Poisson | Balanced smoothness/detail | General heritage |
 
-Raw meshes require: hole filling, smoothing, decimation, texture mapping. Balance optimization against detail loss—don't over-smooth weathered stonework.
+### Mesh optimization
+
+Raw meshes require optimization:
+- **Hole filling**: Close gaps from scanning shadows
+- **Smoothing**: Reduce noise while preserving features
+- **Decimation**: Reduce triangle count for performance
+- **Texture mapping**: Apply colors from photographs
+
+Balance optimization against detail loss. Archaeological meshes must preserve authentic surface character.
 
 | Application | Triangle count |
 |-------------|----------------|
@@ -133,19 +212,41 @@ Raw meshes require: hole filling, smoothing, decimation, texture mapping. Balanc
 
 ### Orthoimage creation
 
-Orthoimages are geometrically corrected images with uniform scale. Project point clouds onto defined planes, assign colors, and export at 1-5 mm/pixel resolution for archaeological documentation.
+Orthoimages are geometrically corrected images where every pixel represents true position. Unlike photographs, orthoimages have uniform scale—enabling direct measurement.
 
-### Section extraction
+**TLS orthoimage workflow:**
+1. Define projection plane (vertical for elevations, horizontal for plans)
+2. Project point cloud onto plane
+3. Assign color from scanner imagery
+4. Export at appropriate resolution (typically 1-5 mm/pixel)
 
-TLS enables unlimited section extraction—vertical profiles, horizontal plans, arbitrary cuts. Export as CAD files (DXF/DWG) or georeferenced rasters.
+### Section generation
+
+TLS enables extraction of unlimited sections through point clouds—profiles that would require extensive manual measurement.
+
+**Section types:**
+- Vertical sections: Wall profiles, architectural elevations
+- Horizontal sections: Floor plans at specified heights
+- Serial sections: Multiple parallel slices for analysis
+
+Export sections as 2D CAD files (DXF/DWG) for integration with architectural drawings.
 
 ## Integration with photogrammetry
+
+### Complementary strengths
 
 | Aspect | TLS | Photogrammetry |
 |--------|-----|----------------|
 | Geometry precision | ±1-5 mm | ±5-20 mm |
 | Color quality | Moderate | Excellent |
 | Dark conditions | Works well | Requires lighting |
+| Equipment cost | High | Low-moderate |
+
+### Fusion workflows
+
+1. **TLS for geometry control**: Use scan data to scale photogrammetric models
+2. **Photogrammetry for texture**: Apply photographs to TLS meshes
+3. **Validation**: Cross-check measurements between methods
 
 <div class="info-box tip">
   <strong>Key idea</strong>
@@ -154,31 +255,68 @@ TLS enables unlimited section extraction—vertical profiles, horizontal plans, 
 
 ## Heritage documentation standards
 
-Follow ICOMOS and CIPA guidelines. Document comprehensive metadata: project information, scanner specifications, registration accuracy, coordinate systems. Archive in open formats—E57 for point clouds, OBJ/PLY for meshes, TIFF for images.
+### International guidelines
+
+Heritage documentation follows established standards: ICOMOS principles for recording monuments, CIPA heritage documentation protocols, and ISO 19650 for data management.
+
+### Metadata requirements
+
+**Project metadata:** Site identification, dates, personnel, permits
+**Technical metadata:** Scanner specs, registration accuracy, coordinate systems
+**Contextual metadata:** Archaeological interpretation, conservation condition
+
+### Archive formats
+
+| Data type | Archive format |
+|-----------|----------------|
+| Point clouds | E57, LAS/LAZ |
+| Meshes | OBJ, PLY |
+| Images | TIFF, PNG |
+| Metadata | XML, JSON |
 
 ## Central Asia applications
 
-### Petroglyphs
+### Petroglyph documentation
 
-Central Asia's rock art benefits from TLS millimeter detail. Capture subtle pecking patterns, quantify erosion between surveys, enable study without site visits.
+Central Asia's rock art—from Tamgaly in Kazakhstan to Saimaly-Tash in Kyrgyzstan—benefits enormously from TLS:
+- Millimeter detail captures subtle pecking patterns
+- Weathering analysis quantifies erosion between campaigns
+- Virtual access enables study without site visits
 
-### Architecture
+Scan petroglyphs at ultra-high resolution (1-2 mm) with multiple angles.
 
-Silk Road monuments—caravanserais, madrasas, mausoleums—require multiple interior stations for domed structures. Mud-brick surfaces may absorb laser energy; test settings on representative materials.
+### Architectural documentation
 
-### Excavations
+Silk Road monuments present complex challenges:
+- Domed structures require multiple interior stations
+- Decorated surfaces need high resolution for tile work
+- Structural deformation visible in deviation maps
 
-Document daily excavation progress, capture trench sections, record complex features in situ. Establish permanent control outside trenches.
+<div class="info-box tip">
+  <strong>Key idea</strong>
+  Central Asia's mud-brick surfaces absorb laser energy and may provide weak returns. Test scanner settings on representative surfaces; consider supplementary photogrammetry.
+</div>
+
+### Excavation documentation
+
+TLS revolutionizes excavation recording:
+- Daily surface models document progress
+- Section recording captures trench walls before collapse
+- Volume calculation quantifies excavated material
+
+Establish permanent control points outside trenches for multi-session consistency.
 
 ## Field workflow checklist
 
 <ul class="checklist">
   <li>Verify scanner calibration before deployment</li>
   <li>Charge all batteries (scanner, targets, GNSS)</li>
-  <li>Establish control point network</li>
+  <li>Pack targets, tripods, and mounting hardware</li>
+  <li>Establish control point network with GNSS</li>
   <li>Plan station positions for complete coverage</li>
   <li>Set appropriate resolution for documentation goals</li>
   <li>Place targets visible from multiple stations</li>
+  <li>Document target positions with photographs</li>
   <li>Scan with 30-50% overlap between stations</li>
   <li>Check data quality after each scan</li>
   <li>Register scans in field software for quality check</li>
@@ -188,241 +326,241 @@ Document daily excavation progress, capture trench sections, record complex feat
 ## Exercises
 
 ### Exercise 1: Scanner selection
-A project requires documenting a caravanserai courtyard (40×40 m) with 3 mm precision. Which scanner type is most appropriate?
+A project requires documenting a caravanserai courtyard (40×40 m) with 3 mm precision on architectural details. Which scanner type is most appropriate?
 
 <details>
 <summary>Show solution</summary>
-Phase-shift scanner. The 40 m courtyard is within phase-shift range, and 3 mm precision matches phase-shift capabilities. TOF would achieve only 5-10 mm at these ranges.
+A phase-shift scanner is most appropriate. The 40 m courtyard is well within phase-shift range (typically 100+ m), and the 3 mm precision requirement matches phase-shift capabilities. Time-of-flight scanners would work for coverage but typically achieve only 5-10 mm precision at these ranges.
 </details>
 
-### Exercise 2: Station count
-Estimate minimum stations for a rectangular building interior (20×10 m) with four rooms and central corridor.
+### Exercise 2: Station count estimation
+Estimate the minimum number of scan stations needed to document a rectangular building interior (20×10 m) with four rooms and a central corridor.
 
 <details>
 <summary>Show solution</summary>
-8-12 stations: one per room (4), corridor positions (2-3), plus corners/doorways (2-5). Each room needs complete wall coverage with appropriate incidence angles.
+Minimum 8-12 stations: at least one station per room (4) plus corridor positions (2-3) plus additional stations for corners and doorways (2-5). Each room needs complete wall coverage with appropriate incidence angles. Plan for 30-50% overlap between adjacent stations.
 </details>
 
 ### Exercise 3: Resolution calculation
-At 6 mm resolution, approximately how many points on a 10×10 m wall at 15 m distance?
+At 6 mm resolution setting, approximately how many points will be captured on a 10×10 m wall face at 15 m distance?
 
 <details>
 <summary>Show solution</summary>
-Approximately 1-2 million points. Resolution scales with distance (6 mm becomes ~9 mm at 15 m). Points per m² ≈ 12,000. Total ≈ 1.2 million, varying with incidence angle.
+Approximately 1-2 million points. At 6 mm resolution at 15 m range, point spacing scales to approximately 9 mm. Points per m² ≈ (1000/9)² ≈ 12,346. Total ≈ 100 × 12,346 = 1.2 million. Actual count varies with incidence angle.
 </details>
 
 ### Exercise 4: Target placement
-Design target strategy for a cylindrical minaret (8 m diameter, 25 m height).
+A site requires scanning a cylindrical minaret (8 m diameter, 25 m height). Design a target placement strategy.
 
 <details>
 <summary>Show solution</summary>
-Three height levels with 4 targets at 90° intervals each = 12 minimum. Use spheres for visibility from multiple angles. Add ground targets linking to site control.
+Place targets at three height levels (ground, ~10 m, ~20 m) distributed around the circumference. At each level, position 4 targets at 90° intervals. Total: 12 targets minimum. Use spherical targets for visibility from multiple angles. Add ground-level targets linking to site control.
 </details>
 
-### Exercise 5: Overlap problem
-Two scans show only 15% overlap. What actions should be taken?
+### Exercise 5: Overlap verification
+Two scans show only 15% overlap in preliminary registration. What actions should be taken?
 
 <details>
 <summary>Show solution</summary>
-15% is insufficient. Add intermediate station if possible. Check target visibility. Attempt C2C if geometry is distinctive. Minimum recommended: 30%.
+15% overlap is insufficient for reliable registration. Review station placement—may need intermediate station. Check target visibility in both scans. Attempt cloud-to-cloud registration if geometry is distinctive. If possible, return to field and add bridging scan. Minimum recommended overlap is 30%.
 </details>
 
-### Exercise 6: Residual analysis
-Residuals of 2, 3, 15, 2, 4 mm for five targets. Interpret these results.
+### Exercise 6: Registration residuals
+Target-based registration shows residuals of 2, 3, 15, 2, 4 mm for five targets. Interpret these results.
 
 <details>
 <summary>Show solution</summary>
-The 15 mm outlier indicates problem—movement, misidentification, or damage. Remove and reprocess. Remaining 2-4 mm residuals are acceptable.
+The 15 mm residual indicates a problem—likely movement, misidentification, or damage. Remove this target and reprocess. Remaining targets (2-4 mm) show acceptable residuals. Investigate the problematic target to prevent similar issues.
 </details>
 
 ### Exercise 7: Processing order
-Order these steps: mesh generation, noise removal, georeferencing, registration, decimation, classification.
+Arrange these steps in correct order: mesh generation, noise removal, georeferencing, registration, decimation, classification.
 
 <details>
 <summary>Show solution</summary>
-Registration → Georeferencing → Noise removal → Classification → Decimation → Mesh generation. This ensures cleaning happens in unified coordinate space.
+Correct order: (1) Registration—align scans; (2) Georeferencing—transform to project coordinates; (3) Noise removal—clean erroneous points; (4) Classification—assign labels; (5) Decimation—reduce for applications; (6) Mesh generation—create surfaces.
 </details>
 
 ### Exercise 8: Decimation ratio
-500M points reduced to 50M. Original spacing 5 mm. Calculate new spacing.
+A 500 million point cloud must be reduced to 50 million points. Calculate the decimation ratio and new point spacing if original was 5 mm.
 
 <details>
 <summary>Show solution</summary>
-10:1 ratio. Spacing increases by √10 ≈ 3.16× for 2D spatial decimation. New spacing ≈ 15-16 mm.
+Decimation ratio = 10:1. For spatial decimation, spacing increases by √10 ≈ 3.16×. Original 5 mm becomes approximately 15-16 mm. This remains adequate for web visualization.
 </details>
 
 ### Exercise 9: Classification categories
-Define categories for an excavation trench with architecture and stratigraphy.
+Define appropriate point cloud classification categories for an excavation trench with architecture and stratigraphy.
 
 <details>
 <summary>Show solution</summary>
-Modern surface, trench walls (stratigraphy), excavated floor, architecture, finds in situ, natural features, modern intrusions, section markers.
+Categories: Modern surface, trench walls (stratigraphy), excavated floor, architecture, finds in situ, natural features, modern intrusions (equipment, sandbags), section markers. Each enables selective visualization.
 </details>
 
 ### Exercise 10: Coordinate transformation
-Local point (10, 5, 2.5), scanner at UTM (500000, 4500000, 850), oriented 45° from north. Calculate UTM coordinates.
+A point has local scanner coordinates (10.000, 5.000, 2.500). Scanner position in UTM is (500000.000, 4500000.000, 850.000) with 45° orientation from north. Calculate UTM coordinates.
 
 <details>
 <summary>Show solution</summary>
-Rotate then translate. E = 500000 + 10×cos45° - 5×sin45° = 500003.54 m. N = 4500000 + 10×sin45° + 5×cos45° = 4500010.61 m. Z = 852.5 m.
+Apply rotation then translation. E = 500000 + 10×cos(45°) - 5×sin(45°) = 500003.54 m. N = 4500000 + 10×sin(45°) + 5×cos(45°) = 4500010.61 m. Z = 850 + 2.5 = 852.5 m.
 </details>
 
-### Exercise 11: Mesh file size
-100 MB limit, 50 bytes per triangle. Maximum triangle count?
+### Exercise 11: Mesh triangle count
+A heritage mesh must fit within 100 MB file size. If each triangle requires 50 bytes, how many triangles can the mesh contain?
 
 <details>
 <summary>Show solution</summary>
-104,857,600 / 50 ≈ 2.1 million triangles. Reserve 20% for headers: ~1.7 million usable triangles.
+100 MB = 104,857,600 bytes. Maximum triangles = 104,857,600 / 50 ≈ 2.1 million. Reserve 20% for headers: usable triangles ≈ 1.7 million.
 </details>
 
 ### Exercise 12: Orthoimage resolution
-Print at 1:50, 300 DPI. Required point density?
+An orthoimage will be printed at 1:50 scale with 300 DPI resolution. What point cloud density is required?
 
 <details>
 <summary>Show solution</summary>
-Pixel = 25.4/300 mm × 50 = 4.2 mm real-world. Need 2-3 mm point spacing for adequate coverage.
+Pixel on paper = 25.4/300 = 0.085 mm. Real-world pixel = 0.085 × 50 = 4.2 mm. Need 2-3 mm point spacing for adequate coverage. This requires high-resolution scanning.
 </details>
 
-### Exercise 13: Serial sections
-5 m trench, 10 cm intervals, 2 m depth. Total section length?
+### Exercise 13: Section extraction
+An excavation trench is 5 m long. How many serial sections at 10 cm intervals, and total drawing length at 2 m depth?
 
 <details>
 <summary>Show solution</summary>
-51 sections × 2 m = 102 m of section drawings—demonstrating TLS efficiency.
+51 sections (0 to 5 m at 10 cm intervals). Total length = 51 × 2 m = 102 m of section drawings—demonstrating TLS efficiency versus manual methods.
 </details>
 
-### Exercise 14: Integration offset
-TLS and photogrammetry show 15 mm systematic offset. Diagnose causes.
+### Exercise 14: Photogrammetry integration
+TLS data shows systematic 15 mm offset from photogrammetric model. Diagnose possible causes and solutions.
 
 <details>
 <summary>Show solution</summary>
-Different datums, scaling error, registration error, or timing difference. Re-process photogrammetry using TLS control.
+Possible causes: Different control datums, scaling error in photogrammetry, registration error, timing difference. Solutions: Re-process photogrammetry using TLS control points, apply rigid transformation, use TLS as geometric reference.
 </details>
 
-### Exercise 15: Range limitation
-Scanner precise to 3 mm within 50 m; maximum range 130 m. How many stations for 200 m site?
+### Exercise 15: Scanner range limitation
+Scanner achieves 3 mm precision within 50 m; maximum range 130 m. How does this affect survey design for a 200 m long site?
 
 <details>
 <summary>Show solution</summary>
-Minimum 4 stations linearly, but overlap needs likely require 6-8. Position critical features within 50 m precision zone.
+Multiple overlapping stations needed to keep targets within 50 m. Minimum 4 stations linearly, but overlap requirements likely need 6-8 stations. Position critical features within precision zone; use outer range for context.
 </details>
 
-### Exercise 16: Data volume
-10 stations, 30M points each, 17 bytes per point. Total volume?
+### Exercise 16: Data volume estimation
+10-station survey, 30 million points per scan, 17 bytes per point (XYZ + RGB + intensity). Calculate total raw data volume.
 
 <details>
 <summary>Show solution</summary>
-30M × 17 = 510 MB per scan. 10 scans = 5.1 GB. Add imagery (~2 GB) = 7+ GB total.
+Per scan: 30M × 17 = 510 MB. Total: 5.1 GB. With scanner imagery (~210 MB per station), add 2.1 GB. Total project: approximately 7.2 GB.
 </details>
 
-### Exercise 17: Edge effects
-Inscription shows points extending 10-15 mm beyond carved edges. Explain.
+### Exercise 17: Edge effect identification
+A stone inscription shows anomalous points extending 10-15 mm beyond carved surface edges. Explain and address.
 
 <details>
 <summary>Show solution</summary>
-Mixed pixel effect—laser spans depth discontinuity. Scan from multiple angles, apply edge filtering, or scan closer.
+Mixed pixel effect—laser footprint spans depth discontinuity, returning averaged distance. Address by scanning from multiple angles, applying edge-aware filtering, manual cleaning, or closer range scanning.
 </details>
 
-### Exercise 18: Incidence angle
-At what angle does footprint elongate 3×?
+### Exercise 18: Incidence angle effects
+At what incidence angle does laser footprint elongation exceed 3× the perpendicular size?
 
 <details>
 <summary>Show solution</summary>
-cos(angle) = 1/3, angle ≈ 70.5° from perpendicular (19.5° grazing). Keep surfaces within 60° incidence.
+Elongation = 1/cos(angle). For 3×: cos(angle) = 1/3, angle ≈ 70.5° from perpendicular (19.5° grazing). Plan stations to keep surfaces within 60° incidence.
 </details>
 
-### Exercise 19: Control accuracy
-GNSS control ±20 mm. Maximum achievable absolute accuracy?
+### Exercise 19: Control point accuracy
+GNSS control points have ±20 mm accuracy. What is maximum achievable absolute accuracy?
 
 <details>
 <summary>Show solution</summary>
-±20-25 mm absolute. Relative accuracy within model remains at scanner precision (±2-5 mm).
+Absolute accuracy limited to ±20-25 mm (control accuracy plus measurement errors). Relative accuracy within model remains at scanner precision (±2-5 mm).
 </details>
 
-### Exercise 20: Multi-campaign registration
-Three campaigns over two years. Design registration strategy.
+### Exercise 20: Multi-session registration
+A monument requires three campaigns over two years. Design registration strategy.
 
 <details>
 <summary>Show solution</summary>
-Establish permanent control markers. Include in every session. Register each campaign internally, then to control. Use unchanged features as check points.
+Establish permanent control monuments. Document with GNSS. Include in every session. Register each campaign internally, then to control. Use unchanged features as check points. Expect 10-20 mm consistency.
 </details>
 
-### Exercise 21: Erosion quantification
-Two surveys 5 years apart. How to quantify erosion?
+### Exercise 21: Weathering quantification
+Two TLS surveys 5 years apart. How to quantify surface erosion?
 
 <details>
 <summary>Show solution</summary>
-Register to common reference using stable areas. Compute C2C distances. Map as colorized cloud. Distinguish erosion patterns from random registration error.
+Register both to common reference using stable areas. Compute cloud-to-cloud distances. Map as colorized point cloud. Distinguish erosion patterns from random registration error. Detection threshold: 2-3× registration accuracy.
 </details>
 
-### Exercise 22: Dome scanning
-15 m diameter dome interior. Design strategy.
+### Exercise 22: Dome scanning strategy
+A 15 m diameter dome requires interior documentation. Design scanning strategy.
 
 <details>
 <summary>Show solution</summary>
-Center position for apex. Ring of 6-8 positions near walls for drum and lower dome. Additional positions for niches/corners.
+Center position captures apex with near-perpendicular angles. Ring of 6-8 positions near walls captures drum and lower dome. Additional positions for corners/niches. Use leveled scanner for consistent vertical reference.
 </details>
 
 ### Exercise 23: Mud-brick challenges
-Poor scan quality on mud-brick. Solutions?
+A mud-brick fortress shows poor scan quality. Diagnose causes and solutions.
 
 <details>
 <summary>Show solution</summary>
-Scan closer, increase power/integration time, scan in diffuse light, tune filtering for weak returns, supplement with photogrammetry.
+Mud-brick absorbs laser energy; porous surface scatters returns. Solutions: Scan closer, increase power/integration time, scan in diffuse lighting, tune filtering for weak returns, supplement with photogrammetry.
 </details>
 
-### Exercise 24: Dynamic objects
-Tourists walk through scans. How to handle?
+### Exercise 24: Dynamic scene handling
+Tourists occasionally walk through scans. How should these be handled?
 
 <details>
 <summary>Show solution</summary>
-Moving objects appear as scattered noise. Remove with statistical filtering. Overlapping scans provide clean coverage. Manually delete persistent artifacts.
+Moving objects appear as scattered noise—remove with statistical filtering. Overlapping scans provide clean data. Manually delete persistent artifacts. Complete removal requires at least one clean scan of each surface.
 </details>
 
-### Exercise 25: Archive formats
-50 GB, 50-year preservation. Format recommendations?
+### Exercise 25: Archive format selection
+A project must archive 50 GB for 50-year preservation. Evaluate format options.
 
 <details>
 <summary>Show solution</summary>
-E57 for point clouds (open standard), PLY for meshes, TIFF for images, XML/JSON for metadata. Plan migration every 10-15 years.
+E57 format—open standard, widely supported. Store point clouds in E57, meshes in PLY, images in TIFF, metadata in XML/JSON. Plan format migration every 10-15 years.
 </details>
 
-### Exercise 26: Quality control
-Design QC checklist for TLS processing.
+### Exercise 26: Quality control workflow
+Design systematic QC checklist for TLS processing.
 
 <details>
 <summary>Show solution</summary>
-Verify stations captured, check noise levels, review registration residuals, validate control points, inspect gaps, verify mesh quality, check metadata completeness.
+Verify all stations captured; check noise levels; review registration residuals (<3 mm targets, <5 mm C2C); verify control points; inspect gaps and artifacts; validate mesh quality; verify metadata completeness.
 </details>
 
-### Exercise 27: Cost-benefit
-TLS vs total station for 500 m² excavation?
+### Exercise 27: Cost-benefit analysis
+Compare TLS versus total station for 500 m² excavation with complex stratigraphy.
 
 <details>
 <summary>Show solution</summary>
-Total station: 2-3 days, 2,000-5,000 points. TLS: 0.5-1 day, 100M+ points, unlimited products. TLS captures more data faster; total station useful for attributed control points.
+Total station: 2-3 days, 2,000-5,000 points, manual drawings. TLS: 0.5-1 day, 100+ million points, orthoimages, sections, 3D visualization. TLS captures more data faster. Combine both for optimal results.
 </details>
 
-### Exercise 28: Report components
-Essential TLS technical report components?
+### Exercise 28: Report requirements
+List essential TLS technical report components.
 
 <details>
 <summary>Show solution</summary>
-Summary, objectives, site description, equipment specs, methodology, control network, registration accuracy, processing workflow, products, quality metrics, recommendations.
+Executive summary, project background, site description, equipment specs, survey methodology, control network, registration accuracy, processing workflow, products delivered, quality metrics, recommendations.
 </details>
 
-### Exercise 29: Emergency documentation
-Earthquake damages monument. Design rapid protocol.
+### Exercise 29: Disaster documentation
+An earthquake damages a historic monument. Design rapid TLS documentation protocol.
 
 <details>
 <summary>Show solution</summary>
-Safety first, minimal GNSS control, perimeter scan from safe distance, prioritize collapsed areas, medium resolution, field registration check, multiple backups. Target: 1-2 days.
+Safety assessment first. Minimal GNSS control (4-6 points). Perimeter scan from safe distance. Prioritize collapsed areas. Medium resolution. Field registration check. Multiple backups. Target: 1-2 days before further damage.
 </details>
 
-### Exercise 30: Complete workflow
-Design workflow for 60×80 m caravanserai with courtyard, rooms, portal.
+### Exercise 30: Project workflow design
+Design complete TLS workflow for a medieval caravanserai (60×80 m) with courtyard, rooms, and decorative portal.
 
 <details>
 <summary>Show solution</summary>
-Field (3-4 days): control network, exterior (15 stations), courtyard (8), rooms (25), portal detail (5 ultra-high). Processing (5-7 days): registration, cleaning, mesh generation, orthoimages, sections. Deliverables: E57 cloud, textured mesh, orthoimages, CAD sections, technical report.
+Field (3-4 days): Control network (12-15 points), exterior (15 stations), courtyard (8 stations), rooms (20-25 stations), portal detail (5 ultra-high resolution). Processing (5-7 days): Registration, noise removal, mesh generation, orthoimages, sections. Deliverables: E57 cloud, textured mesh, orthoimages, CAD sections, technical report.
 </details>

@@ -46,7 +46,7 @@ This gallery is about seeing landscape structure through radar logic, optical sp
 
 <div class="section-card featured-card">
   <div class="eyebrow">Now on display</div>
-  <h2>Fifteen live remote sensing tutorials</h2>
+  <h2>Twenty-two live remote sensing tutorials</h2>
   <ul class="tutorial-list">
     <li>
       <a href="{{ '/tutorials/sar-remote-sensing/01-sar-fundamentals' | relative_url }}">How SAR Fundamentals Help Reveal Hidden Structure</a>
@@ -107,6 +107,26 @@ This gallery is about seeing landscape structure through radar logic, optical sp
     <li>
       <a href="{{ '/tutorials/sar-remote-sensing/15-python-geospatial-analysis' | relative_url }}">How Python Enables Geospatial Analysis</a>
       <span class="desc">Rasterio, geopandas, xarray, and reproducible workflows.</span>
+    </li>
+    <li>
+      <a href="{{ '/tutorials/sar-remote-sensing/17-disaster-monitoring-remote-sensing' | relative_url }}">How Remote Sensing Monitors Natural Disasters</a>
+      <span class="desc">Earthquake damage, flood mapping, landslides, and wildfire assessment.</span>
+    </li>
+    <li>
+      <a href="{{ '/tutorials/sar-remote-sensing/19-accuracy-assessment-validation' | relative_url }}">How Accuracy Assessment Validates Results</a>
+      <span class="desc">Confusion matrices, kappa, sampling design, and validation protocols.</span>
+    </li>
+    <li>
+      <a href="{{ '/tutorials/sar-remote-sensing/20-land-degradation-monitoring' | relative_url }}">How Remote Sensing Monitors Land Degradation</a>
+      <span class="desc">Desertification, salinization, erosion, and vegetation trends.</span>
+    </li>
+    <li>
+      <a href="{{ '/tutorials/sar-remote-sensing/21-field-spectroscopy-hyperspectral' | relative_url }}">How Field Spectroscopy Enables Hyperspectral Analysis</a>
+      <span class="desc">Spectroradiometers, spectral libraries, and mineral identification.</span>
+    </li>
+    <li>
+      <a href="{{ '/tutorials/sar-remote-sensing/22-urban-remote-sensing' | relative_url }}">How Remote Sensing Monitors Urban Growth</a>
+      <span class="desc">Urban expansion, heat islands, and infrastructure monitoring.</span>
     </li>
   </ul>
 </div>
@@ -186,5 +206,30 @@ This gallery is about seeing landscape structure through radar logic, optical sp
     <a href="{{ '/tutorials/sar-remote-sensing/15-python-geospatial-analysis' | relative_url }}">Python Geospatial Analysis</a>
     <span class="status-pill status-live">Live</span>
     <span class="desc">Rasterio, geopandas, xarray, visualization, and batch processing workflows.</span>
+  </li>
+  <li>
+    <a href="{{ '/tutorials/sar-remote-sensing/17-disaster-monitoring-remote-sensing' | relative_url }}">Natural Disaster Monitoring</a>
+    <span class="status-pill status-live">Live</span>
+    <span class="desc">Earthquake damage, flood mapping, landslide detection, and wildfire monitoring.</span>
+  </li>
+  <li>
+    <a href="{{ '/tutorials/sar-remote-sensing/19-accuracy-assessment-validation' | relative_url }}">Accuracy Assessment & Validation</a>
+    <span class="status-pill status-live">Live</span>
+    <span class="desc">Confusion matrices, kappa, F1 score, sampling design, and reporting standards.</span>
+  </li>
+  <li>
+    <a href="{{ '/tutorials/sar-remote-sensing/20-land-degradation-monitoring' | relative_url }}">Land Degradation Monitoring</a>
+    <span class="status-pill status-live">Live</span>
+    <span class="desc">Desertification, salinization, erosion, and multi-decadal vegetation trends.</span>
+  </li>
+  <li>
+    <a href="{{ '/tutorials/sar-remote-sensing/21-field-spectroscopy-hyperspectral' | relative_url }}">Field Spectroscopy & Hyperspectral</a>
+    <span class="status-pill status-live">Live</span>
+    <span class="desc">Spectroradiometers, spectral libraries, mineral mapping, and unmixing.</span>
+  </li>
+  <li>
+    <a href="{{ '/tutorials/sar-remote-sensing/22-urban-remote-sensing' | relative_url }}">Urban Remote Sensing</a>
+    <span class="status-pill status-live">Live</span>
+    <span class="desc">Urban expansion, built-up indices, heat islands, and infrastructure monitoring.</span>
   </li>
 </ul>

@@ -10,287 +10,140 @@ order: 12
 
 ## Why advanced processing matters
 
-Raw GPR data rarely tells the full story. Subsurface reflections are contaminated by system artifacts, geometric distortions, and noise that obscure archaeological and geological features. Advanced processing transforms noisy radargrams into interpretable images where buried walls, voids, kurgans, and ancient irrigation channels become visible.
-
-In Central Asia, where dry loess soils and arid conditions often provide excellent radar penetration, the difference between raw and processed data can mean the difference between missing a qanat entirely and mapping its complete subsurface geometry.
+Raw GPR data contains system artifacts, geometric distortions, and noise that obscure archaeological features. Advanced processing transforms noisy radargrams into interpretable images where buried kurgans, qanats, and irrigation channels become visible.
 
 <div class="info-box tip">
   <strong>Processing philosophy</strong>
-  Each processing step should have a clear physical justification. Blind application of filters can create artifacts that look like real features. Always compare processed data against raw data to verify that apparent features are genuine.
+  Each processing step should have clear physical justification. Blind filtering creates artifacts. Always compare processed data against raw data to verify features.
 </div>
-
-This tutorial builds on fundamental GPR concepts and introduces the mathematical and practical tools needed for professional-grade interpretation. We focus on techniques particularly relevant to Central Asian archaeology: kurgan detection, qanat mapping, and ancient irrigation system reconstruction.
 
 ## Signal processing fundamentals
 
 ### Dewow filtering
 
-GPR systems often exhibit low-frequency "wow" caused by inductive coupling between transmitter and receiver or by system electronics. This manifests as a slowly varying DC offset that shifts trace baselines.
-
-The dewow filter removes this artifact by subtracting a running mean or applying a high-pass filter. For a trace $A(t)$, the dewowed signal is
+GPR systems exhibit low-frequency "wow" from inductive coupling. The dewow filter removes this by subtracting a running mean:
 
 $$
 A_{\text{dewow}}(t) = A(t) - \frac{1}{W} \int_{t-W/2}^{t+W/2} A(\tau) \, d\tau
 $$
 
-where $W$ is the filter window width. In discrete form:
+In discrete form:
 
 $$
 A_{\text{dewow}}[n] = A[n] - \frac{1}{2M+1} \sum_{k=n-M}^{n+M} A[k]
 $$
 
-The window length should be longer than the dominant period of the low-frequency artifact but shorter than the features of interest. Typically, $W$ corresponds to 2-5 times the dominant signal period.
-
 <div class="info-box tip">
-  <strong>Choosing dewow window</strong>
-  For a 400 MHz antenna with center period around 2.5 ns, a dewow window of 5-10 ns effectively removes wow while preserving shallow reflections.
+  <strong>Dewow window</strong>
+  For a 400 MHz antenna, a dewow window of 5-10 ns removes wow while preserving reflections.
 </div>
 
 ### Time-zero correction
 
-The first arrival in a GPR trace does not always correspond to the ground surface. System delays, cable lengths, and antenna geometry create offsets that must be corrected for accurate depth conversion.
-
-Time-zero correction aligns all traces so that $t = 0$ corresponds to the air-ground interface. The corrected time is
+System delays create offsets requiring correction:
 
 $$
 t_{\text{corrected}} = t_{\text{raw}} - t_0
 $$
 
-where $t_0$ is the static time shift, determined by:
-
-1. **Direct wave method**: Identifying the first break of the direct ground wave
-2. **Surface reflection method**: Using a metal plate to create a known reference
-3. **Antenna calibration**: Using manufacturer-provided offsets
-
-For Central Asian surveys, where ground surfaces may be irregular, trace-by-trace time-zero picking may be necessary. The first positive or negative peak of the ground wave often serves as a consistent reference.
+Methods: direct wave identification, metal plate reference, or antenna calibration.
 
 ### Gain functions
 
-Radar signals attenuate with depth due to geometric spreading and material absorption. Gain functions compensate for this attenuation to make deep reflections visible.
-
 #### Spherical and exponential compensation (SEC)
-
-The SEC gain combines geometric spreading correction with exponential attenuation compensation:
 
 $$
 G(t) = \left( 1 + \alpha \cdot v \cdot t \right) \cdot e^{\beta t}
 $$
 
-where $\alpha$ controls the linear (spreading) component and $\beta$ controls exponential attenuation. For a signal $A(t)$, the gained signal is
-
-$$
-A_{\text{gained}}(t) = A(t) \cdot G(t)
-$$
-
 #### Automatic gain control (AGC)
 
-AGC normalizes signal amplitude using a sliding window:
-
 $$
-A_{\text{AGC}}(t) = \frac{A(t)}{\text{RMS}_{W}(t)}
+A_{\text{AGC}}(t) = \frac{A(t)}{\text{RMS}_{W}(t)} \quad \text{where} \quad \text{RMS}_{W}(t) = \sqrt{\frac{1}{W} \int_{t-W/2}^{t+W/2} A^2(\tau) \, d\tau}
 $$
-
-where
-
-$$
-\text{RMS}_{W}(t) = \sqrt{\frac{1}{W} \int_{t-W/2}^{t+W/2} A^2(\tau) \, d\tau}
-$$
-
-AGC equalizes amplitudes throughout the trace, making weak deep reflections visible. However, it destroys true amplitude information and can create artifacts at boundaries between high and low amplitude zones.
 
 <div class="info-box tip">
   <strong>Gain selection</strong>
-  Use SEC for quantitative amplitude analysis. Use AGC for visual interpretation when relative amplitudes are less important than identifying reflection geometry.
+  Use SEC for quantitative analysis; AGC for visual interpretation when amplitude relationships are less critical.
 </div>
-
-#### Energy decay compensation
-
-In attenuating media, signal energy decays exponentially:
-
-$$
-E(t) = E_0 \cdot e^{-2\alpha_{\text{att}} \cdot d(t)}
-$$
-
-where $\alpha_{\text{att}}$ is the attenuation coefficient (Np/m) and $d(t)$ is the depth corresponding to time $t$. The attenuation coefficient relates to conductivity by
-
-$$
-\alpha_{\text{att}} = \frac{\sigma}{2} \sqrt{\frac{\mu}{\varepsilon}}
-$$
-
-For dry Central Asian loess with conductivity $\sigma \approx 1-5$ mS/m, attenuation is typically 0.1-0.5 dB/m at 400 MHz.
 
 ## Filtering techniques
 
 ### Bandpass filtering
 
-GPR data contains useful signal within a frequency band centered on the antenna frequency. Noise outside this band can be removed with a bandpass filter.
-
-For an antenna with center frequency $f_c$, the passband typically spans
+For antenna center frequency $f_c$, the passband typically spans:
 
 $$
 f_{\text{low}} = 0.25 \cdot f_c \quad \text{to} \quad f_{\text{high}} = 2.5 \cdot f_c
 $$
 
-The Butterworth bandpass filter has transfer function
-
-$$
-|H(f)|^2 = \frac{1}{1 + \left( \frac{f_{\text{low}}}{f} \right)^{2n}} \cdot \frac{1}{1 + \left( \frac{f}{f_{\text{high}}} \right)^{2n}}
-$$
-
-where $n$ is the filter order. Higher orders provide sharper cutoffs but may introduce ringing artifacts.
-
-<div class="info-box tip">
-  <strong>Filter order selection</strong>
-  For archaeological GPR, a 2nd or 4th order Butterworth filter typically provides good noise rejection without excessive ringing. Zero-phase filtering (forward-backward application) prevents phase distortion.
-</div>
-
 ### Background removal
 
-Horizontal banding from system ringing, antenna coupling, or planar interfaces can mask point targets and dipping reflectors. Background removal subtracts the average trace from each individual trace:
+Removes horizontal banding by subtracting the average trace:
 
 $$
-A_{\text{BGremoved}}(x, t) = A(x, t) - \bar{A}(t)
+A_{\text{BGremoved}}(x, t) = A(x, t) - \bar{A}(t) \quad \text{where} \quad \bar{A}(t) = \frac{1}{N} \sum_{i=1}^{N} A(x_i, t)
 $$
 
-where
+### F-K filtering
 
-$$
-\bar{A}(t) = \frac{1}{N} \sum_{i=1}^{N} A(x_i, t)
-$$
-
-This removes flat-lying reflections and horizontal noise but preserves hyperbolic diffractions and dipping events.
-
-For spatially varying backgrounds, a moving-window average can be used:
-
-$$
-\bar{A}(x, t) = \frac{1}{2L+1} \sum_{k=x-L}^{x+L} A(k, t)
-$$
-
-where $L$ is the window half-width in traces.
-
-### Frequency-wavenumber (F-K) filtering
-
-F-K filtering operates in the two-dimensional Fourier domain to separate signals based on their apparent velocity. The 2D Fourier transform of a radargram $A(x, t)$ is
-
-$$
-\tilde{A}(k_x, f) = \iint A(x, t) \cdot e^{-i(k_x x + 2\pi f t)} \, dx \, dt
-$$
-
-where $k_x$ is horizontal wavenumber and $f$ is temporal frequency.
-
-Events with different apparent velocities map to different regions in F-K space. The apparent velocity relates wavenumber to frequency:
+Operates in the frequency-wavenumber domain. The apparent velocity:
 
 $$
 v_{\text{app}} = \frac{2\pi f}{k_x}
 $$
 
-Dipping reflectors, diffractions, and noise can be isolated and removed by designing appropriate F-K filter masks. A fan filter passing only events with apparent velocities between $v_1$ and $v_2$ has the mask
-
-$$
-M(k_x, f) = \begin{cases} 1 & \text{if } v_1 < \frac{2\pi f}{k_x} < v_2 \\ 0 & \text{otherwise} \end{cases}
-$$
-
 <div class="info-box tip">
-  <strong>F-K filtering for kurgan surveys</strong>
-  When surveying burial mounds, F-K filtering can separate shallow near-horizontal stratigraphy from deeper diffraction patterns generated by burial chambers or stone structures.
+  <strong>F-K for kurgans</strong>
+  F-K filtering separates shallow stratigraphy from deeper diffraction patterns generated by burial chambers.
 </div>
 
 ## Migration techniques
 
-Migration is the most important processing step for accurate subsurface imaging. It collapses diffraction hyperbolas to their point sources and repositions dipping reflectors to their true subsurface locations.
+Migration collapses diffraction hyperbolas and repositions dipping reflectors to true locations.
 
 ### The migration problem
 
-A point scatterer at depth $z$ and horizontal position $x_0$ generates a hyperbolic diffraction pattern:
+A point scatterer at depth $z$ generates a hyperbola:
 
 $$
 t(x) = \frac{2}{v} \sqrt{z^2 + (x - x_0)^2}
 $$
 
-Migration inverts this relationship, transforming the hyperbola back to a focused point at $(x_0, z)$.
-
-For a dipping reflector with true dip $\theta$, the unmigrated apparent dip $\phi$ satisfies
-
-$$
-\sin \phi = \sin \theta \cdot \cos \theta = \frac{\sin 2\theta}{2}
-$$
-
-Migration corrects this geometric distortion, revealing true reflector geometry.
-
 ### Kirchhoff migration
 
-Kirchhoff migration sums trace amplitudes along diffraction curves and places the result at the apex:
+Sums amplitudes along diffraction curves:
 
 $$
 I(x_0, z) = \sum_{x} A\left( x, t = \frac{2}{v}\sqrt{z^2 + (x-x_0)^2} \right) \cdot w(x, x_0, z)
 $$
 
-where $w(x, x_0, z)$ is a weighting function that accounts for geometric spreading and obliquity:
-
-$$
-w(x, x_0, z) = \frac{z}{\left[ z^2 + (x-x_0)^2 \right]^{3/4}} \cdot \cos \theta
-$$
-
-where $\theta$ is the angle from vertical.
-
-Kirchhoff migration is flexible, handles irregular geometries, and allows spatially varying velocities. For archaeological GPR in Central Asia, where velocity may change laterally (e.g., from intact loess to disturbed fill), this flexibility is valuable.
-
 ### Stolt F-K migration
 
-For constant velocity media, Stolt migration provides efficient migration in the frequency-wavenumber domain. The algorithm maps the data from $(k_x, f)$ to $(k_x, k_z)$ using the dispersion relation:
+Maps data using the dispersion relation:
 
 $$
 k_z = \sqrt{\left( \frac{2\pi f}{v} \right)^2 - k_x^2}
 $$
 
-The migrated image is obtained by inverse Fourier transform:
-
-$$
-I(x, z) = \iint \tilde{A}(k_x, k_z) \cdot e^{i(k_x x + k_z z)} \, dk_x \, dk_z
-$$
-
-Stolt migration is computationally efficient (FFT-based) but assumes constant velocity, which may not hold in heterogeneous archaeological sites.
-
 ### Phase-shift migration
 
-Phase-shift migration propagates the wavefield downward through depth slices:
+Propagates wavefield downward:
 
 $$
 \tilde{A}(k_x, z + \Delta z, f) = \tilde{A}(k_x, z, f) \cdot e^{i k_z \Delta z}
 $$
 
-where
-
-$$
-k_z = \sqrt{\left( \frac{2\pi f}{v(z)} \right)^2 - k_x^2}
-$$
-
-The imaging condition extracts the zero-time component at each depth:
-
-$$
-I(x, z) = \int \tilde{A}(k_x, z, t=0) \cdot e^{i k_x x} \, dk_x
-$$
-
-Phase-shift migration naturally handles vertical velocity variations, making it suitable for layered sites where velocity increases with depth due to compaction.
-
 <div class="info-box tip">
   <strong>Migration velocity</strong>
-  Migration velocity errors cause defocusing. Undermigration (velocity too low) leaves residual hyperbolas; overmigration (velocity too high) creates "smiles" that curve upward.
+  Undermigration (velocity too low) leaves residual hyperbolas; overmigration creates upward-curving "smiles."
 </div>
 
 ## Velocity analysis and depth conversion
 
-Accurate depth conversion requires reliable velocity estimates. Several methods are available for Central Asian survey conditions.
-
 ### Hyperbola fitting
 
-The most common method fits hyperbolas to point diffractions. For a diffraction with apex at $(x_0, t_0)$, the travel time curve is
-
-$$
-t(x) = t_0 \sqrt{1 + \frac{(x - x_0)^2}{(v \cdot t_0 / 2)^2}}
-$$
-
-Rearranging:
+For a diffraction with apex at $(x_0, t_0)$:
 
 $$
 t^2 = t_0^2 + \frac{4(x - x_0)^2}{v^2}
@@ -298,47 +151,30 @@ $$
 
 Plotting $t^2$ versus $(x - x_0)^2$ yields a line with slope $4/v^2$.
 
-For field estimation, measuring the hyperbola width $\Delta x$ at a time $\Delta t$ below the apex gives
+### CMP analysis
 
-$$
-v = \frac{2 \Delta x}{\sqrt{(\Delta t + t_0)^2 - t_0^2}}
-$$
-
-### Common midpoint (CMP) analysis
-
-CMP surveys with variable antenna separation provide velocity-depth profiles. For a horizontal reflector at depth $z$, the travel time with offset $x$ is
+For a horizontal reflector at depth $z$ with offset $x$:
 
 $$
 t(x) = \frac{2}{v} \sqrt{z^2 + \frac{x^2}{4}}
 $$
 
-The normal moveout (NMO) is
+NMO velocity: $v_{\text{NMO}} = \frac{x}{\sqrt{t(x)^2 - t(0)^2}}$
 
-$$
-\Delta t_{\text{NMO}} = t(x) - t(0) \approx \frac{x^2}{2 v^2 t_0}
-$$
+### Dielectric estimation
 
-for small offsets. Velocity is estimated by finding the value that flattens reflections in CMP gathers:
-
-$$
-v_{\text{NMO}} = \frac{x}{\sqrt{t(x)^2 - t(0)^2}}
-$$
-
-### Dielectric estimation from soil properties
-
-When field measurements are unavailable, velocity can be estimated from soil properties using mixing models. For a soil with volumetric water content $\theta_w$, the complex refractive index method gives
+Using the CRIM formula:
 
 $$
 \sqrt{\varepsilon_r} \approx (1 - \phi)\sqrt{\varepsilon_s} + \phi(1 - S_w)\sqrt{\varepsilon_a} + \phi S_w \sqrt{\varepsilon_w}
 $$
 
-where $\phi$ is porosity, $S_w$ is water saturation, and $\varepsilon_s$, $\varepsilon_a$, $\varepsilon_w$ are dielectric constants of solid, air, and water.
-
-For dry Central Asian loess ($\theta_w < 5\%$), typical values are $\varepsilon_r \approx 4-6$, giving velocities of $0.12-0.15$ m/ns.
+<div class="info-box tip">
+  <strong>Central Asian velocities</strong>
+  Dry loess: 0.12-0.15 m/ns; Moist soil: 0.06-0.08 m/ns; Sandy desert: 0.13-0.16 m/ns.
+</div>
 
 ### Depth conversion
-
-Once velocity is determined, depth conversion follows from
 
 $$
 z(t) = \frac{1}{2} \int_0^t v(\tau) \, d\tau
@@ -346,282 +182,146 @@ $$
 
 For constant velocity: $z = vt/2$
 
-For linear velocity increase $v(z) = v_0 + kz$:
-
-$$
-z(t) = \frac{v_0}{k} \left( e^{kt/2} - 1 \right)
-$$
-
-<div class="info-box tip">
-  <strong>Central Asian velocities</strong>
-  Typical GPR velocities in Central Asian contexts: Dry loess 0.12-0.15 m/ns; Moist agricultural soil 0.06-0.08 m/ns; Sandy desert 0.13-0.16 m/ns; Clay-rich alluvium 0.05-0.07 m/ns.
-</div>
-
 ## Attribute analysis
 
-Beyond reflection amplitude, GPR traces contain information encoded in phase, frequency, and other attributes that can reveal subsurface properties.
-
 ### Instantaneous amplitude (envelope)
-
-The instantaneous amplitude or envelope is the magnitude of the analytic signal:
 
 $$
 E(t) = |A(t) + i \mathcal{H}[A(t)]| = \sqrt{A^2(t) + \mathcal{H}^2[A(t)]}
 $$
 
-where $\mathcal{H}$ denotes the Hilbert transform:
-
-$$
-\mathcal{H}[A(t)] = \frac{1}{\pi} \text{P.V.} \int_{-\infty}^{\infty} \frac{A(\tau)}{t - \tau} \, d\tau
-$$
-
-Instantaneous amplitude highlights strong reflectors regardless of polarity and is useful for mapping reflection strength variations that may indicate material property changes.
+where $\mathcal{H}$ is the Hilbert transform.
 
 ### Instantaneous phase
-
-The instantaneous phase tracks wavelet polarity independent of amplitude:
 
 $$
 \phi(t) = \arctan \frac{\mathcal{H}[A(t)]}{A(t)}
 $$
 
-Phase sections enhance weak reflections and continuous interfaces. In Central Asian irrigation systems, phase displays can reveal subtle canal boundaries that are difficult to see in amplitude data.
+Phase displays enhance weak, continuous interfaces.
 
 ### Instantaneous frequency
-
-The instantaneous frequency is the time derivative of phase:
 
 $$
 f_{\text{inst}}(t) = \frac{1}{2\pi} \frac{d\phi}{dt}
 $$
 
-Frequency decreases with attenuation, so low instantaneous frequency can indicate high-loss materials (clay, moist soil). Conversely, high frequencies suggest low-loss materials (dry sand, air voids).
+Low frequency indicates high-loss materials; high frequency suggests low-loss materials.
 
-For a propagating wave with attenuation:
-
-$$
-f_{\text{observed}} = f_0 \cdot e^{-\alpha_f \cdot z}
-$$
-
-where $\alpha_f$ is the frequency-dependent attenuation coefficient.
-
-### Reflection strength and polarity
-
-Reflection polarity indicates the sign of the dielectric contrast:
+### Reflection polarity
 
 $$
 R = \frac{\sqrt{\varepsilon_2} - \sqrt{\varepsilon_1}}{\sqrt{\varepsilon_2} + \sqrt{\varepsilon_1}}
 $$
 
-Positive reflection (same polarity as transmitted pulse): $\varepsilon_2 > \varepsilon_1$ (e.g., dry soil over moist)
+Negative polarity (inverted): $\varepsilon_2 < \varepsilon_1$ (soil over void).
 
-Negative reflection (inverted polarity): $\varepsilon_2 < \varepsilon_1$ (e.g., soil over air void)
+## 3D GPR visualization
 
-This polarity information is crucial for identifying voids in kurgans or air-filled qanat tunnels.
+### Data acquisition
 
-## 3D GPR data acquisition and visualization
-
-### Data acquisition geometry
-
-3D GPR surveys collect multiple parallel profiles with controlled spacing. The Nyquist criterion requires
+Nyquist line spacing:
 
 $$
 \Delta y \leq \frac{\lambda}{4} = \frac{v}{4 f_c}
 $$
 
-For a 400 MHz antenna in dry soil ($v = 0.12$ m/ns), this gives $\Delta y \leq 0.075$ m. Practical surveys often use 0.25-0.50 m spacing, accepting some spatial aliasing.
-
-The 3D data volume $A(x, y, t)$ contains information about subsurface geometry in all three dimensions.
+For 400 MHz in dry soil, $\Delta y \leq 0.075$ m.
 
 ### Spatial interpolation
 
-Irregularly spaced profiles require interpolation to create regular grids. Common methods include:
-
-**Inverse distance weighting:**
+Inverse distance weighting:
 
 $$
-A(x_0, y_0, t) = \frac{\sum_i w_i \cdot A(x_i, y_i, t)}{\sum_i w_i}
+A(x_0, y_0, t) = \frac{\sum_i w_i \cdot A(x_i, y_i, t)}{\sum_i w_i} \quad \text{where} \quad w_i = 1/d_i^p
 $$
 
-where $w_i = 1/d_i^p$ and $d_i$ is the distance to the $i$-th data point.
-
-**Kriging:** Provides optimal interpolation based on spatial autocorrelation:
-
-$$
-\hat{A}(x_0, y_0) = \sum_i \lambda_i \cdot A(x_i, y_i)
-$$
-
-where weights $\lambda_i$ are determined by solving the kriging system based on the semivariogram.
-
-### Depth slices and time slices
-
-Time slices extract horizontal sections at constant two-way travel time:
+### Depth slices
 
 $$
 S(x, y) = A(x, y, t = t_{\text{slice}})
 $$
 
-After depth conversion, these become true depth slices showing plan-view maps at specific depths. Time slice movies (animated sequences through depth) are powerful visualization tools for identifying buried structures.
-
-### Isosurface rendering
-
-3D visualization can render surfaces of constant amplitude:
-
-$$
-\{ (x, y, z) : E(x, y, z) = E_{\text{threshold}} \}
-$$
-
-where $E$ is the envelope amplitude. This creates 3D models of strong reflectors, useful for visualizing kurgan chambers or qanat tunnel networks.
-
 <div class="info-box tip">
   <strong>3D survey planning</strong>
-  For burial mounds and other finite targets, a radial survey pattern centered on the feature can provide efficient coverage with lines converging at the target center.
+  For burial mounds, radial survey patterns centered on the feature provide efficient coverage.
 </div>
 
-## Hyperbola fitting and point target analysis
+## Hyperbola fitting and point targets
 
-### Automated hyperbola detection
+### Target depth estimation
 
-Hyperbolas can be detected automatically using the Hough transform or matched filtering. The Hough transform parameterizes hyperbolas by apex position $(x_0, t_0)$ and velocity $v$:
-
-$$
-\mathcal{H}(x_0, t_0, v) = \sum_x A\left( x, \frac{2}{v}\sqrt{z_0^2 + (x-x_0)^2} \right)
-$$
-
-where $z_0 = vt_0/2$. Peaks in Hough space correspond to hyperbola parameters.
-
-### Target depth and size estimation
-
-For a point target generating a hyperbola, the depth is
+For a point target generating a hyperbola:
 
 $$
 z = \frac{v \cdot t_{\text{apex}}}{2}
 $$
 
-The apparent size of the target relates to the Fresnel zone radius at that depth:
+The Fresnel zone radius:
 
 $$
 r_F = \sqrt{\frac{\lambda z}{2}} = \sqrt{\frac{v z}{2 f_c}}
 $$
 
-Targets smaller than $r_F$ appear as point diffractors. Larger targets produce reflection segments rather than hyperbolas.
+### Resolution limits
 
-### Multiple target resolution
+Horizontal resolution: $\Delta x > r_F$
 
-Two point targets at the same depth but separated horizontally by $\Delta x$ can be resolved if
+Vertical resolution: $\Delta z > \frac{\lambda}{4} = \frac{v}{4 f_c}$
 
-$$
-\Delta x > r_F
-$$
-
-Two targets at the same horizontal position but different depths can be resolved if
-
-$$
-\Delta z > \frac{\lambda}{4} = \frac{v}{4 f_c}
-$$
-
-For a 400 MHz antenna in dry loess ($v = 0.12$ m/ns), vertical resolution is approximately 0.075 m.
+For 400 MHz in dry loess, vertical resolution ≈ 0.075 m.
 
 ## Stratigraphic interpretation
 
-### Reflection configuration analysis
+### Reflection configurations
 
-GPR reflections can be classified by their configuration:
+- **Parallel**: Undisturbed stratigraphy
+- **Chaotic**: Disturbed material, bioturbation
+- **Hyperbolic**: Point sources, voids, boulders
 
-- **Parallel**: Uniform deposition, undisturbed stratigraphy
-- **Divergent**: Variable deposition rates, tilting during deposition
-- **Chaotic**: Disturbed material, mass movement, bioturbation
-- **Sigmoidal**: Prograding deposits, channel fill
-- **Hyperbolic**: Point sources, voids, pipes, boulders
+### Termination patterns
 
-### Reflection terminations
+- **Onlap**: Younger beds onto older surface
+- **Truncation**: Reflections cut by excavation
 
-Termination patterns indicate geological relationships:
+### GPR facies
 
-- **Onlap**: Younger beds lap onto older surface (burial mound construction)
-- **Downlap**: Beds dip into underlying surface (channel fill)
-- **Toplap**: Beds terminate at upper surface (erosion)
-- **Truncation**: Reflections cut by later surface (excavation, disturbance)
-
-### Facies analysis
-
-GPR facies combine reflection amplitude, continuity, and configuration to characterize depositional environments. In Central Asian contexts:
-
-- **Loess facies**: Parallel, continuous, moderate amplitude
-- **Alluvial channel facies**: Inclined, discontinuous, variable amplitude
-- **Kurgan fill facies**: Chaotic to subparallel, disturbed continuity
-- **Qanat tunnel facies**: Strong hyperbolic diffraction, void signature
+- **Loess**: Parallel, continuous, moderate amplitude
+- **Kurgan fill**: Chaotic, disturbed continuity
+- **Qanat tunnel**: Strong hyperbolic diffraction
 
 <div class="info-box tip">
   <strong>Disturbance detection</strong>
-  Archaeological excavations, looting, and burial chamber collapse create distinctive disruption patterns in otherwise continuous stratigraphy. Look for truncation of natural layering and chaotic fill signatures.
+  Looting and chamber collapse create chaotic patterns in otherwise continuous stratigraphy.
 </div>
 
 ## Central Asia case studies
 
 ### Kurgan burial mounds
 
-Kurgans present distinctive GPR signatures depending on construction and preservation:
+**Construction layers**: Dipping reflections away from center:
+$$\theta_{\text{apparent}}(r) = \arctan \frac{h_{\text{mound}}}{r_{\text{base}}}$$
 
-**Construction layers**: Alternating soil and organic layers in mound construction create subparallel reflections dipping away from the center:
+**Chamber voids**: Negative-polarity reflections:
+$$R_{\text{void}} = \frac{\sqrt{1} - \sqrt{5}}{\sqrt{1} + \sqrt{5}} \approx -0.38$$
 
-$$
-\theta_{\text{apparent}}(r) = \arctan \frac{h_{\text{mound}}}{r_{\text{base}}}
-$$
-
-**Chamber voids**: Air-filled chambers produce strong negative-polarity reflections (dielectric decrease) and characteristic diffraction patterns:
-
-$$
-R_{\text{void}} = \frac{\sqrt{1} - \sqrt{5}}{\sqrt{1} + \sqrt{5}} \approx -0.38
-$$
-
-**Dromos passages**: Entry passages appear as linear diffraction sequences trending toward the chamber.
-
-**Ring ditches**: Encircling ditches filled with different material create concentric amplitude anomalies in time slices.
+**Ring ditches**: Concentric anomalies in time slices.
 
 ### Qanat irrigation systems
 
-Qanats (underground aqueducts) present linear subsurface features with characteristic signatures:
+**Tunnel detection**: Diffractions from void-soil interface.
 
-**Tunnel detection**: Main tunnels produce strong diffractions from the void-soil interface. The tunnel diameter $D$ can be estimated from diffraction width:
+**Shaft spacing**: Regular vertical diffractions (20-50 m intervals).
 
-$$
-D \approx 2 \sqrt{W \cdot z - z^2}
-$$
+### Ancient canals
 
-where $W$ is the measured diffraction half-width at the apex depth $z$.
+**Cross-sections**: U-shaped reflections indicate channel geometry:
+$$d_{\text{channel}} = z_{\text{base}} - z_{\text{shoulder}}$$
 
-**Vertical shaft detection**: Access shafts appear as vertical diffraction sequences with regular spacing (typically 20-50 m).
+### Built environments
 
-**Water detection**: Active or recently active qanats may show attenuated returns below the water table due to increased conductivity.
-
-### Ancient irrigation canals
-
-Surface irrigation systems leave subsurface traces even when completely filled:
-
-**Canal cross-sections**: U-shaped or V-shaped reflection patterns indicate former channel geometry. Channel depth can be measured from the basal reflection:
-
-$$
-d_{\text{channel}} = z_{\text{base}} - z_{\text{shoulder}}
-$$
-
-**Fill stratigraphy**: Multiple filling episodes create internal layering within channel fills.
-
-**Levee structures**: Raised canal banks may show internal stratification from construction layers.
-
-### Caravanserai and urban sites
-
-Built environments produce complex GPR signatures:
-
-**Wall foundations**: Linear high-amplitude reflections from mudbrick or stone foundations. Wall thickness relates to reflection duration:
-
-$$
-T_{\text{wall}} \approx \frac{2w}{v_{\text{wall}}}
-$$
-
-**Floor surfaces**: Horizontal high-amplitude reflections from compacted or plastered floors.
-
-**Room voids**: Collapsed rooms may preserve air pockets generating void signatures.
+**Wall foundations**: Linear high-amplitude reflections with duration:
+$$T_{\text{wall}} \approx \frac{2w}{v_{\text{wall}}}$$
 
 ## Processing workflow checklist
 

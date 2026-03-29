@@ -795,18 +795,12 @@ Policy recommendation: Combine degradation prevention with active restoration to
 
 ## Summary
 
-Land degradation monitoring with remote sensing integrates multiple data sources and indicators to assess complex environmental changes across Central Asia. The Aral Sea crisis demonstrates both the severity of degradation and the power of satellite observations to document change.
+Land degradation monitoring integrates multiple remote sensing data sources and indicators. The Aral Sea crisis demonstrates both the severity of degradation and the power of satellite observations.
 
 Key takeaways:
 
-1. **Multi-indicator approach**: No single index captures all degradation processes. Combine vegetation, soil, and surface property indicators.
-
-2. **Temporal depth matters**: Multi-decadal archives reveal trends invisible in snapshot assessments. Landsat's 50-year record is invaluable.
-
-3. **Separate climate from humans**: RESTREND and similar methods distinguish human-induced degradation from climate variability.
-
-4. **Policy relevance**: SDG 15.3.1 and UNCCD indicators translate scientific measurements into actionable metrics.
-
-5. **Regional specificity**: Each Central Asian country faces distinct degradation challenges requiring tailored monitoring approaches.
-
-Remote sensing cannot replace field validation, but it provides the spatial coverage and temporal frequency essential for regional degradation assessment and policy support.
+1. **Multi-indicator approach**: Combine vegetation, soil, and surface property indicators
+2. **Temporal depth matters**: Multi-decadal archives reveal trends invisible in snapshots
+3. **Separate climate from humans**: RESTREND distinguishes human-induced degradation from climate variability
+4. **Policy relevance**: SDG 15.3.1 and UNCCD indicators translate measurements into actionable metrics
+5. **Regional specificity**: Each Central Asian country faces distinct challenges requiring tailored approaches
