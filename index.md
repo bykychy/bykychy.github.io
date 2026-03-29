@@ -11,6 +11,7 @@ description: "A math-first learning site about treasure hunting technology, X-ra
   <div class="hero-actions">
     <a class="cta-button" href="{{ '/tutorials/sar-remote-sensing/' | relative_url }}">Enter the SAR gallery</a>
     <a class="cta-button cta-secondary" href="{{ '/tutorials/treasure-hunting/' | relative_url }}">Enter the field methods gallery</a>
+    <a class="cta-button cta-secondary" href="{{ '/field-atlas/' | relative_url }}">Open the field atlas</a>
   </div>
 </div>
 

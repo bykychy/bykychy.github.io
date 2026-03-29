@@ -21,6 +21,7 @@
       <div class="nav-links">
         <a href="{{ '/tutorials/treasure-hunting/' | relative_url }}">Treasure Hunting</a>
         <a href="{{ '/tutorials/sar-remote-sensing/' | relative_url }}">SAR & Remote Sensing</a>
+        <a href="{{ '/field-atlas/' | relative_url }}">Field Atlas</a>
       </div>
     </div>
   </nav>
@@ -31,9 +32,19 @@
   {% if page.series == 'treasure-hunting' %}
     {% assign series_title = 'Treasure Hunting Sequence' %}
     {% assign series_url = '/tutorials/treasure-hunting/' %}
+    {% assign series_label = 'Field methods' %}
+    {% assign series_note = 'Near-surface sensing for conductive targets, geometry, and material contrast.' %}
+    {% assign series_signal_a = 'Close-range evidence' %}
+    {% assign series_signal_b = 'Ground response' %}
+    {% assign series_signal_c = 'Site-scale interpretation' %}
   {% elsif page.series == 'sar-remote-sensing' %}
     {% assign series_title = 'SAR & Remote Sensing Sequence' %}
     {% assign series_url = '/tutorials/sar-remote-sensing/' %}
+    {% assign series_label = 'Orbital radar' %}
+    {% assign series_note = 'Landscape-scale sensing for roughness, moisture, geometry, and change through time.' %}
+    {% assign series_signal_a = 'Backscatter logic' %}
+    {% assign series_signal_b = 'Terrain-aware reading' %}
+    {% assign series_signal_c = 'Regional comparison' %}
   {% endif %}
   {% assign previous_page = nil %}
   {% assign next_page = nil %}
@@ -78,6 +89,32 @@
         <div class="series-context">
           <span class="series-index-chip">Part {{ page.order }} of {{ series_pages.size }}</span>
           <span>{{ series_title }}</span>
+        </div>
+      {% endif %}
+      {% if page.series %}
+        <div class="tutorial-cover tutorial-cover-{{ page.series }}">
+          <div class="tutorial-cover-copy">
+            <div class="eyebrow">{{ series_label }}</div>
+            <p>{{ series_note }}</p>
+          </div>
+          <div class="tutorial-cover-grid">
+            <div class="cover-cell">
+              <span class="cover-key">Series</span>
+              <strong>{{ series_title }}</strong>
+            </div>
+            <div class="cover-cell">
+              <span class="cover-key">Focus</span>
+              <strong>{{ series_signal_a }}</strong>
+            </div>
+            <div class="cover-cell">
+              <span class="cover-key">Method</span>
+              <strong>{{ series_signal_b }}</strong>
+            </div>
+            <div class="cover-cell">
+              <span class="cover-key">Outcome</span>
+              <strong>{{ series_signal_c }}</strong>
+            </div>
+          </div>
         </div>
       {% endif %}
     </article>
