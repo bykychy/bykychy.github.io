@@ -118,7 +118,7 @@ description: "A math-first learning site about treasure hunting technology, X-ra
 
 <div class="section-card featured-card">
   <div class="eyebrow">Now on display</div>
-  <h2>Nine flagship tutorials are now live</h2>
+  <h2>Fourteen flagship tutorials are now live</h2>
   <ul class="tutorial-list">
     <li>
       <a href="{{ '/tutorials/treasure-hunting/04-metal-detection-fundamentals-central-asia' | relative_url }}">How Metal Detection Reveals Hidden Targets in Central Asia</a>
@@ -135,6 +135,18 @@ description: "A math-first learning site about treasure hunting technology, X-ra
     <li>
       <a href="{{ '/tutorials/treasure-hunting/03-xrf-central-asia-material-signatures' | relative_url }}">How X-Ray Fluorescence Reveals Material Signatures</a>
       <span class="desc">Elemental fingerprints, counts, calibration thinking, and material inference.</span>
+    </li>
+    <li>
+      <a href="{{ '/tutorials/treasure-hunting/05-magnetometry-archaeological-prospection' | relative_url }}">How Magnetometry Reveals Buried Archaeological Features</a>
+      <span class="desc">Magnetic susceptibility, flux density, gradiometer surveys, and feature detection.</span>
+    </li>
+    <li>
+      <a href="{{ '/tutorials/treasure-hunting/06-gnss-surveying-georeferencing' | relative_url }}">How GNSS Surveying Enables Precise Georeferencing</a>
+      <span class="desc">GPS/GLONASS positioning, coordinate systems, differential correction, and RTK.</span>
+    </li>
+    <li>
+      <a href="{{ '/tutorials/treasure-hunting/07-geochemical-soil-sampling' | relative_url }}">How Geochemical Soil Sampling Reveals Activity Signatures</a>
+      <span class="desc">Element mobility, sampling design, statistical analysis, and anthropogenic enrichment.</span>
     </li>
     <li>
       <a href="{{ '/tutorials/sar-remote-sensing/01-sar-fundamentals' | relative_url }}">How SAR Fundamentals Help Reveal Hidden Structure in Central Asia</a>
@@ -156,6 +168,14 @@ description: "A math-first learning site about treasure hunting technology, X-ra
       <a href="{{ '/tutorials/sar-remote-sensing/05-sentinel1-central-asia-unseen-patterns' | relative_url }}">How Sentinel SAR Data Can Reveal Interesting Patterns in Central Asia</a>
       <span class="desc">Backscatter, moisture, geometry, and temporal interpretation with 30 exercises.</span>
     </li>
+    <li>
+      <a href="{{ '/tutorials/sar-remote-sensing/06-sentinel2-multispectral-analysis' | relative_url }}">How Sentinel-2 Multispectral Data Reveals Landscape Patterns</a>
+      <span class="desc">Spectral indices, band combinations, vegetation mapping, and optical-SAR fusion.</span>
+    </li>
+    <li>
+      <a href="{{ '/tutorials/sar-remote-sensing/07-drone-photogrammetry-lidar' | relative_url }}">How Drone Photogrammetry and LiDAR Reveal Surface Detail</a>
+      <span class="desc">UAV survey, structure-from-motion, point clouds, and high-resolution terrain models.</span>
+    </li>
   </ul>
 </div>
 
@@ -163,7 +183,7 @@ description: "A math-first learning site about treasure hunting technology, X-ra
   <div class="section-card">
     <div class="eyebrow">Gallery one</div>
     <h2>Treasure Hunting Technologies</h2>
-    <p>These lessons focus on near-surface and subsurface evidence: conductivity, radar travel time, elemental composition, and field interpretation discipline.</p>
+    <p>These lessons focus on near-surface and subsurface evidence: conductivity, radar travel time, elemental composition, magnetic anomalies, and field interpretation discipline.</p>
     <ul class="roadmap-list">
       <li>
         <a href="{{ '/tutorials/treasure-hunting/04-metal-detection-fundamentals-central-asia' | relative_url }}">Metal Detection Fundamentals</a>
@@ -185,13 +205,28 @@ description: "A math-first learning site about treasure hunting technology, X-ra
         <span class="status-pill status-live">Live</span>
         <span class="desc">Material signatures, counts, noise, and practical elemental reasoning.</span>
       </li>
+      <li>
+        <a href="{{ '/tutorials/treasure-hunting/05-magnetometry-archaeological-prospection' | relative_url }}">Magnetometry</a>
+        <span class="status-pill status-live">Live</span>
+        <span class="desc">Magnetic field theory, susceptibility contrast, and archaeological feature detection.</span>
+      </li>
+      <li>
+        <a href="{{ '/tutorials/treasure-hunting/06-gnss-surveying-georeferencing' | relative_url }}">GNSS Surveying</a>
+        <span class="status-pill status-live">Live</span>
+        <span class="desc">Positioning, coordinate systems, differential correction, and field procedures.</span>
+      </li>
+      <li>
+        <a href="{{ '/tutorials/treasure-hunting/07-geochemical-soil-sampling' | relative_url }}">Geochemical Soil Sampling</a>
+        <span class="status-pill status-live">Live</span>
+        <span class="desc">Element ratios, sampling design, anomaly detection, and activity signatures.</span>
+      </li>
     </ul>
   </div>
 
   <div class="section-card">
     <div class="eyebrow">Gallery two</div>
     <h2>SAR & Remote Sensing</h2>
-    <p>This gallery starts with Sentinel-1 as a rigorous way to read moisture, roughness, slope effects, and repeated landscape structure across Central Asia.</p>
+    <p>This gallery covers satellite and drone-based remote sensing: SAR backscatter, optical spectral analysis, time-series change detection, and high-resolution terrain mapping.</p>
     <ul class="roadmap-list">
       <li>
         <a href="{{ '/tutorials/sar-remote-sensing/01-sar-fundamentals' | relative_url }}">SAR Fundamentals</a>
@@ -216,7 +251,17 @@ description: "A math-first learning site about treasure hunting technology, X-ra
       <li>
         <a href="{{ '/tutorials/sar-remote-sensing/05-sentinel1-central-asia-unseen-patterns' | relative_url }}">Sentinel-1 Central Asia interpretation</a>
         <span class="status-pill status-live">Live</span>
-        <span class="desc">The current anchor lesson for the SAR series.</span>
+        <span class="desc">The anchor lesson for SAR interpretation with 30 exercises.</span>
+      </li>
+      <li>
+        <a href="{{ '/tutorials/sar-remote-sensing/06-sentinel2-multispectral-analysis' | relative_url }}">Sentinel-2 Multispectral Analysis</a>
+        <span class="status-pill status-live">Live</span>
+        <span class="desc">Spectral bands, NDVI, NDWI, band combinations, and optical-SAR fusion.</span>
+      </li>
+      <li>
+        <a href="{{ '/tutorials/sar-remote-sensing/07-drone-photogrammetry-lidar' | relative_url }}">Drone Photogrammetry & LiDAR</a>
+        <span class="status-pill status-live">Live</span>
+        <span class="desc">UAV platforms, structure-from-motion, point clouds, and terrain models.</span>
       </li>
     </ul>
   </div>

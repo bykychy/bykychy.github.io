@@ -67,6 +67,10 @@ permalink: /field-atlas/
         <a href="{{ '/tutorials/sar-remote-sensing/05-sentinel1-central-asia-unseen-patterns' | relative_url }}">Sentinel-1 Central Asia Interpretation</a>
         <span class="desc">Use the interpretation workflow to test geometry versus physical change.</span>
       </li>
+      <li>
+        <a href="{{ '/tutorials/sar-remote-sensing/07-drone-photogrammetry-lidar' | relative_url }}">Drone Photogrammetry & LiDAR</a>
+        <span class="desc">High-resolution terrain mapping for detailed site documentation.</span>
+      </li>
     </ul>
   </div>
 
@@ -85,8 +89,16 @@ permalink: /field-atlas/
         <span class="desc">Best for shallow geometry, hyperbolas, and depth estimation.</span>
       </li>
       <li>
+        <a href="{{ '/tutorials/treasure-hunting/05-magnetometry-archaeological-prospection' | relative_url }}">Magnetometry for Archaeological Prospection</a>
+        <span class="desc">Detects burned features, kilns, ditches, and iron-rich anomalies.</span>
+      </li>
+      <li>
         <a href="{{ '/tutorials/treasure-hunting/01-electromagnetic-survey-central-asia-unseen-conductivity' | relative_url }}">Electromagnetic Survey Methods</a>
         <span class="desc">Use when buried fills or moisture-retaining features create conductivity contrast.</span>
+      </li>
+      <li>
+        <a href="{{ '/tutorials/treasure-hunting/06-gnss-surveying-georeferencing' | relative_url }}">GNSS Surveying & Georeferencing</a>
+        <span class="desc">Essential for precise positioning and integrating multi-method survey data.</span>
       </li>
       <li>
         <a href="{{ '/tutorials/treasure-hunting/04-metal-detection-fundamentals-central-asia' | relative_url }}">Metal Detection Fundamentals</a>
@@ -110,12 +122,74 @@ permalink: /field-atlas/
         <span class="desc">Best for elemental fingerprints and composition-based comparison.</span>
       </li>
       <li>
+        <a href="{{ '/tutorials/treasure-hunting/07-geochemical-soil-sampling' | relative_url }}">Geochemical Soil Sampling</a>
+        <span class="desc">Reveals anthropogenic element enrichment and activity patterns in soil.</span>
+      </li>
+      <li>
+        <a href="{{ '/tutorials/treasure-hunting/05-magnetometry-archaeological-prospection' | relative_url }}">Magnetometry</a>
+        <span class="desc">Detects thermally altered materials and iron-bearing features.</span>
+      </li>
+      <li>
         <a href="{{ '/tutorials/treasure-hunting/04-metal-detection-fundamentals-central-asia' | relative_url }}">Metal Detection Fundamentals</a>
         <span class="desc">Useful for finding conductive targets before closer composition work.</span>
       </li>
       <li>
         <a href="{{ '/tutorials/treasure-hunting/01-electromagnetic-survey-central-asia-unseen-conductivity' | relative_url }}">Electromagnetic Survey Methods</a>
         <span class="desc">Helpful when site-scale conductive residues or saline process zones matter.</span>
+      </li>
+    </ul>
+  </div>
+
+  <div class="atlas-card">
+    <div class="eyebrow">Landscape case</div>
+    <h2>Vegetation, agriculture, and land cover mapping</h2>
+    <p>Use this route for crop monitoring, rangeland assessment, vegetation health, and land cover classification across Central Asian landscapes.</p>
+    <div class="atlas-tags">
+      <span class="atlas-tag">Vegetation</span>
+      <span class="atlas-tag">Agriculture</span>
+      <span class="atlas-tag">Land cover</span>
+    </div>
+    <ul class="atlas-links">
+      <li>
+        <a href="{{ '/tutorials/sar-remote-sensing/06-sentinel2-multispectral-analysis' | relative_url }}">Sentinel-2 Multispectral Analysis</a>
+        <span class="desc">Best for NDVI, vegetation indices, and land cover classification.</span>
+      </li>
+      <li>
+        <a href="{{ '/tutorials/sar-remote-sensing/04-time-series-change-detection' | relative_url }}">Time-Series Analysis</a>
+        <span class="desc">Track seasonal vegetation cycles and long-term change.</span>
+      </li>
+      <li>
+        <a href="{{ '/tutorials/sar-remote-sensing/05-sentinel1-central-asia-unseen-patterns' | relative_url }}">Sentinel-1 Central Asia Interpretation</a>
+        <span class="desc">SAR backscatter for moisture and structure independent of cloud cover.</span>
+      </li>
+      <li>
+        <a href="{{ '/tutorials/sar-remote-sensing/07-drone-photogrammetry-lidar' | relative_url }}">Drone Photogrammetry & LiDAR</a>
+        <span class="desc">High-resolution mapping for detailed field-scale analysis.</span>
+      </li>
+    </ul>
+  </div>
+
+  <div class="atlas-card">
+    <div class="eyebrow">Technical case</div>
+    <h2>Survey integration and precision positioning</h2>
+    <p>Enter here when the goal is accurate georeferencing, multi-method integration, or building consistent spatial datasets.</p>
+    <div class="atlas-tags">
+      <span class="atlas-tag">GNSS</span>
+      <span class="atlas-tag">Coordinates</span>
+      <span class="atlas-tag">Integration</span>
+    </div>
+    <ul class="atlas-links">
+      <li>
+        <a href="{{ '/tutorials/treasure-hunting/06-gnss-surveying-georeferencing' | relative_url }}">GNSS Surveying & Georeferencing</a>
+        <span class="desc">Essential for precise positioning and coordinate transformations.</span>
+      </li>
+      <li>
+        <a href="{{ '/tutorials/sar-remote-sensing/07-drone-photogrammetry-lidar' | relative_url }}">Drone Photogrammetry & LiDAR</a>
+        <span class="desc">GCPs, flight planning, and accuracy assessment.</span>
+      </li>
+      <li>
+        <a href="{{ '/tutorials/sar-remote-sensing/02-sentinel1-data-processing' | relative_url }}">Sentinel-1 Data Processing</a>
+        <span class="desc">Terrain correction and geometric accuracy for satellite data.</span>
       </li>
     </ul>
   </div>
