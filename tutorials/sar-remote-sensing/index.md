@@ -109,8 +109,16 @@ This gallery is about seeing landscape structure through radar logic, optical sp
       <span class="desc">Rasterio, geopandas, xarray, and reproducible workflows.</span>
     </li>
     <li>
+      <a href="{{ '/tutorials/sar-remote-sensing/16-persistent-scatterer-insar' | relative_url }}">How PS-InSAR Measures Millimetre Ground Deformation</a>
+      <span class="desc">Persistent scatterers, SBAS, atmospheric correction, and subsidence monitoring.</span>
+    </li>
+    <li>
       <a href="{{ '/tutorials/sar-remote-sensing/17-disaster-monitoring-remote-sensing' | relative_url }}">How Remote Sensing Monitors Natural Disasters</a>
       <span class="desc">Earthquake damage, flood mapping, landslides, and wildfire assessment.</span>
+    </li>
+    <li>
+      <a href="{{ '/tutorials/sar-remote-sensing/18-sar-optical-fusion' | relative_url }}">How SAR-Optical Fusion Enhances Land Cover Analysis</a>
+      <span class="desc">Combining Sentinel-1 and Sentinel-2, cloud gap-filling, and ML classification.</span>
     </li>
     <li>
       <a href="{{ '/tutorials/sar-remote-sensing/19-accuracy-assessment-validation' | relative_url }}">How Accuracy Assessment Validates Results</a>
@@ -208,9 +216,19 @@ This gallery is about seeing landscape structure through radar logic, optical sp
     <span class="desc">Rasterio, geopandas, xarray, visualization, and batch processing workflows.</span>
   </li>
   <li>
+    <a href="{{ '/tutorials/sar-remote-sensing/16-persistent-scatterer-insar' | relative_url }}">Persistent Scatterer InSAR</a>
+    <span class="status-pill status-live">Live</span>
+    <span class="desc">PS-InSAR, SBAS, atmospheric phase screens, and millimetre-scale deformation.</span>
+  </li>
+  <li>
     <a href="{{ '/tutorials/sar-remote-sensing/17-disaster-monitoring-remote-sensing' | relative_url }}">Natural Disaster Monitoring</a>
     <span class="status-pill status-live">Live</span>
     <span class="desc">Earthquake damage, flood mapping, landslide detection, and wildfire monitoring.</span>
+  </li>
+  <li>
+    <a href="{{ '/tutorials/sar-remote-sensing/18-sar-optical-fusion' | relative_url }}">SAR-Optical Data Fusion</a>
+    <span class="status-pill status-live">Live</span>
+    <span class="desc">Combining Sentinel-1 SAR and Sentinel-2 optical for improved classification.</span>
   </li>
   <li>
     <a href="{{ '/tutorials/sar-remote-sensing/19-accuracy-assessment-validation' | relative_url }}">Accuracy Assessment & Validation</a>

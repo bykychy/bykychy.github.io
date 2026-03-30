@@ -90,6 +90,10 @@ This gallery focuses on sensing methods that help reveal hidden geometry, buried
       <span class="desc">Migration, attribute analysis, 3D visualization, and signal processing.</span>
     </li>
     <li>
+      <a href="{{ '/tutorials/treasure-hunting/13-induced-polarization' | relative_url }}">How Induced Polarization Reveals Mineral and Archaeological Targets</a>
+      <span class="desc">Chargeability, phase angle, sulfide detection, and archaeological slag.</span>
+    </li>
+    <li>
       <a href="{{ '/tutorials/treasure-hunting/14-terrestrial-laser-scanning' | relative_url }}">How Terrestrial Laser Scanning Documents Sites</a>
       <span class="desc">Point clouds, registration, mesh generation, and heritage documentation.</span>
     </li>
@@ -169,6 +173,11 @@ This gallery focuses on sensing methods that help reveal hidden geometry, buried
     <a href="{{ '/tutorials/treasure-hunting/12-gpr-advanced-processing' | relative_url }}">Advanced GPR Processing</a>
     <span class="status-pill status-live">Live</span>
     <span class="desc">Signal processing, migration, attribute analysis, 3D GPR, and stratigraphic interpretation.</span>
+  </li>
+  <li>
+    <a href="{{ '/tutorials/treasure-hunting/13-induced-polarization' | relative_url }}">Induced Polarization</a>
+    <span class="status-pill status-live">Live</span>
+    <span class="desc">Chargeability, phase angle, Cole-Cole model, mineral and archaeological target detection.</span>
   </li>
   <li>
     <a href="{{ '/tutorials/treasure-hunting/14-terrestrial-laser-scanning' | relative_url }}">Terrestrial Laser Scanning</a>
