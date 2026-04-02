@@ -21,6 +21,98 @@ Python transforms geospatial analysis into reproducible, scalable science. Every
 
 For Central Asia specifically, Python-based workflows address critical challenges: processing decades of Landsat and Sentinel archives, integrating data from multiple sources (satellite imagery, climate records, administrative boundaries), and scaling analyses across the five countries of the region. The ecosystem of geospatial Python libraries has matured to the point where complex analyses that once required expensive proprietary software now run on any laptop.
 
+<div class="learning-objectives">
+  <div class="learning-objectives-header">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1e4f8a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    <h3>What you will learn</h3>
+  </div>
+  <ul>
+    <li>Read, write, and manipulate satellite raster data using Rasterio — including band math, reprojection, and windowed I/O</li>
+    <li>Perform vector geospatial analysis with GeoPandas: spatial joins, overlay operations, and attribute queries on Central Asian datasets</li>
+    <li>Handle multi-dimensional satellite time series with Xarray and Rioxarray for climate and remote sensing archives</li>
+    <li>Transform coordinates between CRS projections using Pyproj and compute zonal statistics across raster-vector intersections</li>
+    <li>Build automated, reproducible batch-processing pipelines that scale from single scenes to multi-year, multi-country archives</li>
+  </ul>
+</div>
+
+<div class="prerequisites">
+  <div class="prerequisites-header">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8b5e00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+    <h3>Prerequisites</h3>
+  </div>
+  <ul>
+    <li>Working knowledge of Python (variables, functions, loops, file I/O) and familiarity with NumPy array operations</li>
+    <li>Basic understanding of raster and vector geospatial data formats (GeoTIFF, Shapefile, GeoJSON)</li>
+    <li>A Python environment with pip or conda for installing geospatial libraries (rasterio, geopandas, xarray)</li>
+    <li>Conceptual understanding of coordinate reference systems and map projections</li>
+  </ul>
+</div>
+
+<div class="concept-diagram">
+  <svg viewBox="0 0 620 320" xmlns="http://www.w3.org/2000/svg" style="max-width: 580px;">
+    <!-- Title -->
+    <text x="310" y="20" font-family="Inter, sans-serif" font-size="13" fill="#111" text-anchor="middle" font-weight="bold">Python Geospatial Analysis Pipeline</text>
+    <!-- Input: Raster data box -->
+    <rect x="20" y="45" width="130" height="80" rx="6" fill="#e8f0fa" stroke="#1e4f8a" stroke-width="1.5"/>
+    <text x="85" y="65" font-family="Inter, sans-serif" font-size="11" fill="#1e4f8a" text-anchor="middle" font-weight="bold">Raster Data</text>
+    <!-- Grid icon -->
+    <rect x="55" y="72" width="14" height="14" fill="#1e4f8a" opacity="0.3" stroke="#1e4f8a" stroke-width="0.5"/>
+    <rect x="69" y="72" width="14" height="14" fill="#1e4f8a" opacity="0.5" stroke="#1e4f8a" stroke-width="0.5"/>
+    <rect x="83" y="72" width="14" height="14" fill="#1e4f8a" opacity="0.2" stroke="#1e4f8a" stroke-width="0.5"/>
+    <rect x="55" y="86" width="14" height="14" fill="#1e4f8a" opacity="0.6" stroke="#1e4f8a" stroke-width="0.5"/>
+    <rect x="69" y="86" width="14" height="14" fill="#1e4f8a" opacity="0.4" stroke="#1e4f8a" stroke-width="0.5"/>
+    <rect x="83" y="86" width="14" height="14" fill="#1e4f8a" opacity="0.7" stroke="#1e4f8a" stroke-width="0.5"/>
+    <text x="85" y="115" font-family="Inter, sans-serif" font-size="9" fill="#68625b" text-anchor="middle">Rasterio · Rioxarray</text>
+    <!-- Input: Vector data box -->
+    <rect x="20" y="145" width="130" height="80" rx="6" fill="#fdf6e3" stroke="#8b5e00" stroke-width="1.5"/>
+    <text x="85" y="165" font-family="Inter, sans-serif" font-size="11" fill="#8b5e00" text-anchor="middle" font-weight="bold">Vector Data</text>
+    <!-- Polygon icon -->
+    <polygon points="60,180 80,172 100,178 95,198 65,195" fill="#8b5e00" opacity="0.2" stroke="#8b5e00" stroke-width="1"/>
+    <circle cx="72" cy="190" r="3" fill="#8b5e00" opacity="0.5"/>
+    <circle cx="88" cy="185" r="3" fill="#8b5e00" opacity="0.5"/>
+    <text x="85" y="215" font-family="Inter, sans-serif" font-size="9" fill="#68625b" text-anchor="middle">GeoPandas · Fiona</text>
+    <!-- Arrow from raster to center -->
+    <line x1="150" y1="85" x2="210" y2="140" stroke="#1e4f8a" stroke-width="1.5" marker-end="url(#arrowBlue)"/>
+    <!-- Arrow from vector to center -->
+    <line x1="150" y1="185" x2="210" y2="165" stroke="#8b5e00" stroke-width="1.5" marker-end="url(#arrowBrown)"/>
+    <!-- Center: Analysis Engine -->
+    <rect x="215" y="115" width="180" height="90" rx="8" fill="#f0f7f2" stroke="#165d34" stroke-width="2"/>
+    <text x="305" y="140" font-family="Inter, sans-serif" font-size="12" fill="#165d34" text-anchor="middle" font-weight="bold">Analysis Engine</text>
+    <text x="305" y="157" font-family="Inter, sans-serif" font-size="10" fill="#111" text-anchor="middle">NumPy · Xarray · Dask</text>
+    <text x="305" y="172" font-family="Inter, sans-serif" font-size="10" fill="#111" text-anchor="middle">Band math · Zonal stats</text>
+    <text x="305" y="187" font-family="Inter, sans-serif" font-size="10" fill="#111" text-anchor="middle">CRS transforms · Filters</text>
+    <!-- Arrow to output -->
+    <line x1="395" y1="150" x2="450" y2="105" stroke="#165d34" stroke-width="1.5" marker-end="url(#arrowGreen)"/>
+    <line x1="395" y1="170" x2="450" y2="210" stroke="#165d34" stroke-width="1.5" marker-end="url(#arrowGreen)"/>
+    <!-- Output: Map -->
+    <rect x="455" y="50" width="140" height="80" rx="6" fill="#fce8e7" stroke="#d92b1f" stroke-width="1.5"/>
+    <text x="525" y="70" font-family="Inter, sans-serif" font-size="11" fill="#d92b1f" text-anchor="middle" font-weight="bold">Map Output</text>
+    <!-- Mini map graphic -->
+    <rect x="480" y="78" width="50" height="35" rx="2" fill="#d92b1f" opacity="0.1" stroke="#d92b1f" stroke-width="0.5"/>
+    <rect x="482" y="80" width="15" height="12" fill="#165d34" opacity="0.4"/>
+    <rect x="499" y="80" width="15" height="12" fill="#1e4f8a" opacity="0.4"/>
+    <rect x="482" y="94" width="15" height="12" fill="#8b5e00" opacity="0.4"/>
+    <rect x="499" y="94" width="15" height="12" fill="#165d34" opacity="0.3"/>
+    <text x="525" y="122" font-family="Inter, sans-serif" font-size="9" fill="#68625b" text-anchor="middle">Matplotlib · Folium</text>
+    <!-- Output: Data products -->
+    <rect x="455" y="175" width="140" height="80" rx="6" fill="#f0f0f0" stroke="#68625b" stroke-width="1.5"/>
+    <text x="525" y="195" font-family="Inter, sans-serif" font-size="11" fill="#68625b" text-anchor="middle" font-weight="bold">Data Products</text>
+    <text x="525" y="212" font-family="Inter, sans-serif" font-size="9" fill="#111" text-anchor="middle">GeoTIFF · GeoJSON</text>
+    <text x="525" y="226" font-family="Inter, sans-serif" font-size="9" fill="#111" text-anchor="middle">CSV tables · NetCDF</text>
+    <text x="525" y="240" font-family="Inter, sans-serif" font-size="9" fill="#111" text-anchor="middle">Reproducible scripts</text>
+    <!-- Bottom: CRS bar -->
+    <rect x="140" y="275" width="340" height="30" rx="4" fill="#e8f0fa" stroke="#1e4f8a" stroke-width="0.5"/>
+    <text x="310" y="294" font-family="Inter, sans-serif" font-size="10" fill="#1e4f8a" text-anchor="middle">Pyproj — CRS management &amp; coordinate transformations</text>
+    <!-- Arrowhead definitions -->
+    <defs>
+      <marker id="arrowBlue" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#1e4f8a"/></marker>
+      <marker id="arrowBrown" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#8b5e00"/></marker>
+      <marker id="arrowGreen" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#165d34"/></marker>
+    </defs>
+  </svg>
+  <p class="diagram-caption">The Python geospatial stack: raster data (Rasterio) and vector data (GeoPandas) flow into an analysis engine powered by NumPy, Xarray, and Dask, producing maps and reproducible data products.</p>
+</div>
+
 ## Python geospatial ecosystem overview
 
 The Python geospatial stack consists of interconnected libraries that handle different data types and operations. Understanding this ecosystem helps you choose the right tool for each task.

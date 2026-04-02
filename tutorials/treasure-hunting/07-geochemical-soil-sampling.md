@@ -19,6 +19,113 @@ This tutorial builds on concepts from XRF analysis (elemental signatures) and in
   Geochemical prospection works because human activities concentrate, disperse, and transform elements in predictable ways. The mathematics of anomaly detection lets us distinguish anthropogenic signals from natural background variation.
 </div>
 
+<div class="learning-objectives">
+  <div class="learning-objectives-header">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1e4f8a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    <h3>What you will learn</h3>
+  </div>
+  <ul>
+    <li>How element mobility classes (P, Cu, Pb, Zn, Ca, Fe) determine which soil chemistry signatures persist over archaeological timescales</li>
+    <li>The enrichment-factor formula for distinguishing anthropogenic anomalies from natural geochemical background variation</li>
+    <li>Optimal sampling grid design, depth selection, and preparation procedures for Central Asian steppe and desert soils</li>
+    <li>Statistical methods—including kriging interpolation, principal component analysis, and multi-element ratios—for mapping activity zones</li>
+    <li>Interpretation of geochemical signatures for settlement, metallurgy, animal husbandry, and burial contexts in Central Asian archaeology</li>
+  </ul>
+</div>
+
+<div class="prerequisites">
+  <div class="prerequisites-header">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8b5e00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+    <h3>Prerequisites</h3>
+  </div>
+  <ul>
+    <li>Understanding of basic descriptive statistics (mean, standard deviation, percentiles) and hypothesis testing concepts</li>
+    <li>Familiarity with XRF elemental analysis from the earlier tutorial in this series (Tutorial 04) or equivalent experience</li>
+    <li>Working knowledge of sampling theory and grid-based spatial data collection from field survey or GIS coursework</li>
+    <li>Comfort with ratio and logarithmic calculations used in enrichment factors and geochemical normalization</li>
+  </ul>
+</div>
+
+<div class="concept-diagram">
+  <svg viewBox="0 0 620 320" xmlns="http://www.w3.org/2000/svg" style="max-width: 580px;">
+    <!-- Background -->
+    <rect x="0" y="0" width="620" height="320" fill="#f8f7f4" rx="6"/>
+
+    <!-- Title -->
+    <text x="310" y="22" text-anchor="middle" font-family="Inter, sans-serif" font-size="13" font-weight="600" fill="#111">Geochemical Soil Sampling — Element Migration from Buried Feature</text>
+
+    <!-- LEFT PANEL: Plan-view sampling grid -->
+    <text x="150" y="42" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="600" fill="#111">Plan view — Sampling grid</text>
+
+    <!-- Grid dots -->
+    <g fill="#68625b">
+      <circle cx="70" cy="65" r="3"/><circle cx="110" cy="65" r="3"/><circle cx="150" cy="65" r="3"/><circle cx="190" cy="65" r="3"/><circle cx="230" cy="65" r="3"/>
+      <circle cx="70" cy="100" r="3"/><circle cx="110" cy="100" r="3"/><circle cx="150" cy="100" r="3"/><circle cx="190" cy="100" r="3"/><circle cx="230" cy="100" r="3"/>
+      <circle cx="70" cy="135" r="3"/><circle cx="110" cy="135" r="3"/><circle cx="150" cy="135" r="3"/><circle cx="190" cy="135" r="3"/><circle cx="230" cy="135" r="3"/>
+      <circle cx="70" cy="170" r="3"/><circle cx="110" cy="170" r="3"/><circle cx="150" cy="170" r="3"/><circle cx="190" cy="170" r="3"/><circle cx="230" cy="170" r="3"/>
+      <circle cx="70" cy="205" r="3"/><circle cx="110" cy="205" r="3"/><circle cx="150" cy="205" r="3"/><circle cx="190" cy="205" r="3"/><circle cx="230" cy="205" r="3"/>
+    </g>
+
+    <!-- Anomalous zone (hot colours) -->
+    <ellipse cx="155" cy="135" rx="55" ry="40" fill="#d92b1f" opacity="0.15" stroke="#d92b1f" stroke-width="1" stroke-dasharray="4,3"/>
+    <text x="155" y="232" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#d92b1f">Elevated P, Cu, Zn</text>
+
+    <!-- Grid spacing annotation -->
+    <line x1="70" y1="58" x2="110" y2="58" stroke="#68625b" stroke-width="0.8"/>
+    <text x="90" y="55" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#68625b">10 m</text>
+
+    <!-- Divider -->
+    <line x1="285" y1="35" x2="285" y2="310" stroke="#68625b" stroke-width="0.5" stroke-dasharray="3,3"/>
+
+    <!-- RIGHT PANEL: Cross-section -->
+    <text x="450" y="42" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="600" fill="#111">Cross-section — Upward element migration</text>
+
+    <!-- Surface -->
+    <line x1="310" y1="72" x2="590" y2="72" stroke="#8b5e00" stroke-width="2"/>
+    <text x="315" y="67" font-family="Inter, sans-serif" font-size="10" fill="#8b5e00">Surface</text>
+
+    <!-- Soil column layers -->
+    <rect x="310" y="72" width="280" height="35" fill="#e8dcc8" rx="0"/>
+    <text x="315" y="92" font-family="Inter, sans-serif" font-size="10" fill="#68625b">Modern A-horizon (0–20 cm)</text>
+
+    <rect x="310" y="107" width="280" height="50" fill="#d9ccb0" rx="0"/>
+    <text x="315" y="130" font-family="Inter, sans-serif" font-size="10" fill="#68625b">Anthropogenic layer (20–50 cm)</text>
+
+    <rect x="310" y="157" width="280" height="60" fill="#c4b698" rx="0"/>
+    <text x="315" y="185" font-family="Inter, sans-serif" font-size="10" fill="#68625b">Subsoil (50–100 cm)</text>
+
+    <rect x="310" y="217" width="280" height="55" fill="#b0a486" rx="0"/>
+
+    <!-- Buried feature -->
+    <rect x="400" y="225" width="90" height="40" fill="#d92b1f" opacity="0.4" stroke="#d92b1f" stroke-width="1.5" rx="4"/>
+    <text x="445" y="242" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" font-weight="600" fill="#d92b1f">Buried</text>
+    <text x="445" y="255" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#d92b1f">workshop</text>
+
+    <!-- Upward migration arrows -->
+    <g stroke="#d92b1f" stroke-width="1.2" fill="#d92b1f" opacity="0.7">
+      <line x1="430" y1="222" x2="430" y2="115"/><polygon points="430,115 427,122 433,122"/>
+      <line x1="445" y1="222" x2="445" y2="85"/><polygon points="445,85 442,92 448,92"/>
+      <line x1="460" y1="222" x2="460" y2="115"/><polygon points="460,115 457,122 463,122"/>
+    </g>
+    <text x="488" y="160" font-family="Inter, sans-serif" font-size="10" fill="#d92b1f" transform="rotate(-90,488,160)">Element diffusion</text>
+
+    <!-- Sampling depth indicator -->
+    <line x1="540" y1="72" x2="540" y2="107" stroke="#1e4f8a" stroke-width="2"/>
+    <line x1="535" y1="72" x2="545" y2="72" stroke="#1e4f8a" stroke-width="2"/>
+    <line x1="535" y1="107" x2="545" y2="107" stroke="#1e4f8a" stroke-width="2"/>
+    <text x="555" y="93" font-family="Inter, sans-serif" font-size="10" fill="#1e4f8a">Sample</text>
+    <text x="555" y="103" font-family="Inter, sans-serif" font-size="10" fill="#1e4f8a">15–30 cm</text>
+
+    <!-- Concentration profile at far right -->
+    <text x="450" y="290" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#111">Concentration →</text>
+    <line x1="350" y1="280" x2="390" y2="280" stroke="#165d34" stroke-width="2"/>
+    <text x="395" y="284" font-family="Inter, sans-serif" font-size="9" fill="#165d34">Background</text>
+    <line x1="350" y1="296" x2="390" y2="296" stroke="#d92b1f" stroke-width="2"/>
+    <text x="395" y="300" font-family="Inter, sans-serif" font-size="9" fill="#d92b1f">Anomaly (EF &gt; 2)</text>
+  </svg>
+  <p class="diagram-caption">Left: plan-view sampling grid over a site, with elevated concentrations (red ellipse) marking a buried activity area. Right: cross-section showing how elements migrate upward from a buried workshop through the soil column, reaching the optimal sampling depth of 15–30 cm.</p>
+</div>
+
 ## Geochemical principles
 
 ### Element mobility in soils

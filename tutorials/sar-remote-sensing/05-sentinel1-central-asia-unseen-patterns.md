@@ -19,6 +19,149 @@ That is exactly why SAR is valuable for Central Asia. Much of the region is dry,
   SAR is best used as a clue generator. It helps you decide where the landscape behaves differently from its surroundings. Then you combine that clue with field knowledge, topography, geology, archaeology, and if available, ground-based electromagnetic or X-ray methods.
 </div>
 
+<div class="learning-objectives">
+  <div class="learning-objectives-header">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1e4f8a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    <h3>What you will learn</h3>
+  </div>
+  <ul>
+    <li>How radar backscatter responds differently to smooth water, rough soil, vegetation, and urban structures</li>
+    <li>How abandoned irrigation geometry and paleochannels create detectable surface contrasts in SAR imagery</li>
+    <li>How alluvial fans, fault-controlled landforms, and tectonic structures appear under different radar look angles</li>
+    <li>How seasonal moisture and flood dynamics in Central Asian deltas and lakeshores alter radar returns</li>
+    <li>How to use SAR as a clue generator for archaeological, hydrological, and geological investigation</li>
+  </ul>
+</div>
+
+<div class="prerequisites">
+  <div class="prerequisites-header">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8b5e00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+    <h3>Prerequisites</h3>
+  </div>
+  <ul>
+    <li>Completed Tutorial 02 on Sentinel-1 data processing (calibration and terrain correction)</li>
+    <li>Basic understanding of radar scattering mechanisms (specular, diffuse, corner reflection)</li>
+    <li>Familiarity with Central Asian geography: river basins, mountain fronts, steppe, and desert landscapes</li>
+  </ul>
+</div>
+
+<div class="concept-diagram">
+  <svg viewBox="0 0 620 320" xmlns="http://www.w3.org/2000/svg" style="max-width: 580px;">
+    <!-- Background -->
+    <rect x="0" y="0" width="620" height="320" fill="#f8f9fa" rx="8"/>
+    <text x="310" y="22" text-anchor="middle" font-family="Inter, sans-serif" font-size="13" font-weight="bold" fill="#1e4f8a">Radar Scattering Mechanisms across Central Asian Surfaces</text>
+
+    <!-- Incoming radar wave (top center) -->
+    <text x="310" y="48" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#68625b">Incoming radar pulse</text>
+
+    <!-- ===== SCENE 1: Water (Specular) ===== -->
+    <rect x="15" y="72" width="140" height="230" rx="6" fill="#fff" stroke="#1e4f8a" stroke-width="1.5"/>
+    <text x="85" y="90" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="bold" fill="#1e4f8a">Smooth Water</text>
+    <text x="85" y="103" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#68625b">Specular reflection</text>
+
+    <!-- Water surface -->
+    <rect x="30" y="200" width="110" height="25" rx="2" fill="#c5d5ea" stroke="#1e4f8a" stroke-width="1"/>
+    <path d="M 35 210 Q 50 205 65 210 Q 80 215 95 210 Q 110 205 125 210" stroke="#1e4f8a" stroke-width="1" fill="none" opacity="0.5"/>
+
+    <!-- Incoming ray -->
+    <line x1="60" y1="120" x2="85" y2="198" stroke="#d92b1f" stroke-width="1.5"/>
+    <polygon points="82,192 85,198 90,194" fill="#d92b1f"/>
+    <!-- Reflected away from sensor -->
+    <line x1="85" y1="198" x2="130" y2="130" stroke="#d92b1f" stroke-width="1.5" stroke-dasharray="4,3"/>
+    <polygon points="128,136 130,130 124,132" fill="#d92b1f"/>
+    <text x="125" y="125" font-family="Inter, sans-serif" font-size="8" fill="#d92b1f">away</text>
+
+    <!-- Backscatter indicator -->
+    <rect x="35" y="240" width="90" height="18" rx="3" fill="#e8e6e3"/>
+    <rect x="35" y="240" width="14" height="18" rx="3" fill="#1e4f8a" opacity="0.4"/>
+    <text x="80" y="253" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#111">Very low &sigma;&sup0;</text>
+    <text x="85" y="278" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#1e4f8a">Dark in SAR image</text>
+
+    <!-- ===== SCENE 2: Rough soil (Diffuse) ===== -->
+    <rect x="165" y="72" width="140" height="230" rx="6" fill="#fff" stroke="#8b5e00" stroke-width="1.5"/>
+    <text x="235" y="90" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="bold" fill="#8b5e00">Rough Soil</text>
+    <text x="235" y="103" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#68625b">Diffuse scattering</text>
+
+    <!-- Rough surface -->
+    <path d="M 180 200 L 190 195 L 200 202 L 210 193 L 220 200 L 230 196 L 240 203 L 250 194 L 260 200 L 270 196 L 280 202 L 290 198" stroke="#8b5e00" stroke-width="2" fill="none"/>
+    <rect x="180" y="203" width="110" height="22" fill="#f0e8d8" stroke="none"/>
+
+    <!-- Incoming ray -->
+    <line x1="210" y1="120" x2="235" y2="197" stroke="#d92b1f" stroke-width="1.5"/>
+    <polygon points="232,191 235,197 240,193" fill="#d92b1f"/>
+    <!-- Scattered in multiple directions -->
+    <line x1="235" y1="197" x2="215" y2="140" stroke="#165d34" stroke-width="1.2"/>
+    <polygon points="216,146 215,140 211,144" fill="#165d34"/>
+    <line x1="235" y1="197" x2="255" y2="145" stroke="#165d34" stroke-width="1.2"/>
+    <polygon points="254,151 255,145 250,148" fill="#165d34"/>
+    <line x1="235" y1="197" x2="235" y2="135" stroke="#165d34" stroke-width="1.2"/>
+    <polygon points="231,141 235,135 239,141" fill="#165d34"/>
+    <text x="225" y="130" font-family="Inter, sans-serif" font-size="8" fill="#165d34">scattered</text>
+
+    <!-- Backscatter indicator -->
+    <rect x="185" y="240" width="90" height="18" rx="3" fill="#e8e6e3"/>
+    <rect x="185" y="240" width="45" height="18" rx="3" fill="#8b5e00" opacity="0.5"/>
+    <text x="235" y="253" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#111">Medium &sigma;&sup0;</text>
+    <text x="235" y="278" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#8b5e00">Gray in SAR image</text>
+
+    <!-- ===== SCENE 3: Vegetation (Volume) ===== -->
+    <rect x="315" y="72" width="140" height="230" rx="6" fill="#fff" stroke="#165d34" stroke-width="1.5"/>
+    <text x="385" y="90" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="bold" fill="#165d34">Vegetation</text>
+    <text x="385" y="103" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#68625b">Volume scattering</text>
+
+    <!-- Vegetation canopy -->
+    <ellipse cx="365" cy="180" rx="18" ry="22" fill="#165d34" opacity="0.4"/>
+    <ellipse cx="385" cy="175" rx="20" ry="25" fill="#165d34" opacity="0.5"/>
+    <ellipse cx="405" cy="180" rx="18" ry="22" fill="#165d34" opacity="0.4"/>
+    <!-- Trunks -->
+    <line x1="370" y1="200" x2="370" y2="215" stroke="#8b5e00" stroke-width="2"/>
+    <line x1="385" y1="198" x2="385" y2="215" stroke="#8b5e00" stroke-width="2"/>
+    <line x1="400" y1="200" x2="400" y2="215" stroke="#8b5e00" stroke-width="2"/>
+    <!-- Ground -->
+    <line x1="330" y1="215" x2="440" y2="215" stroke="#8b5e00" stroke-width="1.5"/>
+
+    <!-- Incoming ray -->
+    <line x1="360" y1="120" x2="385" y2="170" stroke="#d92b1f" stroke-width="1.5"/>
+    <polygon points="382,164 385,170 390,166" fill="#d92b1f"/>
+    <!-- Multiple internal scattering -->
+    <line x1="385" y1="170" x2="370" y2="140" stroke="#165d34" stroke-width="1"/>
+    <line x1="385" y1="170" x2="395" y2="142" stroke="#165d34" stroke-width="1"/>
+    <line x1="385" y1="170" x2="380" y2="138" stroke="#165d34" stroke-width="1"/>
+
+    <!-- Backscatter indicator -->
+    <rect x="335" y="240" width="90" height="18" rx="3" fill="#e8e6e3"/>
+    <rect x="335" y="240" width="55" height="18" rx="3" fill="#165d34" opacity="0.5"/>
+    <text x="385" y="253" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#111">Med-High &sigma;&sup0;</text>
+    <text x="385" y="278" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#165d34">Textured in SAR</text>
+
+    <!-- ===== SCENE 4: Urban (Corner) ===== -->
+    <rect x="465" y="72" width="140" height="230" rx="6" fill="#fff" stroke="#d92b1f" stroke-width="1.5"/>
+    <text x="535" y="90" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="bold" fill="#d92b1f">Urban / Structure</text>
+    <text x="535" y="103" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#68625b">Corner reflection</text>
+
+    <!-- Building with corner reflector -->
+    <rect x="510" y="175" width="40" height="40" fill="#68625b" stroke="#111" stroke-width="1"/>
+    <line x1="480" y1="215" x2="590" y2="215" stroke="#8b5e00" stroke-width="1.5"/>
+
+    <!-- Double bounce path -->
+    <line x1="500" y1="125" x2="520" y2="215" stroke="#d92b1f" stroke-width="1.5"/>
+    <polygon points="518,209 520,215 524,210" fill="#d92b1f"/>
+    <line x1="520" y1="215" x2="510" y2="195" stroke="#d92b1f" stroke-width="1.5"/>
+    <line x1="510" y1="195" x2="490" y2="130" stroke="#d92b1f" stroke-width="1.5"/>
+    <polygon points="492,136 490,130 486,135" fill="#d92b1f"/>
+    <text x="488" y="126" font-family="Inter, sans-serif" font-size="8" fill="#d92b1f" font-weight="bold">back to</text>
+    <text x="488" y="135" font-family="Inter, sans-serif" font-size="8" fill="#d92b1f" font-weight="bold">sensor</text>
+
+    <!-- Backscatter indicator -->
+    <rect x="485" y="240" width="90" height="18" rx="3" fill="#e8e6e3"/>
+    <rect x="485" y="240" width="80" height="18" rx="3" fill="#d92b1f" opacity="0.5"/>
+    <text x="535" y="253" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#111">Very high &sigma;&sup0;</text>
+    <text x="535" y="278" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#d92b1f">Bright in SAR image</text>
+  </svg>
+  <p class="diagram-caption">Figure: Four dominant radar scattering mechanisms encountered in Central Asia. Smooth water reflects energy away (dark pixels), rough soil scatters diffusely, vegetation causes volume scattering, and buildings create strong corner-reflector returns (bright pixels).</p>
+</div>
+
+
 ## What Sentinel-1 can reveal in Central Asia
 
 ### 1. Abandoned irrigation geometry

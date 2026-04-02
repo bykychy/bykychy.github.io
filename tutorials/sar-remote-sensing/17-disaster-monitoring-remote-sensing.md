@@ -19,6 +19,115 @@ When disaster strikes, hours matter. Emergency responders need damage assessment
   The value of disaster remote sensing is measured in response time. A damage map delivered 6 hours after an earthquake saves more lives than a perfect map delivered 6 days later.
 </div>
 
+<div class="learning-objectives">
+  <div class="learning-objectives-header">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1e4f8a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    <h3>What you will learn</h3>
+  </div>
+  <ul>
+    <li>Map earthquake building damage using SAR coherence loss and damage proxy map classification (moderate/severe thresholds)</li>
+    <li>Detect flood extent from SAR backscatter thresholds and change detection between pre-event and flood-event imagery</li>
+    <li>Identify landslide-affected slopes through coherence loss, amplitude change, and DEM-derived susceptibility indicators</li>
+    <li>Monitor glacial lake outburst floods (GLOFs) and wildfire burn areas using multi-temporal SAR and optical indices</li>
+    <li>Design rapid-response mapping workflows with pre-event baselines and integration into emergency response systems</li>
+  </ul>
+</div>
+
+<div class="prerequisites">
+  <div class="prerequisites-header">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8b5e00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+    <h3>Prerequisites</h3>
+  </div>
+  <ul>
+    <li>Understanding of SAR backscatter fundamentals and coherence computation from earlier tutorials in this series</li>
+    <li>Basic Python programming for image processing (NumPy array operations, thresholding, filtering)</li>
+    <li>Familiarity with change detection concepts — comparing pre-event and post-event imagery</li>
+    <li>Awareness of Central Asia's natural hazard context (seismic zones, river systems, mountain terrain)</li>
+  </ul>
+</div>
+
+<div class="concept-diagram">
+  <svg viewBox="0 0 620 320" xmlns="http://www.w3.org/2000/svg" style="max-width: 580px;">
+    <text x="310" y="18" font-family="Inter, sans-serif" font-size="13" fill="#111" text-anchor="middle" font-weight="bold">Multi-Hazard Disaster Monitoring with Remote Sensing</text>
+    <!-- Earthquake panel -->
+    <rect x="15" y="35" width="185" height="130" rx="5" fill="#fce8e7" stroke="#d92b1f" stroke-width="1.2"/>
+    <text x="107" y="52" font-family="Inter, sans-serif" font-size="11" fill="#d92b1f" text-anchor="middle" font-weight="bold">Earthquake Damage</text>
+    <!-- Before coherence (high) -->
+    <rect x="28" y="62" width="70" height="45" rx="2" fill="#fff" stroke="#68625b" stroke-width="0.5"/>
+    <text x="63" y="73" font-family="Inter, sans-serif" font-size="8" fill="#111" text-anchor="middle">Pre-event</text>
+    <rect x="35" y="77" width="12" height="12" fill="#1e4f8a" opacity="0.8"/><rect x="49" y="77" width="12" height="12" fill="#1e4f8a" opacity="0.7"/><rect x="63" y="77" width="12" height="12" fill="#1e4f8a" opacity="0.9"/>
+    <rect x="35" y="91" width="12" height="12" fill="#1e4f8a" opacity="0.75"/><rect x="49" y="91" width="12" height="12" fill="#1e4f8a" opacity="0.85"/><rect x="63" y="91" width="12" height="12" fill="#1e4f8a" opacity="0.8"/>
+    <!-- After coherence (low) -->
+    <rect x="112" y="62" width="70" height="45" rx="2" fill="#fff" stroke="#68625b" stroke-width="0.5"/>
+    <text x="147" y="73" font-family="Inter, sans-serif" font-size="8" fill="#111" text-anchor="middle">Post-event</text>
+    <rect x="119" y="77" width="12" height="12" fill="#1e4f8a" opacity="0.7"/><rect x="133" y="77" width="12" height="12" fill="#d92b1f" opacity="0.7"/><rect x="147" y="77" width="12" height="12" fill="#d92b1f" opacity="0.9"/>
+    <rect x="119" y="91" width="12" height="12" fill="#1e4f8a" opacity="0.6"/><rect x="133" y="91" width="12" height="12" fill="#d92b1f" opacity="0.8"/><rect x="147" y="91" width="12" height="12" fill="#d92b1f" opacity="0.6"/>
+    <text x="63" y="118" font-family="Inter, sans-serif" font-size="8" fill="#1e4f8a" text-anchor="middle">High coherence</text>
+    <text x="147" y="118" font-family="Inter, sans-serif" font-size="8" fill="#d92b1f" text-anchor="middle">Coherence loss</text>
+    <!-- Arrow between -->
+    <text x="102" y="92" font-family="Inter, sans-serif" font-size="12" fill="#68625b" text-anchor="middle">→</text>
+    <text x="107" y="148" font-family="Inter, sans-serif" font-size="9" fill="#68625b" text-anchor="middle" font-style="italic">Damage proxy map</text>
+    <!-- Flood panel -->
+    <rect x="215" y="35" width="185" height="130" rx="5" fill="#e8f0fa" stroke="#1e4f8a" stroke-width="1.2"/>
+    <text x="307" y="52" font-family="Inter, sans-serif" font-size="11" fill="#1e4f8a" text-anchor="middle" font-weight="bold">Flood Mapping</text>
+    <!-- SAR image with water (dark) -->
+    <rect x="228" y="62" width="70" height="55" rx="2" fill="#fff" stroke="#68625b" stroke-width="0.5"/>
+    <text x="263" y="73" font-family="Inter, sans-serif" font-size="8" fill="#111" text-anchor="middle">Pre-flood</text>
+    <rect x="235" y="77" width="50" height="35" fill="#68625b" opacity="0.3"/>
+    <path d="M240,95 Q255,90 270,95" fill="none" stroke="#1e4f8a" stroke-width="1"/>
+    <rect x="312" y="62" width="70" height="55" rx="2" fill="#fff" stroke="#68625b" stroke-width="0.5"/>
+    <text x="347" y="73" font-family="Inter, sans-serif" font-size="8" fill="#111" text-anchor="middle">During flood</text>
+    <rect x="319" y="77" width="50" height="35" fill="#68625b" opacity="0.3"/>
+    <rect x="319" y="87" width="50" height="25" fill="#1e4f8a" opacity="0.5"/>
+    <text x="263" y="130" font-family="Inter, sans-serif" font-size="8" fill="#68625b" text-anchor="middle">Normal</text>
+    <text x="347" y="130" font-family="Inter, sans-serif" font-size="8" fill="#1e4f8a" text-anchor="middle">Dark = water</text>
+    <!-- Arrow -->
+    <text x="300" y="97" font-family="Inter, sans-serif" font-size="12" fill="#68625b" text-anchor="middle">→</text>
+    <text x="307" y="148" font-family="Inter, sans-serif" font-size="9" fill="#68625b" text-anchor="middle" font-style="italic">Flood extent map</text>
+    <!-- Landslide panel -->
+    <rect x="415" y="35" width="185" height="130" rx="5" fill="#f0f7f2" stroke="#165d34" stroke-width="1.2"/>
+    <text x="507" y="52" font-family="Inter, sans-serif" font-size="11" fill="#165d34" text-anchor="middle" font-weight="bold">Landslide Detection</text>
+    <!-- Slope with slide -->
+    <polygon points="430,115 510,62 510,115" fill="#165d34" opacity="0.2" stroke="#165d34" stroke-width="0.5"/>
+    <polygon points="510,62 590,115 510,115" fill="#165d34" opacity="0.15" stroke="#165d34" stroke-width="0.5"/>
+    <!-- Slide scar -->
+    <path d="M475,82 Q490,78 500,85 Q505,90 495,95 Q485,92 475,82Z" fill="#8b5e00" opacity="0.6" stroke="#8b5e00" stroke-width="0.5"/>
+    <text x="487" y="108" font-family="Inter, sans-serif" font-size="8" fill="#8b5e00" text-anchor="middle">Slide scar</text>
+    <!-- Coherence bars -->
+    <rect x="530" y="70" width="8" height="35" fill="#165d34" opacity="0.6"/>
+    <rect x="545" y="85" width="8" height="20" fill="#d92b1f" opacity="0.6"/>
+    <text x="534" y="115" font-family="Inter, sans-serif" font-size="7" fill="#165d34" text-anchor="middle">Pre</text>
+    <text x="549" y="115" font-family="Inter, sans-serif" font-size="7" fill="#d92b1f" text-anchor="middle">Post</text>
+    <text x="542" y="130" font-family="Inter, sans-serif" font-size="8" fill="#68625b" text-anchor="middle">Coherence</text>
+    <text x="507" y="148" font-family="Inter, sans-serif" font-size="9" fill="#68625b" text-anchor="middle" font-style="italic">Slope failure map</text>
+    <!-- Bottom: Rapid Response Pipeline -->
+    <rect x="30" y="180" width="560" height="55" rx="5" fill="#f5f5f0" stroke="#68625b" stroke-width="1"/>
+    <text x="310" y="198" font-family="Inter, sans-serif" font-size="11" fill="#111" text-anchor="middle" font-weight="bold">Rapid Response Pipeline</text>
+    <!-- Pipeline steps -->
+    <rect x="48" y="206" width="90" height="22" rx="3" fill="#1e4f8a" opacity="0.15" stroke="#1e4f8a" stroke-width="0.5"/>
+    <text x="93" y="220" font-family="Inter, sans-serif" font-size="9" fill="#1e4f8a" text-anchor="middle">Pre-event baseline</text>
+    <text x="148" y="220" font-family="Inter, sans-serif" font-size="11" fill="#68625b" text-anchor="middle">→</text>
+    <rect x="158" y="206" width="90" height="22" rx="3" fill="#d92b1f" opacity="0.15" stroke="#d92b1f" stroke-width="0.5"/>
+    <text x="203" y="220" font-family="Inter, sans-serif" font-size="9" fill="#d92b1f" text-anchor="middle">Event detection</text>
+    <text x="258" y="220" font-family="Inter, sans-serif" font-size="11" fill="#68625b" text-anchor="middle">→</text>
+    <rect x="268" y="206" width="90" height="22" rx="3" fill="#8b5e00" opacity="0.15" stroke="#8b5e00" stroke-width="0.5"/>
+    <text x="313" y="220" font-family="Inter, sans-serif" font-size="9" fill="#8b5e00" text-anchor="middle">Change analysis</text>
+    <text x="368" y="220" font-family="Inter, sans-serif" font-size="11" fill="#68625b" text-anchor="middle">→</text>
+    <rect x="378" y="206" width="90" height="22" rx="3" fill="#165d34" opacity="0.15" stroke="#165d34" stroke-width="0.5"/>
+    <text x="423" y="220" font-family="Inter, sans-serif" font-size="9" fill="#165d34" text-anchor="middle">Damage map</text>
+    <text x="478" y="220" font-family="Inter, sans-serif" font-size="11" fill="#68625b" text-anchor="middle">→</text>
+    <rect x="488" y="206" width="90" height="22" rx="3" fill="#68625b" opacity="0.15" stroke="#68625b" stroke-width="0.5"/>
+    <text x="533" y="220" font-family="Inter, sans-serif" font-size="9" fill="#68625b" text-anchor="middle">Emergency alert</text>
+    <!-- Timeline -->
+    <text x="310" y="260" font-family="Inter, sans-serif" font-size="10" fill="#d92b1f" text-anchor="middle" font-style="italic">Target: actionable damage assessment within 6–12 hours of event</text>
+    <!-- Central Asia context -->
+    <rect x="80" y="275" width="460" height="35" rx="4" fill="#fdf6e3" stroke="#8b5e00" stroke-width="0.5"/>
+    <text x="310" y="290" font-family="Inter, sans-serif" font-size="9" fill="#8b5e00" text-anchor="middle">Central Asia hazards: Tien Shan earthquakes · Syr Darya floods · Pamir landslides · Aral dust storms · Glacial lake outbursts</text>
+    <text x="310" y="303" font-family="Inter, sans-serif" font-size="9" fill="#8b5e00" text-anchor="middle">SAR advantage: all-weather, day/night imaging when optical sensors are blocked by clouds or darkness</text>
+  </svg>
+  <p class="diagram-caption">Multi-hazard disaster monitoring framework: SAR coherence loss detects earthquake damage, backscatter thresholds map flood extent, and slope coherence analysis identifies landslides — all feeding a rapid-response pipeline.</p>
+</div>
+
 ## Earthquake damage mapping
 
 ### Coherence loss detection

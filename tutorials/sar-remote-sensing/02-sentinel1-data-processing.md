@@ -19,6 +19,109 @@ This is where many mistakes happen. A beautiful image can still be scientificall
   Processing is not decoration. Each step exists to make the pixel values closer to a physically meaningful measurement.
 </div>
 
+<div class="learning-objectives">
+  <div class="learning-objectives-header">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1e4f8a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    <h3>What you will learn</h3>
+  </div>
+  <ul>
+    <li>How to radiometrically calibrate Sentinel-1 data into physically meaningful backscatter coefficients (&sigma;<sup>0</sup>, &beta;<sup>0</sup>, &gamma;<sup>0</sup>)</li>
+    <li>When and how to apply speckle filtering without destroying meaningful spatial detail</li>
+    <li>Why terrain correction is essential for mountainous Central Asian landscapes</li>
+    <li>How to convert linear backscatter to decibel (dB) scale and interpret the difference</li>
+    <li>How to design a complete Sentinel-1 processing chain tailored to a scientific comparison question</li>
+  </ul>
+</div>
+
+<div class="prerequisites">
+  <div class="prerequisites-header">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8b5e00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+    <h3>Prerequisites</h3>
+  </div>
+  <ul>
+    <li>Basic understanding of SAR imaging principles (Tutorial 01 recommended)</li>
+    <li>Familiarity with logarithmic scales and decibel notation</li>
+    <li>Access to SNAP toolbox or equivalent SAR processing software</li>
+  </ul>
+</div>
+
+<div class="concept-diagram">
+  <svg viewBox="0 0 620 320" xmlns="http://www.w3.org/2000/svg" style="max-width: 580px;">
+    <!-- Background -->
+    <rect x="0" y="0" width="620" height="320" fill="#f8f9fa" rx="8"/>
+    <text x="310" y="24" text-anchor="middle" font-family="Inter, sans-serif" font-size="13" font-weight="bold" fill="#1e4f8a">Sentinel-1 Processing Pipeline</text>
+
+    <!-- Step 1: Raw SLC -->
+    <rect x="20" y="55" width="110" height="60" rx="6" fill="#1e4f8a" stroke="#1e4f8a" stroke-width="1.5"/>
+    <text x="75" y="80" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="bold" fill="#fff">Raw SLC</text>
+    <text x="75" y="98" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#c5d5ea">Uncalibrated</text>
+    <text x="75" y="108" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#c5d5ea">amplitude</text>
+
+    <!-- Arrow 1 -->
+    <line x1="130" y1="85" x2="155" y2="85" stroke="#68625b" stroke-width="2"/>
+    <polygon points="155,80 165,85 155,90" fill="#68625b"/>
+
+    <!-- Step 2: Calibration -->
+    <rect x="165" y="55" width="110" height="60" rx="6" fill="#fff" stroke="#1e4f8a" stroke-width="2"/>
+    <text x="220" y="78" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="bold" fill="#1e4f8a">Calibration</text>
+    <text x="220" y="94" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#68625b">&sigma;&sup0; / &beta;&sup0; / &gamma;&sup0;</text>
+    <text x="220" y="108" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#8b5e00">Physical units</text>
+
+    <!-- Arrow 2 -->
+    <line x1="275" y1="85" x2="300" y2="85" stroke="#68625b" stroke-width="2"/>
+    <polygon points="300,80 310,85 300,90" fill="#68625b"/>
+
+    <!-- Step 3: Speckle Filter -->
+    <rect x="310" y="55" width="110" height="60" rx="6" fill="#fff" stroke="#165d34" stroke-width="2"/>
+    <text x="365" y="78" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="bold" fill="#165d34">Speckle</text>
+    <text x="365" y="93" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="bold" fill="#165d34">Filtering</text>
+    <text x="365" y="108" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#8b5e00">Lee / Refined Lee</text>
+
+    <!-- Arrow 3 -->
+    <line x1="420" y1="85" x2="445" y2="85" stroke="#68625b" stroke-width="2"/>
+    <polygon points="445,80 455,85 445,90" fill="#68625b"/>
+
+    <!-- Step 4: Terrain Correction -->
+    <rect x="455" y="55" width="140" height="60" rx="6" fill="#fff" stroke="#8b5e00" stroke-width="2"/>
+    <text x="525" y="78" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="bold" fill="#8b5e00">Terrain</text>
+    <text x="525" y="93" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="bold" fill="#8b5e00">Correction</text>
+    <text x="525" y="108" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#68625b">DEM + sensor geometry</text>
+
+    <!-- Arrow 4: down to final product -->
+    <line x1="525" y1="115" x2="525" y2="145" stroke="#68625b" stroke-width="2"/>
+    <polygon points="520,145 525,155 530,145" fill="#68625b"/>
+
+    <!-- Step 5: Final Product -->
+    <rect x="430" y="158" width="190" height="55" rx="6" fill="#d92b1f" stroke="#d92b1f" stroke-width="1.5"/>
+    <text x="525" y="182" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" font-weight="bold" fill="#fff">Analysis-Ready Product</text>
+    <text x="525" y="200" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#fdd">Calibrated, filtered, geocoded dB image</text>
+
+    <!-- Annotations below pipeline -->
+    <rect x="20" y="145" width="380" height="120" rx="6" fill="#fff" stroke="#e0ddd8" stroke-width="1"/>
+
+    <!-- Speckle noise illustration -->
+    <text x="35" y="165" font-family="Inter, sans-serif" font-size="10" font-weight="bold" fill="#111">Why each step matters:</text>
+    <!-- Calibration annotation -->
+    <circle cx="45" cy="185" r="5" fill="#1e4f8a"/>
+    <text x="55" y="189" font-family="Inter, sans-serif" font-size="9" fill="#111">Calibration: raw DN &rarr; physically comparable &sigma;&sup0; values</text>
+    <!-- Filter annotation -->
+    <circle cx="45" cy="205" r="5" fill="#165d34"/>
+    <text x="55" y="209" font-family="Inter, sans-serif" font-size="9" fill="#111">Filtering: reduces speckle noise while preserving edges</text>
+    <!-- Terrain annotation -->
+    <circle cx="45" cy="225" r="5" fill="#8b5e00"/>
+    <text x="55" y="229" font-family="Inter, sans-serif" font-size="9" fill="#111">Terrain correction: maps slant-range to ground coordinates using DEM</text>
+    <!-- dB annotation -->
+    <circle cx="45" cy="245" r="5" fill="#d92b1f"/>
+    <text x="55" y="249" font-family="Inter, sans-serif" font-size="9" fill="#111">dB conversion: 10&middot;log&#x2081;&#x2080;(&sigma;&sup0;) makes multiplicative contrasts readable</text>
+
+    <!-- Formula box -->
+    <rect x="20" y="278" width="580" height="30" rx="4" fill="#eef2f7" stroke="#1e4f8a" stroke-width="1"/>
+    <text x="310" y="298" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="#1e4f8a">Key formula: &sigma;&sup0;(dB) = 10 &middot; log&#x2081;&#x2080;(&sigma;&sup0;)  |  Doubling power &asymp; +3 dB</text>
+  </svg>
+  <p class="diagram-caption">Figure: The standard Sentinel-1 processing pipeline from raw Single Look Complex (SLC) data to analysis-ready backscatter products. Each step brings pixel values closer to physically meaningful measurements.</p>
+</div>
+
+
 ## The standard Sentinel-1 workflow
 
 A common workflow includes:

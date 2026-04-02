@@ -19,6 +19,242 @@ This tutorial addresses the often-neglected foundation of all survey work: recor
   The most sophisticated instrument produces worthless data if you cannot prove when, where, and how measurements were taken. Documentation is not bureaucracy—it is the bridge between raw readings and scientific knowledge.
 </div>
 
+<div class="learning-objectives">
+  <div class="learning-objectives-header">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1e4f8a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    <h3>What you will learn</h3>
+  </div>
+  <ul>
+    <li>Maintain systematic field notebooks with waterproof media, permanent ink, and legally defensible recording practices</li>
+    <li>Apply metadata standards (who, what, when, where, how, why) to every geophysical and remote-sensing dataset</li>
+    <li>Implement consistent file-naming conventions and GPS waypoint/track logging for Central Asian survey projects</li>
+    <li>Structure professional survey reports including executive summaries, methodology sections, and appendices</li>
+    <li>Archive and share datasets using open formats, Creative Commons licensing, and long-term preservation strategies</li>
+  </ul>
+</div>
+
+<div class="prerequisites">
+  <div class="prerequisites-header">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8b5e00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+    <h3>Prerequisites</h3>
+  </div>
+  <ul>
+    <li>Basic familiarity with at least one geophysical survey method (e.g., magnetometry, GPR, or EM)</li>
+    <li>Ability to read and record GPS coordinates in latitude/longitude and UTM formats</li>
+    <li>Access to a text editor or spreadsheet for creating metadata records</li>
+  </ul>
+</div>
+
+<div class="concept-diagram">
+  <svg viewBox="0 0 620 320" xmlns="http://www.w3.org/2000/svg" style="max-width: 580px;">
+    <!-- Background -->
+    <rect x="0" y="0" width="620" height="320" fill="#f9f8f6" rx="8"/>
+    <text x="310" y="28" text-anchor="middle" font-family="Inter, sans-serif" font-size="13" font-weight="bold" fill="#111">Field Documentation Workflow</text>
+
+    <!-- Step 1: Field Notebook -->
+    <rect x="20" y="55" width="100" height="80" rx="6" fill="#fff" stroke="#1e4f8a" stroke-width="1.5"/>
+    <rect x="35" y="65" width="70" height="50" rx="3" fill="#e8eef5" stroke="#1e4f8a" stroke-width="0.8"/>
+    <line x1="42" y1="76" x2="98" y2="76" stroke="#1e4f8a" stroke-width="0.6"/>
+    <line x1="42" y1="84" x2="98" y2="84" stroke="#1e4f8a" stroke-width="0.6"/>
+    <line x1="42" y1="92" x2="85" y2="92" stroke="#1e4f8a" stroke-width="0.6"/>
+    <line x1="42" y1="100" x2="95" y2="100" stroke="#1e4f8a" stroke-width="0.6"/>
+    <text x="70" y="148" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#111">Field Notebook</text>
+    <text x="70" y="160" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#68625b">Waterproof, ink</text>
+
+    <!-- Arrow 1 -->
+    <line x1="125" y1="95" x2="148" y2="95" stroke="#68625b" stroke-width="1.5" marker-end="url(#arrowGray11)"/>
+
+    <!-- Step 2: Digital Entry -->
+    <rect x="152" y="55" width="100" height="80" rx="6" fill="#fff" stroke="#165d34" stroke-width="1.5"/>
+    <rect x="167" y="67" width="70" height="45" rx="2" fill="#eaf5ec" stroke="#165d34" stroke-width="0.8"/>
+    <text x="202" y="82" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#165d34">CSV / XLSX</text>
+    <rect x="175" y="88" width="54" height="6" rx="1" fill="#165d34" opacity="0.2"/>
+    <rect x="175" y="97" width="42" height="6" rx="1" fill="#165d34" opacity="0.2"/>
+    <text x="202" y="148" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#111">Digital Entry</text>
+    <text x="202" y="160" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#68625b">Same-day transfer</text>
+
+    <!-- Arrow 2 -->
+    <line x1="257" y1="95" x2="280" y2="95" stroke="#68625b" stroke-width="1.5" marker-end="url(#arrowGray11)"/>
+
+    <!-- Step 3: Metadata Standard -->
+    <rect x="284" y="55" width="100" height="80" rx="6" fill="#fff" stroke="#8b5e00" stroke-width="1.5"/>
+    <text x="334" y="78" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" font-weight="bold" fill="#8b5e00">WHO</text>
+    <text x="334" y="90" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#8b5e00">WHAT · WHEN</text>
+    <text x="334" y="102" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#8b5e00">WHERE · HOW</text>
+    <text x="334" y="114" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" font-weight="bold" fill="#8b5e00">WHY</text>
+    <text x="334" y="148" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#111">Metadata Standard</text>
+    <text x="334" y="160" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#68625b">Six essential Qs</text>
+
+    <!-- Arrow 3 -->
+    <line x1="389" y1="95" x2="412" y2="95" stroke="#68625b" stroke-width="1.5" marker-end="url(#arrowGray11)"/>
+
+    <!-- Step 4: GIS Database -->
+    <rect x="416" y="55" width="100" height="80" rx="6" fill="#fff" stroke="#d92b1f" stroke-width="1.5"/>
+    <circle cx="466" cy="82" r="16" fill="#fdeaea" stroke="#d92b1f" stroke-width="0.8"/>
+    <circle cx="466" cy="82" r="8" fill="none" stroke="#d92b1f" stroke-width="0.6"/>
+    <line x1="458" y1="82" x2="474" y2="82" stroke="#d92b1f" stroke-width="0.6"/>
+    <line x1="466" y1="74" x2="466" y2="90" stroke="#d92b1f" stroke-width="0.6"/>
+    <text x="466" y="115" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#d92b1f">Georeferenced</text>
+    <text x="466" y="148" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#111">GIS Database</text>
+    <text x="466" y="160" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#68625b">Spatial archive</text>
+
+    <!-- Arrow 4 -->
+    <line x1="521" y1="95" x2="544" y2="95" stroke="#68625b" stroke-width="1.5" marker-end="url(#arrowGray11)"/>
+
+    <!-- Step 5: Report -->
+    <rect x="548" y="55" width="56" height="80" rx="6" fill="#fff" stroke="#111" stroke-width="1.5"/>
+    <rect x="556" y="64" width="40" height="52" rx="2" fill="#f2f2f2" stroke="#111" stroke-width="0.6"/>
+    <line x1="561" y1="74" x2="591" y2="74" stroke="#111" stroke-width="0.5"/>
+    <line x1="561" y1="82" x2="591" y2="82" stroke="#111" stroke-width="0.5"/>
+    <line x1="561" y1="90" x2="586" y2="90" stroke="#111" stroke-width="0.5"/>
+    <line x1="561" y1="98" x2="589" y2="98" stroke="#111" stroke-width="0.5"/>
+    <line x1="561" y1="106" x2="580" y2="106" stroke="#111" stroke-width="0.5"/>
+    <text x="576" y="148" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#111">Report</text>
+    <text x="576" y="160" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#68625b">Final output</text>
+
+    <!-- Quality Control feedback loop -->
+    <path d="M 310 170 L 310 195 L 70 195 L 70 170" fill="none" stroke="#d92b1f" stroke-width="1" stroke-dasharray="4,3"/>
+    <text x="190" y="210" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#d92b1f">← Quality Control Checks at Every Stage →</text>
+
+    <!-- Legend -->
+    <rect x="20" y="235" width="580" height="70" rx="6" fill="#fff" stroke="#68625b" stroke-width="0.5"/>
+    <text x="30" y="253" font-family="Inter, sans-serif" font-size="10" font-weight="bold" fill="#111">Key Principles</text>
+    <circle cx="38" cy="268" r="3" fill="#1e4f8a"/>
+    <text x="48" y="272" font-family="Inter, sans-serif" font-size="9" fill="#111">Record immediately in the field — never from memory</text>
+    <circle cx="38" cy="285" r="3" fill="#165d34"/>
+    <text x="48" y="289" font-family="Inter, sans-serif" font-size="9" fill="#111">Transfer to digital same day; backup to 3 separate locations</text>
+    <circle cx="330" cy="268" r="3" fill="#8b5e00"/>
+    <text x="340" y="272" font-family="Inter, sans-serif" font-size="9" fill="#111">Every dataset must answer: who, what, when, where, how, why</text>
+    <circle cx="330" cy="285" r="3" fill="#d92b1f"/>
+    <text x="340" y="289" font-family="Inter, sans-serif" font-size="9" fill="#111">Use open formats (CSV, GeoTIFF) for long-term access</text>
+
+    <defs>
+      <marker id="arrowGray11" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="#68625b"/>
+      </marker>
+    </defs>
+  </svg>
+  <p class="diagram-caption">Figure — Documentation workflow from field notebook to final report, with quality control at every stage.</p>
+</div>
+
+<div class="learning-objectives">
+  <div class="learning-objectives-header">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1e4f8a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    <h3>What you will learn</h3>
+  </div>
+  <ul>
+    <li>Maintain systematic field notebooks with waterproof media, permanent ink, and legally defensible recording practices</li>
+    <li>Apply metadata standards (who, what, when, where, how, why) to every geophysical and remote-sensing dataset</li>
+    <li>Implement consistent file-naming conventions and GPS waypoint/track logging for Central Asian survey projects</li>
+    <li>Structure professional survey reports including executive summaries, methodology sections, and appendices</li>
+    <li>Archive and share datasets using open formats, Creative Commons licensing, and long-term preservation strategies</li>
+  </ul>
+</div>
+
+<div class="prerequisites">
+  <div class="prerequisites-header">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8b5e00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+    <h3>Prerequisites</h3>
+  </div>
+  <ul>
+    <li>Basic familiarity with at least one geophysical survey method (e.g., magnetometry, GPR, or EM)</li>
+    <li>Ability to read and record GPS coordinates in latitude/longitude and UTM formats</li>
+    <li>Access to a text editor or spreadsheet for creating metadata records</li>
+  </ul>
+</div>
+
+<div class="concept-diagram">
+  <svg viewBox="0 0 620 320" xmlns="http://www.w3.org/2000/svg" style="max-width: 580px;">
+    <!-- Background -->
+    <rect x="0" y="0" width="620" height="320" fill="#f9f8f6" rx="8"/>
+    <text x="310" y="28" text-anchor="middle" font-family="Inter, sans-serif" font-size="13" font-weight="bold" fill="#111">Field Documentation Workflow</text>
+
+    <!-- Step 1: Field Notebook -->
+    <rect x="20" y="55" width="100" height="80" rx="6" fill="#fff" stroke="#1e4f8a" stroke-width="1.5"/>
+    <rect x="35" y="65" width="70" height="50" rx="3" fill="#e8eef5" stroke="#1e4f8a" stroke-width="0.8"/>
+    <line x1="42" y1="76" x2="98" y2="76" stroke="#1e4f8a" stroke-width="0.6"/>
+    <line x1="42" y1="84" x2="98" y2="84" stroke="#1e4f8a" stroke-width="0.6"/>
+    <line x1="42" y1="92" x2="85" y2="92" stroke="#1e4f8a" stroke-width="0.6"/>
+    <line x1="42" y1="100" x2="95" y2="100" stroke="#1e4f8a" stroke-width="0.6"/>
+    <text x="70" y="148" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#111">Field Notebook</text>
+    <text x="70" y="160" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#68625b">Waterproof, ink</text>
+
+    <!-- Arrow 1 -->
+    <line x1="125" y1="95" x2="148" y2="95" stroke="#68625b" stroke-width="1.5" marker-end="url(#arrowGray11)"/>
+
+    <!-- Step 2: Digital Entry -->
+    <rect x="152" y="55" width="100" height="80" rx="6" fill="#fff" stroke="#165d34" stroke-width="1.5"/>
+    <rect x="167" y="67" width="70" height="45" rx="2" fill="#eaf5ec" stroke="#165d34" stroke-width="0.8"/>
+    <text x="202" y="82" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#165d34">CSV / XLSX</text>
+    <rect x="175" y="88" width="54" height="6" rx="1" fill="#165d34" opacity="0.2"/>
+    <rect x="175" y="97" width="42" height="6" rx="1" fill="#165d34" opacity="0.2"/>
+    <text x="202" y="148" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#111">Digital Entry</text>
+    <text x="202" y="160" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#68625b">Same-day transfer</text>
+
+    <!-- Arrow 2 -->
+    <line x1="257" y1="95" x2="280" y2="95" stroke="#68625b" stroke-width="1.5" marker-end="url(#arrowGray11)"/>
+
+    <!-- Step 3: Metadata Standard -->
+    <rect x="284" y="55" width="100" height="80" rx="6" fill="#fff" stroke="#8b5e00" stroke-width="1.5"/>
+    <text x="334" y="78" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" font-weight="bold" fill="#8b5e00">WHO</text>
+    <text x="334" y="90" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#8b5e00">WHAT · WHEN</text>
+    <text x="334" y="102" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#8b5e00">WHERE · HOW</text>
+    <text x="334" y="114" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" font-weight="bold" fill="#8b5e00">WHY</text>
+    <text x="334" y="148" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#111">Metadata Standard</text>
+    <text x="334" y="160" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#68625b">Six essential Qs</text>
+
+    <!-- Arrow 3 -->
+    <line x1="389" y1="95" x2="412" y2="95" stroke="#68625b" stroke-width="1.5" marker-end="url(#arrowGray11)"/>
+
+    <!-- Step 4: GIS Database -->
+    <rect x="416" y="55" width="100" height="80" rx="6" fill="#fff" stroke="#d92b1f" stroke-width="1.5"/>
+    <circle cx="466" cy="82" r="16" fill="#fdeaea" stroke="#d92b1f" stroke-width="0.8"/>
+    <circle cx="466" cy="82" r="8" fill="none" stroke="#d92b1f" stroke-width="0.6"/>
+    <line x1="458" y1="82" x2="474" y2="82" stroke="#d92b1f" stroke-width="0.6"/>
+    <line x1="466" y1="74" x2="466" y2="90" stroke="#d92b1f" stroke-width="0.6"/>
+    <text x="466" y="115" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#d92b1f">Georeferenced</text>
+    <text x="466" y="148" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#111">GIS Database</text>
+    <text x="466" y="160" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#68625b">Spatial archive</text>
+
+    <!-- Arrow 4 -->
+    <line x1="521" y1="95" x2="544" y2="95" stroke="#68625b" stroke-width="1.5" marker-end="url(#arrowGray11)"/>
+
+    <!-- Step 5: Report -->
+    <rect x="548" y="55" width="56" height="80" rx="6" fill="#fff" stroke="#111" stroke-width="1.5"/>
+    <rect x="556" y="64" width="40" height="52" rx="2" fill="#f2f2f2" stroke="#111" stroke-width="0.6"/>
+    <line x1="561" y1="74" x2="591" y2="74" stroke="#111" stroke-width="0.5"/>
+    <line x1="561" y1="82" x2="591" y2="82" stroke="#111" stroke-width="0.5"/>
+    <line x1="561" y1="90" x2="586" y2="90" stroke="#111" stroke-width="0.5"/>
+    <line x1="561" y1="98" x2="589" y2="98" stroke="#111" stroke-width="0.5"/>
+    <line x1="561" y1="106" x2="580" y2="106" stroke="#111" stroke-width="0.5"/>
+    <text x="576" y="148" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#111">Report</text>
+    <text x="576" y="160" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#68625b">Final output</text>
+
+    <!-- Quality Control feedback loop -->
+    <path d="M 310 170 L 310 195 L 70 195 L 70 170" fill="none" stroke="#d92b1f" stroke-width="1" stroke-dasharray="4,3"/>
+    <text x="190" y="210" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#d92b1f">← Quality Control Checks at Every Stage →</text>
+
+    <!-- Legend -->
+    <rect x="20" y="235" width="580" height="70" rx="6" fill="#fff" stroke="#68625b" stroke-width="0.5"/>
+    <text x="30" y="253" font-family="Inter, sans-serif" font-size="10" font-weight="bold" fill="#111">Key Principles</text>
+    <circle cx="38" cy="268" r="3" fill="#1e4f8a"/>
+    <text x="48" y="272" font-family="Inter, sans-serif" font-size="9" fill="#111">Record immediately in the field — never from memory</text>
+    <circle cx="38" cy="285" r="3" fill="#165d34"/>
+    <text x="48" y="289" font-family="Inter, sans-serif" font-size="9" fill="#111">Transfer to digital same day; backup to 3 separate locations</text>
+    <circle cx="330" cy="268" r="3" fill="#8b5e00"/>
+    <text x="340" y="272" font-family="Inter, sans-serif" font-size="9" fill="#111">Every dataset must answer: who, what, when, where, how, why</text>
+    <circle cx="330" cy="285" r="3" fill="#d92b1f"/>
+    <text x="340" y="289" font-family="Inter, sans-serif" font-size="9" fill="#111">Use open formats (CSV, GeoTIFF) for long-term access</text>
+
+    <defs>
+      <marker id="arrowGray11" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="#68625b"/>
+      </marker>
+    </defs>
+  </svg>
+  <p class="diagram-caption">Figure — Documentation workflow from field notebook to final report, with quality control at every stage.</p>
+</div>
+
 ## Field notebook essentials
 
 ### What to record

@@ -19,6 +19,157 @@ For Central Asia, this capability is transformative. The region contains archaeo
   Drones bridge the resolution gap. Satellites see patterns across landscapes; ground instruments see details at points. UAVs capture the intermediate scale where many management decisions are made: individual field parcels, building footprints, erosion gullies, and archaeological features.
 </div>
 
+<div class="learning-objectives">
+  <div class="learning-objectives-header">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1e4f8a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    <h3>What you will learn</h3>
+  </div>
+  <ul>
+    <li>How Structure from Motion (SfM) reconstructs 3D geometry from overlapping 2D drone images</li>
+    <li>How to plan UAV survey flights with proper overlap, altitude, and ground sampling distance (GSD)</li>
+    <li>How LiDAR point clouds differ from photogrammetric products and when each is preferred</li>
+    <li>How to assess accuracy using ground control points, RMSE, and point cloud density metrics</li>
+    <li>How to apply drone-based surveying to Central Asian archaeological sites, irrigation networks, and glacier monitoring</li>
+  </ul>
+</div>
+
+<div class="prerequisites">
+  <div class="prerequisites-header">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8b5e00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+    <h3>Prerequisites</h3>
+  </div>
+  <ul>
+    <li>Understanding of basic 3D coordinate systems and map projections</li>
+    <li>Familiarity with image overlap, parallax, and triangulation concepts</li>
+    <li>Awareness of UAV regulations and flight planning fundamentals</li>
+  </ul>
+</div>
+
+<div class="concept-diagram">
+  <svg viewBox="0 0 620 320" xmlns="http://www.w3.org/2000/svg" style="max-width: 580px;">
+    <!-- Background -->
+    <rect x="0" y="0" width="620" height="320" fill="#f8f9fa" rx="8"/>
+    <text x="310" y="22" text-anchor="middle" font-family="Inter, sans-serif" font-size="13" font-weight="bold" fill="#1e4f8a">Structure from Motion: Overlapping Images to 3D Point Cloud</text>
+
+    <!-- Drone positions along flight path -->
+    <!-- Flight path line -->
+    <line x1="80" y1="55" x2="540" y2="55" stroke="#68625b" stroke-width="1.5" stroke-dasharray="8,4"/>
+    <text x="560" y="58" font-family="Inter, sans-serif" font-size="8" fill="#68625b">Flight path</text>
+
+    <!-- Drone 1 -->
+    <rect x="75" y="42" width="30" height="12" rx="3" fill="#1e4f8a"/>
+    <line x1="75" y1="48" x2="65" y2="42" stroke="#1e4f8a" stroke-width="1.5"/>
+    <line x1="105" y1="48" x2="115" y2="42" stroke="#1e4f8a" stroke-width="1.5"/>
+    <circle cx="65" cy="40" r="3" fill="#1e4f8a"/>
+    <circle cx="115" cy="40" r="3" fill="#1e4f8a"/>
+    <text x="90" y="38" text-anchor="middle" font-family="Inter, sans-serif" font-size="7" fill="#1e4f8a">Pos 1</text>
+
+    <!-- Drone 2 -->
+    <rect x="215" y="42" width="30" height="12" rx="3" fill="#1e4f8a"/>
+    <line x1="215" y1="48" x2="205" y2="42" stroke="#1e4f8a" stroke-width="1.5"/>
+    <line x1="245" y1="48" x2="255" y2="42" stroke="#1e4f8a" stroke-width="1.5"/>
+    <circle cx="205" cy="40" r="3" fill="#1e4f8a"/>
+    <circle cx="255" cy="40" r="3" fill="#1e4f8a"/>
+    <text x="230" y="38" text-anchor="middle" font-family="Inter, sans-serif" font-size="7" fill="#1e4f8a">Pos 2</text>
+
+    <!-- Drone 3 -->
+    <rect x="355" y="42" width="30" height="12" rx="3" fill="#1e4f8a"/>
+    <line x1="355" y1="48" x2="345" y2="42" stroke="#1e4f8a" stroke-width="1.5"/>
+    <line x1="385" y1="48" x2="395" y2="42" stroke="#1e4f8a" stroke-width="1.5"/>
+    <circle cx="345" cy="40" r="3" fill="#1e4f8a"/>
+    <circle cx="395" cy="40" r="3" fill="#1e4f8a"/>
+    <text x="370" y="38" text-anchor="middle" font-family="Inter, sans-serif" font-size="7" fill="#1e4f8a">Pos 3</text>
+
+    <!-- Image footprints (trapezoids showing camera coverage) -->
+    <!-- Footprint 1 -->
+    <polygon points="90,54 40,175 180,175" fill="#1e4f8a" opacity="0.08" stroke="#1e4f8a" stroke-width="1" stroke-dasharray="3,2"/>
+    <!-- Footprint 2 -->
+    <polygon points="230,54 160,175 320,175" fill="#d92b1f" opacity="0.08" stroke="#d92b1f" stroke-width="1" stroke-dasharray="3,2"/>
+    <!-- Footprint 3 -->
+    <polygon points="370,54 300,175 460,175" fill="#165d34" opacity="0.08" stroke="#165d34" stroke-width="1" stroke-dasharray="3,2"/>
+
+    <!-- Overlap zone labels -->
+    <rect x="152" y="135" width="38" height="16" rx="2" fill="#8b5e00" opacity="0.2" stroke="#8b5e00" stroke-width="1"/>
+    <text x="171" y="147" text-anchor="middle" font-family="Inter, sans-serif" font-size="7" fill="#8b5e00" font-weight="bold">Overlap</text>
+
+    <rect x="292" y="135" width="38" height="16" rx="2" fill="#8b5e00" opacity="0.2" stroke="#8b5e00" stroke-width="1"/>
+    <text x="311" y="147" text-anchor="middle" font-family="Inter, sans-serif" font-size="7" fill="#8b5e00" font-weight="bold">Overlap</text>
+
+    <!-- Ground surface with terrain -->
+    <path d="M 20 195 Q 80 180 140 190 Q 200 200 260 185 Q 320 175 380 190 Q 440 200 500 188 Q 540 183 600 195" stroke="#8b5e00" stroke-width="2" fill="none"/>
+    <path d="M 20 195 Q 80 180 140 190 Q 200 200 260 185 Q 320 175 380 190 Q 440 200 500 188 Q 540 183 600 195 L 600 210 L 20 210 Z" fill="#f0e8d8"/>
+
+    <!-- Feature points (matched keypoints) -->
+    <circle cx="120" cy="188" r="3" fill="#d92b1f"/>
+    <circle cx="170" cy="192" r="3" fill="#d92b1f"/>
+    <circle cx="210" cy="189" r="3" fill="#d92b1f"/>
+    <circle cx="260" cy="185" r="3" fill="#d92b1f"/>
+    <circle cx="310" cy="178" r="3" fill="#d92b1f"/>
+    <circle cx="350" cy="184" r="3" fill="#d92b1f"/>
+    <circle cx="400" cy="192" r="3" fill="#d92b1f"/>
+    <circle cx="450" cy="196" r="3" fill="#d92b1f"/>
+
+    <!-- Triangulation lines from drone 1 to points -->
+    <line x1="90" y1="54" x2="170" y2="192" stroke="#1e4f8a" stroke-width="0.5" opacity="0.4"/>
+    <line x1="90" y1="54" x2="120" y2="188" stroke="#1e4f8a" stroke-width="0.5" opacity="0.4"/>
+    <!-- Triangulation lines from drone 2 to same points -->
+    <line x1="230" y1="54" x2="170" y2="192" stroke="#d92b1f" stroke-width="0.5" opacity="0.4"/>
+    <line x1="230" y1="54" x2="210" y2="189" stroke="#d92b1f" stroke-width="0.5" opacity="0.4"/>
+    <line x1="230" y1="54" x2="260" y2="185" stroke="#d92b1f" stroke-width="0.5" opacity="0.4"/>
+    <!-- Triangulation lines from drone 3 -->
+    <line x1="370" y1="54" x2="310" y2="178" stroke="#165d34" stroke-width="0.5" opacity="0.4"/>
+    <line x1="370" y1="54" x2="350" y2="184" stroke="#165d34" stroke-width="0.5" opacity="0.4"/>
+    <line x1="370" y1="54" x2="400" y2="192" stroke="#165d34" stroke-width="0.5" opacity="0.4"/>
+
+    <!-- Arrow from scene to point cloud -->
+    <line x1="310" y1="215" x2="310" y2="235" stroke="#68625b" stroke-width="1.5"/>
+    <polygon points="306,235 310,243 314,235" fill="#68625b"/>
+    <text x="310" y="238" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#68625b" dx="40">SfM processing</text>
+
+    <!-- 3D Point Cloud output -->
+    <rect x="120" y="250" width="380" height="60" rx="6" fill="#fff" stroke="#1e4f8a" stroke-width="1.5"/>
+    <text x="310" y="268" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="bold" fill="#1e4f8a">3D Dense Point Cloud &amp; DSM</text>
+
+    <!-- Point cloud dots -->
+    <circle cx="155" cy="285" r="2" fill="#165d34" opacity="0.7"/>
+    <circle cx="168" cy="282" r="2" fill="#165d34" opacity="0.6"/>
+    <circle cx="180" cy="288" r="2" fill="#8b5e00" opacity="0.7"/>
+    <circle cx="193" cy="280" r="2" fill="#165d34" opacity="0.8"/>
+    <circle cx="206" cy="286" r="2" fill="#8b5e00" opacity="0.6"/>
+    <circle cx="219" cy="283" r="2" fill="#165d34" opacity="0.7"/>
+    <circle cx="232" cy="278" r="2" fill="#165d34" opacity="0.6"/>
+    <circle cx="245" cy="285" r="2" fill="#8b5e00" opacity="0.7"/>
+    <circle cx="258" cy="281" r="2" fill="#165d34" opacity="0.8"/>
+    <circle cx="271" cy="287" r="2" fill="#8b5e00" opacity="0.6"/>
+    <circle cx="284" cy="276" r="2" fill="#165d34" opacity="0.7"/>
+    <circle cx="297" cy="284" r="2" fill="#8b5e00" opacity="0.7"/>
+    <circle cx="310" cy="280" r="2" fill="#165d34" opacity="0.8"/>
+    <circle cx="323" cy="287" r="2" fill="#8b5e00" opacity="0.6"/>
+    <circle cx="336" cy="282" r="2" fill="#165d34" opacity="0.7"/>
+    <circle cx="349" cy="278" r="2" fill="#8b5e00" opacity="0.7"/>
+    <circle cx="362" cy="285" r="2" fill="#165d34" opacity="0.6"/>
+    <circle cx="375" cy="281" r="2" fill="#165d34" opacity="0.8"/>
+    <circle cx="388" cy="288" r="2" fill="#8b5e00" opacity="0.7"/>
+    <circle cx="401" cy="283" r="2" fill="#165d34" opacity="0.6"/>
+    <circle cx="414" cy="279" r="2" fill="#8b5e00" opacity="0.7"/>
+    <circle cx="427" cy="286" r="2" fill="#165d34" opacity="0.7"/>
+    <circle cx="440" cy="282" r="2" fill="#8b5e00" opacity="0.8"/>
+    <circle cx="453" cy="277" r="2" fill="#165d34" opacity="0.6"/>
+    <circle cx="466" cy="285" r="2" fill="#8b5e00" opacity="0.7"/>
+
+    <!-- GSD annotation -->
+    <text x="310" y="300" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#68625b">GSD = (sensor pixel &times; flight altitude) / focal length  |  60-80% forward overlap recommended</text>
+
+    <!-- Altitude annotation -->
+    <line x1="500" y1="55" x2="500" y2="195" stroke="#d92b1f" stroke-width="1" stroke-dasharray="4,2"/>
+    <line x1="495" y1="55" x2="505" y2="55" stroke="#d92b1f" stroke-width="1"/>
+    <line x1="495" y1="195" x2="505" y2="195" stroke="#d92b1f" stroke-width="1"/>
+    <text x="515" y="125" font-family="Inter, sans-serif" font-size="9" fill="#d92b1f" transform="rotate(90, 515, 125)">Flight altitude (H)</text>
+  </svg>
+  <p class="diagram-caption">Figure: Structure from Motion principle — overlapping images from multiple drone positions enable triangulation of ground feature points into a dense 3D point cloud and digital surface model. Higher overlap and lower altitude yield finer ground sampling distance (GSD).</p>
+</div>
+
+
 ## UAV platforms and sensors
 
 ### Multirotor versus fixed-wing

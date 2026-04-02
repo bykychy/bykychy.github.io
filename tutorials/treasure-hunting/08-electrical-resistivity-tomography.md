@@ -25,6 +25,124 @@ Electrical Resistivity Tomography (ERT) sees what other methods cannot. While **
 | Depth control | Excellent | Limited | Poor |
 | Saline soils | Works well | Works well | Fails |
 
+<div class="learning-objectives">
+  <div class="learning-objectives-header">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1e4f8a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    <h3>What you will learn</h3>
+  </div>
+  <ul>
+    <li>The four-electrode measurement principle and how the geometric factor converts measured voltage and current into apparent resistivity</li>
+    <li>Array configurations—Wenner, Schlumberger, and dipole-dipole—and their trade-offs in resolution, depth, and signal strength</li>
+    <li>How 2-D and 3-D ERT surveys build pseudosections and how inversion algorithms recover true subsurface resistivity models</li>
+    <li>Resistivity signatures of archaeological and geological targets in Central Asia, including walls, ditches, kurgans, and saline zones</li>
+    <li>Practical survey design: electrode spacing selection, spread length, contact resistance testing, and integration with GPR and magnetometry</li>
+  </ul>
+</div>
+
+<div class="prerequisites">
+  <div class="prerequisites-header">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8b5e00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+    <h3>Prerequisites</h3>
+  </div>
+  <ul>
+    <li>Understanding of Ohm's law (V = IR) and the concept of resistivity as a material property (physics or engineering background)</li>
+    <li>Familiarity with inverse problems and iterative numerical methods at an introductory level</li>
+    <li>Experience with earlier tutorials on EM methods or GPR in this series, to appreciate complementary strengths of ERT</li>
+    <li>Comfort reading 2-D colour-scale cross-sections and pseudosections common in geophysical imaging</li>
+  </ul>
+</div>
+
+<div class="concept-diagram">
+  <svg viewBox="0 0 620 320" xmlns="http://www.w3.org/2000/svg" style="max-width: 580px;">
+    <!-- Background -->
+    <rect x="0" y="0" width="620" height="320" fill="#f8f7f4" rx="6"/>
+
+    <!-- Title -->
+    <text x="310" y="22" text-anchor="middle" font-family="Inter, sans-serif" font-size="13" font-weight="600" fill="#111">ERT — Four-Electrode Measurement &amp; Subsurface Imaging</text>
+
+    <!-- Ground surface -->
+    <line x1="30" y1="110" x2="590" y2="110" stroke="#8b5e00" stroke-width="2"/>
+    <text x="35" y="105" font-family="Inter, sans-serif" font-size="10" fill="#8b5e00">Surface</text>
+
+    <!-- Subsurface -->
+    <rect x="30" y="110" width="560" height="105" fill="#f0e6d3" rx="0"/>
+
+    <!-- Electrodes -->
+    <g font-family="Inter, sans-serif" font-size="11" font-weight="600">
+      <!-- A (current +) -->
+      <line x1="130" y1="85" x2="130" y2="113" stroke="#d92b1f" stroke-width="2"/>
+      <circle cx="130" cy="113" r="4" fill="#d92b1f"/>
+      <text x="130" y="78" text-anchor="middle" fill="#d92b1f">A</text>
+      <text x="130" y="68" text-anchor="middle" fill="#d92b1f" font-size="9">I +</text>
+
+      <!-- M (potential) -->
+      <line x1="250" y1="85" x2="250" y2="113" stroke="#1e4f8a" stroke-width="2"/>
+      <circle cx="250" cy="113" r="4" fill="#1e4f8a"/>
+      <text x="250" y="78" text-anchor="middle" fill="#1e4f8a">M</text>
+      <text x="250" y="68" text-anchor="middle" fill="#1e4f8a" font-size="9">V +</text>
+
+      <!-- N (potential) -->
+      <line x1="370" y1="85" x2="370" y2="113" stroke="#1e4f8a" stroke-width="2"/>
+      <circle cx="370" cy="113" r="4" fill="#1e4f8a"/>
+      <text x="370" y="78" text-anchor="middle" fill="#1e4f8a">N</text>
+      <text x="370" y="68" text-anchor="middle" fill="#1e4f8a" font-size="9">V −</text>
+
+      <!-- B (current −) -->
+      <line x1="490" y1="85" x2="490" y2="113" stroke="#d92b1f" stroke-width="2"/>
+      <circle cx="490" cy="113" r="4" fill="#d92b1f"/>
+      <text x="490" y="78" text-anchor="middle" fill="#d92b1f">B</text>
+      <text x="490" y="68" text-anchor="middle" fill="#d92b1f" font-size="9">I −</text>
+    </g>
+
+    <!-- Spacing labels -->
+    <line x1="130" y1="93" x2="250" y2="93" stroke="#68625b" stroke-width="0.8"/>
+    <text x="190" y="90" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#68625b">a</text>
+    <line x1="250" y1="93" x2="370" y2="93" stroke="#68625b" stroke-width="0.8"/>
+    <text x="310" y="90" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#68625b">a</text>
+    <line x1="370" y1="93" x2="490" y2="93" stroke="#68625b" stroke-width="0.8"/>
+    <text x="430" y="90" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#68625b">a</text>
+
+    <!-- Current flow lines (arcs) -->
+    <path d="M 130 115 Q 190 175 250 115" fill="none" stroke="#d92b1f" stroke-width="1" opacity="0.5"/>
+    <path d="M 130 115 Q 250 220 370 115" fill="none" stroke="#d92b1f" stroke-width="1" opacity="0.4"/>
+    <path d="M 130 115 Q 310 260 490 115" fill="none" stroke="#d92b1f" stroke-width="1" opacity="0.3"/>
+    <text x="70" y="160" font-family="Inter, sans-serif" font-size="9" fill="#d92b1f">Current</text>
+    <text x="70" y="170" font-family="Inter, sans-serif" font-size="9" fill="#d92b1f">flow lines</text>
+
+    <!-- Equipotential lines (vertical-ish arcs) -->
+    <path d="M 250 115 Q 245 155 250 195" fill="none" stroke="#1e4f8a" stroke-width="0.8" stroke-dasharray="3,2" opacity="0.5"/>
+    <path d="M 370 115 Q 375 155 370 195" fill="none" stroke="#1e4f8a" stroke-width="0.8" stroke-dasharray="3,2" opacity="0.5"/>
+    <text x="525" y="155" font-family="Inter, sans-serif" font-size="9" fill="#1e4f8a">Equipotential</text>
+    <text x="525" y="165" font-family="Inter, sans-serif" font-size="9" fill="#1e4f8a">lines</text>
+
+    <!-- Buried anomaly (resistive, e.g., a wall) -->
+    <rect x="280" y="155" width="60" height="35" fill="#1e4f8a" opacity="0.3" stroke="#1e4f8a" stroke-width="1.5" rx="3"/>
+    <text x="310" y="174" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" font-weight="600" fill="#1e4f8a">Wall</text>
+    <text x="310" y="184" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#1e4f8a">high ρ</text>
+
+    <!-- Pseudosection below -->
+    <text x="310" y="230" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="600" fill="#111">Apparent resistivity pseudosection</text>
+
+    <!-- Pseudosection colour blocks -->
+    <rect x="80" y="240" width="460" height="50" fill="#d9ccb0" rx="3" stroke="#68625b" stroke-width="0.5"/>
+    <!-- Low resistivity background -->
+    <rect x="80" y="240" width="150" height="50" fill="#e8dcc8" rx="3"/>
+    <rect x="380" y="240" width="160" height="50" fill="#e8dcc8" rx="3"/>
+    <!-- High resistivity anomaly -->
+    <rect x="250" y="248" width="110" height="34" fill="#1e4f8a" opacity="0.35" rx="4"/>
+    <text x="305" y="270" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#1e4f8a">High ρₐ anomaly</text>
+
+    <!-- Depth axis -->
+    <text x="68" y="250" text-anchor="end" font-family="Inter, sans-serif" font-size="9" fill="#68625b">n=1</text>
+    <text x="68" y="268" text-anchor="end" font-family="Inter, sans-serif" font-size="9" fill="#68625b">n=3</text>
+    <text x="68" y="286" text-anchor="end" font-family="Inter, sans-serif" font-size="9" fill="#68625b">n=6</text>
+
+    <!-- Formula -->
+    <text x="310" y="310" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="#111">ρₐ = k · ΔV / I     (Wenner: k = 2πa)</text>
+  </svg>
+  <p class="diagram-caption">Wenner four-electrode array: current electrodes A and B inject current whose flow lines penetrate the subsurface; potential electrodes M and N measure the voltage difference. A buried resistive wall deflects current flow, producing an apparent-resistivity anomaly in the pseudosection below.</p>
+</div>
+
 ## Electrical resistivity fundamentals
 
 ### Ohm's law in the ground

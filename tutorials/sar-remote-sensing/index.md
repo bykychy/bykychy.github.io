@@ -6,10 +6,44 @@ description: "Museum-style, math-first tutorials on Sentinel SAR, Sentinel-2 mul
 
 # SAR & Remote Sensing
 
-This gallery is about seeing landscape structure through radar logic, optical spectral analysis, and high-resolution aerial survey: backscatter, slope, roughness, moisture, vegetation indices, and temporal change. The tutorials cover satellite and drone-based methods for Central Asia.
+<div class="hero-pattern" style="margin-bottom: 1.5rem;">
+  <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+    <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="24" cy="24" r="22" stroke="#1e4f8a" stroke-width="2" fill="#f0f4fa"/>
+      <path d="M14 34 L24 10 L34 34" stroke="#1e4f8a" stroke-width="2" fill="none"/>
+      <ellipse cx="24" cy="10" rx="4" ry="3" stroke="#d92b1f" stroke-width="1.5" fill="none"/>
+      <path d="M10 38 L38 38" stroke="#8b5e00" stroke-width="2"/>
+      <path d="M18 38 L18 30 M24 38 L24 26 M30 38 L30 32" stroke="#165d34" stroke-width="1.5" stroke-dasharray="2 2"/>
+      <circle cx="24" cy="10" r="1.5" fill="#d92b1f"/>
+    </svg>
+    <div>
+      <p style="margin: 0; font-size: 1.1rem; color: var(--ink);">This gallery is about seeing landscape structure through radar logic, optical spectral analysis, and high-resolution aerial survey: backscatter, slope, roughness, moisture, vegetation indices, and temporal change. The tutorials cover satellite and drone-based methods for Central Asia.</p>
+    </div>
+  </div>
+</div>
+
+<div class="stats-bar">
+  <div class="stat-item">
+    <span class="stat-number">22</span>
+    <span class="stat-label">Tutorials</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-number">660</span>
+    <span class="stat-label">Exercises</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-number">8</span>
+    <span class="stat-label">Sensor Types</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-number">10m</span>
+    <span class="stat-label">Resolution</span>
+  </div>
+</div>
 
 <div class="path-grid">
   <div class="path-card">
+    <div class="topic-icon topic-icon-radar"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5.636 18.364a9 9 0 0 1 0-12.728"/><path d="M8.464 15.536a5 5 0 0 1 0-7.072"/><circle cx="12" cy="12" r="1"/><path d="M15.536 8.464a5 5 0 0 1 0 7.072"/><path d="M18.364 5.636a9 9 0 0 1 0 12.728"/></svg></div>
     <div class="eyebrow">Suggested route</div>
     <h2>Core remote sensing sequence</h2>
     <p>Begin with SAR fundamentals, then process data, learn interferometry and time-series methods, add optical and thermal analysis.</p>
@@ -21,9 +55,10 @@ This gallery is about seeing landscape structure through radar logic, optical sp
       <li><span class="path-step-num">05</span><div><a class="path-step-link" href="{{ '/tutorials/sar-remote-sensing/06-sentinel2-multispectral-analysis' | relative_url }}">Sentinel-2 Multispectral</a><span class="desc">Optical bands, spectral indices, and vegetation mapping.</span></div></li>
       <li><span class="path-step-num">06</span><div><a class="path-step-link" href="{{ '/tutorials/sar-remote-sensing/08-thermal-infrared-remote-sensing' | relative_url }}">Thermal Infrared</a><span class="desc">LST, emissivity, and thermal anomaly detection.</span></div></li>
     </ol>
-    <a class="cta-button" href="{{ '/tutorials/sar-remote-sensing/01-sar-fundamentals' | relative_url }}">Start this route</a>
+    <a class="cta-button" href="{{ '/tutorials/sar-remote-sensing/01-sar-fundamentals' | relative_url }}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 0.4rem;"><polygon points="5 3 19 12 5 21 5 3"/></svg>Start this route</a>
   </div>
   <div class="path-card">
+    <div class="topic-icon topic-icon-nature"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><line x1="4" y1="10" x2="20" y2="10"/><line x1="10" y1="4" x2="10" y2="20"/><circle cx="7" cy="7" r="1" fill="white"/><circle cx="14" cy="14" r="1" fill="white"/></svg></div>
     <div class="eyebrow">Advanced track</div>
     <h2>Analysis, cloud computing & coding</h2>
     <p>Cloud platforms, machine learning, terrain analysis, and Python geospatial workflows.</p>
@@ -35,7 +70,7 @@ This gallery is about seeing landscape structure through radar logic, optical sp
       <li><span class="path-step-num">13</span><div><a class="path-step-link" href="{{ '/tutorials/sar-remote-sensing/13-water-resources-monitoring' | relative_url }}">Water Resources</a><span class="desc">Lakes, snow, soil moisture, and irrigation.</span></div></li>
       <li><span class="path-step-num">15</span><div><a class="path-step-link" href="{{ '/tutorials/sar-remote-sensing/15-python-geospatial-analysis' | relative_url }}">Python Geospatial</a><span class="desc">Rasterio, geopandas, and xarray workflows.</span></div></li>
     </ol>
-    <a class="cta-button" href="{{ '/tutorials/sar-remote-sensing/09-google-earth-engine-python' | relative_url }}">Start advanced track</a>
+    <a class="cta-button" href="{{ '/tutorials/sar-remote-sensing/09-google-earth-engine-python' | relative_url }}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 0.4rem;"><polygon points="5 3 19 12 5 21 5 3"/></svg>Start advanced track</a>
   </div>
 </div>
 

@@ -17,6 +17,260 @@ Raw GPR data contains system artifacts, geometric distortions, and noise that ob
   Each processing step should have clear physical justification. Blind filtering creates artifacts. Always compare processed data against raw data to verify features.
 </div>
 
+<div class="learning-objectives">
+  <div class="learning-objectives-header">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1e4f8a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    <h3>What you will learn</h3>
+  </div>
+  <ul>
+    <li>Apply dewow filtering, time-zero correction, and gain functions (SEC, AGC) to remove system artifacts from raw GPR data</li>
+    <li>Perform Kirchhoff and Stolt (F-K) migration to collapse diffraction hyperbolae and restore true subsurface geometry</li>
+    <li>Estimate subsurface velocity using hyperbola fitting, CMP analysis, and known-depth reflectors for accurate depth conversion</li>
+    <li>Extract GPR attributes (instantaneous amplitude, phase, frequency) to enhance detection of kurgans, qanats, and buried channels</li>
+    <li>Build 3D GPR volumes from parallel 2D profiles and generate time/depth slices for plan-view interpretation</li>
+  </ul>
+</div>
+
+<div class="prerequisites">
+  <div class="prerequisites-header">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8b5e00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+    <h3>Prerequisites</h3>
+  </div>
+  <ul>
+    <li>Solid understanding of GPR operating principles, antenna frequencies, and radargram interpretation</li>
+    <li>Familiarity with signal processing concepts: time-domain vs. frequency-domain, convolution, and Fourier transforms</li>
+    <li>Experience collecting GPR data in the field (survey grid layout, instrument settings, data formats)</li>
+    <li>Access to GPR processing software (e.g., GPR-SLICE, ReflexW, MATLAB, or open-source Python libraries)</li>
+  </ul>
+</div>
+
+<div class="concept-diagram">
+  <svg viewBox="0 0 620 320" xmlns="http://www.w3.org/2000/svg" style="max-width: 580px;">
+    <rect x="0" y="0" width="620" height="320" fill="#f9f8f6" rx="8"/>
+    <text x="310" y="24" text-anchor="middle" font-family="Inter, sans-serif" font-size="13" font-weight="bold" fill="#111">GPR Processing Pipeline</text>
+
+    <!-- Stage boxes along top row -->
+    <!-- 1 Raw -->
+    <rect x="15" y="42" width="90" height="44" rx="5" fill="#fdeaea" stroke="#d92b1f" stroke-width="1.2"/>
+    <text x="60" y="60" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" font-weight="bold" fill="#d92b1f">Raw Data</text>
+    <text x="60" y="74" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#68625b">Noise + artifacts</text>
+
+    <line x1="108" y1="64" x2="127" y2="64" stroke="#68625b" stroke-width="1.2" marker-end="url(#arr12)"/>
+
+    <!-- 2 Dewow -->
+    <rect x="130" y="42" width="80" height="44" rx="5" fill="#e8eef5" stroke="#1e4f8a" stroke-width="1.2"/>
+    <text x="170" y="60" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" font-weight="bold" fill="#1e4f8a">Dewow</text>
+    <text x="170" y="74" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#68625b">Remove DC shift</text>
+
+    <line x1="213" y1="64" x2="232" y2="64" stroke="#68625b" stroke-width="1.2" marker-end="url(#arr12)"/>
+
+    <!-- 3 Gain -->
+    <rect x="235" y="42" width="80" height="44" rx="5" fill="#e8eef5" stroke="#1e4f8a" stroke-width="1.2"/>
+    <text x="275" y="60" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" font-weight="bold" fill="#1e4f8a">Gain</text>
+    <text x="275" y="74" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#68625b">SEC / AGC</text>
+
+    <line x1="318" y1="64" x2="337" y2="64" stroke="#68625b" stroke-width="1.2" marker-end="url(#arr12)"/>
+
+    <!-- 4 Filter -->
+    <rect x="340" y="42" width="80" height="44" rx="5" fill="#e8eef5" stroke="#1e4f8a" stroke-width="1.2"/>
+    <text x="380" y="60" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" font-weight="bold" fill="#1e4f8a">Filter</text>
+    <text x="380" y="74" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#68625b">Bandpass / BG</text>
+
+    <line x1="423" y1="64" x2="442" y2="64" stroke="#68625b" stroke-width="1.2" marker-end="url(#arr12)"/>
+
+    <!-- 5 Migration -->
+    <rect x="445" y="42" width="80" height="44" rx="5" fill="#eaf5ec" stroke="#165d34" stroke-width="1.2"/>
+    <text x="485" y="60" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" font-weight="bold" fill="#165d34">Migration</text>
+    <text x="485" y="74" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#68625b">Kirchhoff / F-K</text>
+
+    <line x1="528" y1="64" x2="541" y2="64" stroke="#68625b" stroke-width="1.2" marker-end="url(#arr12)"/>
+
+    <!-- 6 Depth -->
+    <rect x="544" y="42" width="66" height="44" rx="5" fill="#fff8ec" stroke="#8b5e00" stroke-width="1.2"/>
+    <text x="577" y="58" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" font-weight="bold" fill="#8b5e00">Depth</text>
+    <text x="577" y="70" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" font-weight="bold" fill="#8b5e00">Conversion</text>
+    <text x="577" y="82" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#68625b">v(z) model</text>
+
+    <!-- Before / After radargram comparison -->
+    <!-- Raw radargram (noisy) -->
+    <text x="155" y="115" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" font-weight="bold" fill="#d92b1f">Before Processing</text>
+    <rect x="30" y="125" width="250" height="100" rx="4" fill="#fff" stroke="#d92b1f" stroke-width="1"/>
+    <text x="35" y="138" font-family="Inter, sans-serif" font-size="8" fill="#68625b">0 ns</text>
+    <text x="35" y="218" font-family="Inter, sans-serif" font-size="8" fill="#68625b">50 ns</text>
+    <!-- Noisy traces -->
+    <polyline points="55,135 58,145 62,138 67,155 70,142 75,160 78,148 82,165 87,150 92,168 95,155 100,170 105,160 110,175 115,163 120,178 125,168 130,182 135,172 140,185 145,175 150,188 155,180 160,190 165,182 170,195 175,186 180,198 185,190 190,200 195,192 200,204 205,196 210,208 215,198 220,210 225,200 230,214 235,204 240,216 245,206 250,218 255,210 260,220 265,212" fill="none" stroke="#d92b1f" stroke-width="0.7" opacity="0.6"/>
+    <!-- Hyperbola (distorted) -->
+    <path d="M 90,170 Q 120,200 155,210 Q 190,200 220,170" fill="none" stroke="#111" stroke-width="1.2" stroke-dasharray="3,2"/>
+    <text x="155" y="208" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#111">diffraction</text>
+    <!-- DC wow artifact -->
+    <path d="M 55,145 Q 100,155 155,148 Q 200,155 265,150" fill="none" stroke="#d92b1f" stroke-width="1.5" opacity="0.4"/>
+    <text x="255" y="148" font-family="Inter, sans-serif" font-size="7" fill="#d92b1f">wow</text>
+
+    <!-- Processed radargram (clean) -->
+    <text x="465" y="115" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" font-weight="bold" fill="#165d34">After Processing</text>
+    <rect x="340" y="125" width="250" height="100" rx="4" fill="#fff" stroke="#165d34" stroke-width="1"/>
+    <text x="345" y="138" font-family="Inter, sans-serif" font-size="8" fill="#68625b">0 m</text>
+    <text x="345" y="218" font-family="Inter, sans-serif" font-size="8" fill="#68625b">2.5 m</text>
+    <!-- Clean horizontal reflectors -->
+    <line x1="365" y1="155" x2="575" y2="155" stroke="#1e4f8a" stroke-width="1" opacity="0.5"/>
+    <line x1="365" y1="175" x2="575" y2="175" stroke="#1e4f8a" stroke-width="1.4"/>
+    <line x1="365" y1="200" x2="575" y2="200" stroke="#1e4f8a" stroke-width="0.8" opacity="0.6"/>
+    <!-- Migrated point reflector (focused) -->
+    <ellipse cx="465" cy="175" rx="6" ry="4" fill="#165d34" opacity="0.6"/>
+    <text x="465" y="188" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#165d34">focused target</text>
+    <!-- Buried wall -->
+    <rect x="410" y="165" width="4" height="25" fill="#8b5e00" opacity="0.5"/>
+    <rect x="500" y="165" width="4" height="25" fill="#8b5e00" opacity="0.5"/>
+    <text x="457" y="164" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#8b5e00">buried walls</text>
+
+    <!-- Arrow between panels -->
+    <path d="M 285 175 L 330 175" fill="none" stroke="#68625b" stroke-width="1.5" marker-end="url(#arr12)"/>
+    <text x="308" y="170" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#68625b">process</text>
+
+    <!-- Depth axis label -->
+    <text x="310" y="248" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#111">Each step has clear physical justification — always compare against raw data</text>
+
+    <!-- Velocity note -->
+    <rect x="30" y="260" width="560" height="48" rx="5" fill="#fff" stroke="#68625b" stroke-width="0.5"/>
+    <text x="40" y="278" font-family="Inter, sans-serif" font-size="9" font-weight="bold" fill="#111">Key velocities for Central Asia:</text>
+    <text x="40" y="296" font-family="Inter, sans-serif" font-size="9" fill="#68625b">Dry loess ≈ 0.10–0.12 m/ns  ·  Wet alluvium ≈ 0.06–0.08 m/ns  ·  Limestone ≈ 0.10–0.12 m/ns  ·  Saturated clay ≈ 0.05–0.07 m/ns</text>
+
+    <defs>
+      <marker id="arr12" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="#68625b"/>
+      </marker>
+    </defs>
+  </svg>
+  <p class="diagram-caption">Figure — GPR processing pipeline from raw radargram to depth-converted section, showing signal improvement at each stage.</p>
+</div>
+
+<div class="learning-objectives">
+  <div class="learning-objectives-header">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1e4f8a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    <h3>What you will learn</h3>
+  </div>
+  <ul>
+    <li>Apply dewow filtering, time-zero correction, and gain functions (SEC, AGC) to remove system artifacts from raw GPR data</li>
+    <li>Perform Kirchhoff and Stolt (F-K) migration to collapse diffraction hyperbolae and restore true subsurface geometry</li>
+    <li>Estimate subsurface velocity using hyperbola fitting, CMP analysis, and known-depth reflectors for accurate depth conversion</li>
+    <li>Extract GPR attributes (instantaneous amplitude, phase, frequency) to enhance detection of kurgans, qanats, and buried channels</li>
+    <li>Build 3D GPR volumes from parallel 2D profiles and generate time/depth slices for plan-view interpretation</li>
+  </ul>
+</div>
+
+<div class="prerequisites">
+  <div class="prerequisites-header">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8b5e00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+    <h3>Prerequisites</h3>
+  </div>
+  <ul>
+    <li>Solid understanding of GPR operating principles, antenna frequencies, and radargram interpretation</li>
+    <li>Familiarity with signal processing concepts: time-domain vs. frequency-domain, convolution, and Fourier transforms</li>
+    <li>Experience collecting GPR data in the field (survey grid layout, instrument settings, data formats)</li>
+    <li>Access to GPR processing software (e.g., GPR-SLICE, ReflexW, MATLAB, or open-source Python libraries)</li>
+  </ul>
+</div>
+
+<div class="concept-diagram">
+  <svg viewBox="0 0 620 320" xmlns="http://www.w3.org/2000/svg" style="max-width: 580px;">
+    <rect x="0" y="0" width="620" height="320" fill="#f9f8f6" rx="8"/>
+    <text x="310" y="24" text-anchor="middle" font-family="Inter, sans-serif" font-size="13" font-weight="bold" fill="#111">GPR Processing Pipeline</text>
+
+    <!-- Stage boxes along top row -->
+    <!-- 1 Raw -->
+    <rect x="15" y="42" width="90" height="44" rx="5" fill="#fdeaea" stroke="#d92b1f" stroke-width="1.2"/>
+    <text x="60" y="60" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" font-weight="bold" fill="#d92b1f">Raw Data</text>
+    <text x="60" y="74" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#68625b">Noise + artifacts</text>
+
+    <line x1="108" y1="64" x2="127" y2="64" stroke="#68625b" stroke-width="1.2" marker-end="url(#arr12)"/>
+
+    <!-- 2 Dewow -->
+    <rect x="130" y="42" width="80" height="44" rx="5" fill="#e8eef5" stroke="#1e4f8a" stroke-width="1.2"/>
+    <text x="170" y="60" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" font-weight="bold" fill="#1e4f8a">Dewow</text>
+    <text x="170" y="74" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#68625b">Remove DC shift</text>
+
+    <line x1="213" y1="64" x2="232" y2="64" stroke="#68625b" stroke-width="1.2" marker-end="url(#arr12)"/>
+
+    <!-- 3 Gain -->
+    <rect x="235" y="42" width="80" height="44" rx="5" fill="#e8eef5" stroke="#1e4f8a" stroke-width="1.2"/>
+    <text x="275" y="60" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" font-weight="bold" fill="#1e4f8a">Gain</text>
+    <text x="275" y="74" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#68625b">SEC / AGC</text>
+
+    <line x1="318" y1="64" x2="337" y2="64" stroke="#68625b" stroke-width="1.2" marker-end="url(#arr12)"/>
+
+    <!-- 4 Filter -->
+    <rect x="340" y="42" width="80" height="44" rx="5" fill="#e8eef5" stroke="#1e4f8a" stroke-width="1.2"/>
+    <text x="380" y="60" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" font-weight="bold" fill="#1e4f8a">Filter</text>
+    <text x="380" y="74" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#68625b">Bandpass / BG</text>
+
+    <line x1="423" y1="64" x2="442" y2="64" stroke="#68625b" stroke-width="1.2" marker-end="url(#arr12)"/>
+
+    <!-- 5 Migration -->
+    <rect x="445" y="42" width="80" height="44" rx="5" fill="#eaf5ec" stroke="#165d34" stroke-width="1.2"/>
+    <text x="485" y="60" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" font-weight="bold" fill="#165d34">Migration</text>
+    <text x="485" y="74" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#68625b">Kirchhoff / F-K</text>
+
+    <line x1="528" y1="64" x2="541" y2="64" stroke="#68625b" stroke-width="1.2" marker-end="url(#arr12)"/>
+
+    <!-- 6 Depth -->
+    <rect x="544" y="42" width="66" height="44" rx="5" fill="#fff8ec" stroke="#8b5e00" stroke-width="1.2"/>
+    <text x="577" y="58" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" font-weight="bold" fill="#8b5e00">Depth</text>
+    <text x="577" y="70" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" font-weight="bold" fill="#8b5e00">Conversion</text>
+    <text x="577" y="82" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#68625b">v(z) model</text>
+
+    <!-- Before / After radargram comparison -->
+    <!-- Raw radargram (noisy) -->
+    <text x="155" y="115" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" font-weight="bold" fill="#d92b1f">Before Processing</text>
+    <rect x="30" y="125" width="250" height="100" rx="4" fill="#fff" stroke="#d92b1f" stroke-width="1"/>
+    <text x="35" y="138" font-family="Inter, sans-serif" font-size="8" fill="#68625b">0 ns</text>
+    <text x="35" y="218" font-family="Inter, sans-serif" font-size="8" fill="#68625b">50 ns</text>
+    <!-- Noisy traces -->
+    <polyline points="55,135 58,145 62,138 67,155 70,142 75,160 78,148 82,165 87,150 92,168 95,155 100,170 105,160 110,175 115,163 120,178 125,168 130,182 135,172 140,185 145,175 150,188 155,180 160,190 165,182 170,195 175,186 180,198 185,190 190,200 195,192 200,204 205,196 210,208 215,198 220,210 225,200 230,214 235,204 240,216 245,206 250,218 255,210 260,220 265,212" fill="none" stroke="#d92b1f" stroke-width="0.7" opacity="0.6"/>
+    <!-- Hyperbola (distorted) -->
+    <path d="M 90,170 Q 120,200 155,210 Q 190,200 220,170" fill="none" stroke="#111" stroke-width="1.2" stroke-dasharray="3,2"/>
+    <text x="155" y="208" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#111">diffraction</text>
+    <!-- DC wow artifact -->
+    <path d="M 55,145 Q 100,155 155,148 Q 200,155 265,150" fill="none" stroke="#d92b1f" stroke-width="1.5" opacity="0.4"/>
+    <text x="255" y="148" font-family="Inter, sans-serif" font-size="7" fill="#d92b1f">wow</text>
+
+    <!-- Processed radargram (clean) -->
+    <text x="465" y="115" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" font-weight="bold" fill="#165d34">After Processing</text>
+    <rect x="340" y="125" width="250" height="100" rx="4" fill="#fff" stroke="#165d34" stroke-width="1"/>
+    <text x="345" y="138" font-family="Inter, sans-serif" font-size="8" fill="#68625b">0 m</text>
+    <text x="345" y="218" font-family="Inter, sans-serif" font-size="8" fill="#68625b">2.5 m</text>
+    <!-- Clean horizontal reflectors -->
+    <line x1="365" y1="155" x2="575" y2="155" stroke="#1e4f8a" stroke-width="1" opacity="0.5"/>
+    <line x1="365" y1="175" x2="575" y2="175" stroke="#1e4f8a" stroke-width="1.4"/>
+    <line x1="365" y1="200" x2="575" y2="200" stroke="#1e4f8a" stroke-width="0.8" opacity="0.6"/>
+    <!-- Migrated point reflector (focused) -->
+    <ellipse cx="465" cy="175" rx="6" ry="4" fill="#165d34" opacity="0.6"/>
+    <text x="465" y="188" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#165d34">focused target</text>
+    <!-- Buried wall -->
+    <rect x="410" y="165" width="4" height="25" fill="#8b5e00" opacity="0.5"/>
+    <rect x="500" y="165" width="4" height="25" fill="#8b5e00" opacity="0.5"/>
+    <text x="457" y="164" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#8b5e00">buried walls</text>
+
+    <!-- Arrow between panels -->
+    <path d="M 285 175 L 330 175" fill="none" stroke="#68625b" stroke-width="1.5" marker-end="url(#arr12)"/>
+    <text x="308" y="170" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#68625b">process</text>
+
+    <!-- Depth axis label -->
+    <text x="310" y="248" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#111">Each step has clear physical justification — always compare against raw data</text>
+
+    <!-- Velocity note -->
+    <rect x="30" y="260" width="560" height="48" rx="5" fill="#fff" stroke="#68625b" stroke-width="0.5"/>
+    <text x="40" y="278" font-family="Inter, sans-serif" font-size="9" font-weight="bold" fill="#111">Key velocities for Central Asia:</text>
+    <text x="40" y="296" font-family="Inter, sans-serif" font-size="9" fill="#68625b">Dry loess ≈ 0.10–0.12 m/ns  ·  Wet alluvium ≈ 0.06–0.08 m/ns  ·  Limestone ≈ 0.10–0.12 m/ns  ·  Saturated clay ≈ 0.05–0.07 m/ns</text>
+
+    <defs>
+      <marker id="arr12" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="#68625b"/>
+      </marker>
+    </defs>
+  </svg>
+  <p class="diagram-caption">Figure — GPR processing pipeline from raw radargram to depth-converted section, showing signal improvement at each stage.</p>
+</div>
+
 ## Signal processing fundamentals
 
 ### Dewow filtering

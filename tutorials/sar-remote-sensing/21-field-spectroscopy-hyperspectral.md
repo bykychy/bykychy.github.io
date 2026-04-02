@@ -19,6 +19,131 @@ Every material on Earth's surface interacts with light in a characteristic way. 
 
 For Central Asia, this capability transforms how we explore for minerals, monitor crop health, and assess land degradation. Hyperspectral sensors with hundreds of narrow bands detect specific absorption features that distinguish chalcopyrite from hematite, enabling targeted exploration that reduces costs and environmental impact.
 
+<div class="learning-objectives">
+  <div class="learning-objectives-header">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1e4f8a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    <h3>What you will learn</h3>
+  </div>
+  <ul>
+    <li>Operate a field spectroradiometer, calibrate with white reference panels, and compute reflectance factors from raw detector counts</li>
+    <li>Identify diagnostic absorption features for minerals (iron oxides, clays, carbonates) and vegetation (chlorophyll, water bands, red edge)</li>
+    <li>Build spectral libraries with proper metadata and apply continuum removal for quantitative feature comparison</li>
+    <li>Perform spectral unmixing using endmember extraction algorithms (PPI, N-FINDR, VCA) and constrained abundance estimation</li>
+    <li>Apply hyperspectral analysis to Central Asian mineral exploration, crop stress detection, and salinization mapping using PRISMA and EnMAP data</li>
+  </ul>
+</div>
+
+<div class="prerequisites">
+  <div class="prerequisites-header">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8b5e00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+    <h3>Prerequisites</h3>
+  </div>
+  <ul>
+    <li>Understanding of the electromagnetic spectrum (visible, NIR, SWIR wavelength ranges)</li>
+    <li>Familiarity with remote sensing fundamentals (reflectance, radiance, atmospheric correction)</li>
+    <li>Basic linear algebra (matrix operations, least-squares optimization) for spectral unmixing</li>
+    <li>Prior exposure to multispectral satellite imagery analysis (e.g., Landsat, Sentinel-2)</li>
+  </ul>
+</div>
+
+<div class="concept-diagram">
+  <svg viewBox="0 0 620 320" xmlns="http://www.w3.org/2000/svg" style="max-width: 580px;">
+    <rect x="0" y="0" width="620" height="320" fill="#f9f8f6" rx="8"/>
+    <text x="310" y="22" text-anchor="middle" font-family="Inter, sans-serif" font-size="13" font-weight="bold" fill="#111">Field Spectroscopy: From Measurement to Spectral Identification</text>
+    <defs>
+      <marker id="arrBlue" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+        <path d="M0,0 L8,3 L0,6" fill="#1e4f8a"/>
+      </marker>
+      <marker id="arrGray2" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+        <path d="M0,0 L8,3 L0,6" fill="#68625b"/>
+      </marker>
+    </defs>
+    <!-- Sun -->
+    <circle cx="55" cy="55" r="18" fill="#f5d442" stroke="#8b5e00" stroke-width="1.5"/>
+    <line x1="55" y1="75" x2="55" y2="90" stroke="#8b5e00" stroke-width="1" stroke-dasharray="3,2"/>
+    <line x1="55" y1="75" x2="90" y2="105" stroke="#8b5e00" stroke-width="1" stroke-dasharray="3,2"/>
+    <line x1="55" y1="75" x2="20" y2="105" stroke="#8b5e00" stroke-width="1" stroke-dasharray="3,2"/>
+    <text x="55" y="55" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#8b5e00" dy="3">☀</text>
+    <!-- Ground surface with rock sample -->
+    <rect x="15" y="110" width="120" height="40" fill="#d4c4a0" stroke="#8b5e00" stroke-width="1" rx="3"/>
+    <rect x="40" y="115" width="35" height="20" fill="#a08060" stroke="#8b5e00" stroke-width="1" rx="2"/>
+    <text x="57" y="129" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#fff">Rock</text>
+    <text x="75" y="163" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#111">Target surface</text>
+    <!-- Reflected light arrow -->
+    <line x1="75" y1="110" x2="120" y2="80" stroke="#1e4f8a" stroke-width="1.5" marker-end="url(#arrBlue)"/>
+    <text x="108" y="88" font-family="Inter, sans-serif" font-size="8" fill="#1e4f8a">Reflected</text>
+    <!-- Spectroradiometer -->
+    <rect x="120" y="55" width="80" height="35" fill="#e8e6e2" stroke="#1e4f8a" stroke-width="1.5" rx="4"/>
+    <text x="160" y="72" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" font-weight="bold" fill="#1e4f8a">Spectro-</text>
+    <text x="160" y="83" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" font-weight="bold" fill="#1e4f8a">radiometer</text>
+    <!-- White reference -->
+    <rect x="15" y="175" width="60" height="25" fill="#fff" stroke="#68625b" stroke-width="1" rx="2"/>
+    <text x="45" y="191" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#68625b">White ref.</text>
+    <text x="45" y="214" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#68625b">ρ = DN_t/DN_r</text>
+    <!-- Arrow from spectroradiometer to spectral curve -->
+    <line x1="200" y1="72" x2="230" y2="72" stroke="#68625b" stroke-width="1.5" marker-end="url(#arrGray2)"/>
+    <!-- Spectral curve panel -->
+    <rect x="235" y="38" width="200" height="140" fill="#fff" stroke="#68625b" stroke-width="1" rx="4"/>
+    <text x="335" y="55" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="bold" fill="#111">Spectral Curve</text>
+    <!-- Axes -->
+    <line x1="260" y1="65" x2="260" y2="160" stroke="#111" stroke-width="1"/>
+    <line x1="260" y1="160" x2="420" y2="160" stroke="#111" stroke-width="1"/>
+    <text x="255" y="72" text-anchor="end" font-family="Inter, sans-serif" font-size="8" fill="#68625b">R</text>
+    <text x="340" y="172" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#68625b">Wavelength (nm)</text>
+    <text x="270" y="172" font-family="Inter, sans-serif" font-size="7" fill="#68625b">400</text>
+    <text x="335" y="172" font-family="Inter, sans-serif" font-size="7" fill="#68625b">1400</text>
+    <text x="405" y="172" font-family="Inter, sans-serif" font-size="7" fill="#68625b">2500</text>
+    <!-- Spectral reflectance curve with absorption dips -->
+    <polyline points="270,120 278,115 286,108 294,100 302,90 308,92 312,98 316,95 320,88 328,85 336,100 340,105 344,96 348,90 356,88 364,92 372,110 378,98 384,90 392,95 400,105 408,115" fill="none" stroke="#1e4f8a" stroke-width="2"/>
+    <!-- Absorption feature labels with arrows -->
+    <!-- Fe3+ at ~900nm -->
+    <line x1="308" y1="98" x2="308" y2="110" stroke="#d92b1f" stroke-width="0.8"/>
+    <text x="308" y="118" text-anchor="middle" font-family="Inter, sans-serif" font-size="7" fill="#d92b1f">Fe³⁺</text>
+    <!-- OH at ~1400nm -->
+    <line x1="336" y1="105" x2="336" y2="116" stroke="#d92b1f" stroke-width="0.8"/>
+    <text x="336" y="124" text-anchor="middle" font-family="Inter, sans-serif" font-size="7" fill="#d92b1f">OH</text>
+    <!-- H2O at ~1900nm -->
+    <line x1="372" y1="110" x2="372" y2="122" stroke="#d92b1f" stroke-width="0.8"/>
+    <text x="372" y="130" text-anchor="middle" font-family="Inter, sans-serif" font-size="7" fill="#d92b1f">H₂O</text>
+    <!-- Al-OH at ~2200nm -->
+    <line x1="400" y1="105" x2="400" y2="118" stroke="#d92b1f" stroke-width="0.8"/>
+    <text x="400" y="126" text-anchor="middle" font-family="Inter, sans-serif" font-size="7" fill="#d92b1f">Al-OH</text>
+    <!-- Arrow to identification -->
+    <line x1="435" y1="108" x2="452" y2="108" stroke="#68625b" stroke-width="1.5" marker-end="url(#arrGray2)"/>
+    <!-- Identification panel -->
+    <rect x="457" y="38" width="150" height="140" fill="#fff" stroke="#165d34" stroke-width="1.5" rx="4"/>
+    <text x="532" y="55" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="bold" fill="#165d34">Identification</text>
+    <!-- Mineral list -->
+    <rect x="470" y="64" width="124" height="18" fill="#f0e8d8" rx="2"/>
+    <text x="532" y="77" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#8b5e00">🔬 Kaolinite (2205 nm)</text>
+    <rect x="470" y="86" width="124" height="18" fill="#f0e8d8" rx="2"/>
+    <text x="532" y="99" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#8b5e00">🔬 Goethite (900 nm)</text>
+    <rect x="470" y="108" width="124" height="18" fill="#dbecd0" rx="2"/>
+    <text x="532" y="121" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#165d34">🌿 Chlorophyll (680 nm)</text>
+    <rect x="470" y="130" width="124" height="18" fill="#d8e8f0" rx="2"/>
+    <text x="532" y="143" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#1e4f8a">💧 Water (1450 nm)</text>
+    <!-- Bottom: Unmixing workflow -->
+    <rect x="50" y="195" width="520" height="55" fill="#fff" stroke="#1e4f8a" stroke-width="1.5" rx="4"/>
+    <text x="310" y="212" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="bold" fill="#1e4f8a">Spectral Unmixing Workflow</text>
+    <!-- Steps -->
+    <rect x="65" y="220" width="90" height="20" fill="#e8e6e2" rx="3"/>
+    <text x="110" y="234" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#111">Endmembers</text>
+    <line x1="158" y1="230" x2="172" y2="230" stroke="#68625b" stroke-width="1" marker-end="url(#arrGray2)"/>
+    <rect x="175" y="220" width="90" height="20" fill="#e8e6e2" rx="3"/>
+    <text x="220" y="234" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#111">PPI / N-FINDR</text>
+    <line x1="268" y1="230" x2="282" y2="230" stroke="#68625b" stroke-width="1" marker-end="url(#arrGray2)"/>
+    <rect x="285" y="220" width="90" height="20" fill="#e8e6e2" rx="3"/>
+    <text x="330" y="234" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#111">R = Σ fᵢRᵢ + ε</text>
+    <line x1="378" y1="230" x2="392" y2="230" stroke="#68625b" stroke-width="1" marker-end="url(#arrGray2)"/>
+    <rect x="395" y="220" width="90" height="20" fill="#dbecd0" rx="3"/>
+    <text x="440" y="234" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#165d34">Abundance map</text>
+    <!-- Caption area -->
+    <text x="310" y="275" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#111">Sensors: ASD FieldSpec (field) · PRISMA / EnMAP (space) · AVIRIS (airborne)</text>
+    <text x="310" y="292" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#68625b">Coverage: 350–2500 nm | 3–10 nm spectral resolution | 230–285 bands</text>
+  </svg>
+  <p class="diagram-caption">Figure: Field spectroscopy workflow — sunlight reflects from a target surface, a spectroradiometer records the spectral curve, absorption features identify minerals and vegetation, and unmixing maps sub-pixel abundance.</p>
+</div>
+
 ## Electromagnetic spectrum and spectral signatures
 
 The electromagnetic spectrum for remote sensing spans 350 to 2500 nanometers:

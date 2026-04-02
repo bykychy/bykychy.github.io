@@ -21,6 +21,114 @@ Conventional Differential InSAR (DInSAR) measures surface displacement between t
 
 Subsidence rates of 5–30 mm yr⁻¹ from groundwater extraction, tectonic loading of 1–4 mm yr⁻¹ along the Tien Shan front, and mining-induced settlement of 10–100 mm yr⁻¹ all fall within the detection range of modern multi-temporal InSAR.
 
+<div class="learning-objectives">
+  <div class="learning-objectives-header">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1e4f8a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    <h3>What you will learn</h3>
+  </div>
+  <ul>
+    <li>Distinguish PS-InSAR, DInSAR, and SBAS techniques by their scatterer types, accuracy levels, and optimal terrain conditions</li>
+    <li>Select persistent scatterers using amplitude dispersion index (D<sub>A</sub> &lt; 0.25) and temporal coherence thresholds (&gamma;<sub>t</sub> &gt; 0.7)</li>
+    <li>Estimate and remove atmospheric phase screens through spatial filtering and network-based inversion</li>
+    <li>Invert interferometric networks to derive mm-scale displacement velocity maps and deformation time series</li>
+    <li>Apply PS-InSAR and SBAS to Central Asian applications: groundwater subsidence, tectonic loading, and mining-induced settlement</li>
+  </ul>
+</div>
+
+<div class="prerequisites">
+  <div class="prerequisites-header">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8b5e00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+    <h3>Prerequisites</h3>
+  </div>
+  <ul>
+    <li>Solid understanding of SAR imaging geometry, phase, and interferometric coherence (Tutorials 1–6 in this series)</li>
+    <li>Experience with differential InSAR (DInSAR) concepts: interferogram formation, phase unwrapping, and baseline geometry</li>
+    <li>Familiarity with SNAP, StaMPS, or MintPy software for SAR processing</li>
+    <li>Working knowledge of Python and basic linear algebra (matrix inversion, SVD) for understanding the network solution</li>
+  </ul>
+</div>
+
+<div class="concept-diagram">
+  <svg viewBox="0 0 620 320" xmlns="http://www.w3.org/2000/svg" style="max-width: 580px;">
+    <defs>
+      <marker id="psArrow" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto"><path d="M0,0 L7,2.5 L0,5" fill="#68625b"/></marker>
+    </defs>
+    <text x="310" y="18" font-family="Inter, sans-serif" font-size="13" fill="#111" text-anchor="middle" font-weight="bold">Persistent Scatterer InSAR: Multi-Temporal Analysis</text>
+    <!-- SAR passes (top row) -->
+    <text x="80" y="45" font-family="Inter, sans-serif" font-size="10" fill="#68625b" text-anchor="middle">SAR Pass 1</text>
+    <text x="200" y="45" font-family="Inter, sans-serif" font-size="10" fill="#68625b" text-anchor="middle">SAR Pass 2</text>
+    <text x="310" y="45" font-family="Inter, sans-serif" font-size="10" fill="#111" text-anchor="middle" font-weight="bold">...</text>
+    <text x="400" y="45" font-family="Inter, sans-serif" font-size="10" fill="#68625b" text-anchor="middle">SAR Pass N</text>
+    <!-- Satellite icons -->
+    <rect x="68" y="52" width="24" height="14" rx="2" fill="#68625b" stroke="#111" stroke-width="0.5"/>
+    <rect x="58" y="56" width="8" height="6" fill="#1e4f8a"/>
+    <rect x="94" y="56" width="8" height="6" fill="#1e4f8a"/>
+    <rect x="188" y="52" width="24" height="14" rx="2" fill="#68625b" stroke="#111" stroke-width="0.5"/>
+    <rect x="178" y="56" width="8" height="6" fill="#1e4f8a"/>
+    <rect x="214" y="56" width="8" height="6" fill="#1e4f8a"/>
+    <rect x="388" y="52" width="24" height="14" rx="2" fill="#68625b" stroke="#111" stroke-width="0.5"/>
+    <rect x="378" y="56" width="8" height="6" fill="#1e4f8a"/>
+    <rect x="414" y="56" width="8" height="6" fill="#1e4f8a"/>
+    <!-- Dashed lines down from satellites -->
+    <line x1="80" y1="66" x2="80" y2="95" stroke="#1e4f8a" stroke-width="1" stroke-dasharray="3,2"/>
+    <line x1="200" y1="66" x2="200" y2="95" stroke="#1e4f8a" stroke-width="1" stroke-dasharray="3,2"/>
+    <line x1="400" y1="66" x2="400" y2="95" stroke="#1e4f8a" stroke-width="1" stroke-dasharray="3,2"/>
+    <!-- Ground scene with PS points -->
+    <rect x="30" y="95" width="430" height="95" rx="4" fill="#f5f5f0" stroke="#68625b" stroke-width="1"/>
+    <text x="245" y="110" font-family="Inter, sans-serif" font-size="10" fill="#111" text-anchor="middle" font-weight="bold">Ground Scene — Persistent Scatterer Network</text>
+    <!-- PS points as diamonds -->
+    <polygon points="80,135 86,128 92,135 86,142" fill="#d92b1f" stroke="#d92b1f" stroke-width="0.5"/>
+    <polygon points="140,150 146,143 152,150 146,157" fill="#d92b1f" stroke="#d92b1f" stroke-width="0.5"/>
+    <polygon points="200,125 206,118 212,125 206,132" fill="#d92b1f" stroke="#d92b1f" stroke-width="0.5"/>
+    <polygon points="260,155 266,148 272,155 266,162" fill="#d92b1f" stroke="#d92b1f" stroke-width="0.5"/>
+    <polygon points="320,130 326,123 332,130 326,137" fill="#d92b1f" stroke="#d92b1f" stroke-width="0.5"/>
+    <polygon points="370,160 376,153 382,160 376,167" fill="#d92b1f" stroke="#d92b1f" stroke-width="0.5"/>
+    <polygon points="420,140 426,133 432,140 426,147" fill="#d92b1f" stroke="#d92b1f" stroke-width="0.5"/>
+    <!-- Network connections between PS -->
+    <line x1="86" y1="135" x2="146" y2="150" stroke="#1e4f8a" stroke-width="0.8" opacity="0.5"/>
+    <line x1="86" y1="135" x2="206" y2="125" stroke="#1e4f8a" stroke-width="0.8" opacity="0.5"/>
+    <line x1="146" y1="150" x2="206" y2="125" stroke="#1e4f8a" stroke-width="0.8" opacity="0.5"/>
+    <line x1="146" y1="150" x2="266" y2="155" stroke="#1e4f8a" stroke-width="0.8" opacity="0.5"/>
+    <line x1="206" y1="125" x2="326" y2="130" stroke="#1e4f8a" stroke-width="0.8" opacity="0.5"/>
+    <line x1="206" y1="125" x2="266" y2="155" stroke="#1e4f8a" stroke-width="0.8" opacity="0.5"/>
+    <line x1="266" y1="155" x2="326" y2="130" stroke="#1e4f8a" stroke-width="0.8" opacity="0.5"/>
+    <line x1="266" y1="155" x2="376" y2="160" stroke="#1e4f8a" stroke-width="0.8" opacity="0.5"/>
+    <line x1="326" y1="130" x2="376" y2="160" stroke="#1e4f8a" stroke-width="0.8" opacity="0.5"/>
+    <line x1="326" y1="130" x2="426" y2="140" stroke="#1e4f8a" stroke-width="0.8" opacity="0.5"/>
+    <line x1="376" y1="160" x2="426" y2="140" stroke="#1e4f8a" stroke-width="0.8" opacity="0.5"/>
+    <!-- Legend for PS -->
+    <polygon points="55,178 59,174 63,178 59,182" fill="#d92b1f"/>
+    <text x="70" y="181" font-family="Inter, sans-serif" font-size="9" fill="#111">PS point</text>
+    <line x1="115" y1="178" x2="140" y2="178" stroke="#1e4f8a" stroke-width="1" opacity="0.6"/>
+    <text x="147" y="181" font-family="Inter, sans-serif" font-size="9" fill="#111">Network link</text>
+    <!-- Arrow down to time series -->
+    <line x1="245" y1="190" x2="245" y2="210" stroke="#68625b" stroke-width="1.5" marker-end="url(#psArrow)"/>
+    <text x="270" y="205" font-family="Inter, sans-serif" font-size="9" fill="#68625b">Inversion</text>
+    <!-- Deformation time series graph -->
+    <rect x="80" y="215" width="460" height="95" rx="4" fill="#fff" stroke="#68625b" stroke-width="1"/>
+    <text x="310" y="232" font-family="Inter, sans-serif" font-size="10" fill="#111" text-anchor="middle" font-weight="bold">Displacement Time Series at Selected PS</text>
+    <!-- Axes -->
+    <line x1="120" y1="245" x2="120" y2="295" stroke="#111" stroke-width="1"/>
+    <line x1="120" y1="295" x2="510" y2="295" stroke="#111" stroke-width="1"/>
+    <text x="110" y="275" font-family="Inter, sans-serif" font-size="8" fill="#111" text-anchor="end" transform="rotate(-90,110,275)">Displacement (mm)</text>
+    <text x="315" y="308" font-family="Inter, sans-serif" font-size="8" fill="#111" text-anchor="middle">Time →</text>
+    <!-- Tick marks -->
+    <text x="115" y="252" font-family="Inter, sans-serif" font-size="7" fill="#68625b" text-anchor="end">0</text>
+    <text x="115" y="273" font-family="Inter, sans-serif" font-size="7" fill="#68625b" text-anchor="end">-20</text>
+    <text x="115" y="293" font-family="Inter, sans-serif" font-size="7" fill="#68625b" text-anchor="end">-40</text>
+    <!-- Stable PS (blue) - nearly horizontal -->
+    <polyline points="130,252 180,251 230,253 280,252 330,254 380,253 430,255 480,254" fill="none" stroke="#1e4f8a" stroke-width="1.5"/>
+    <!-- Subsiding PS (red) - descending -->
+    <polyline points="130,252 180,257 230,263 280,270 330,275 380,281 430,286 480,291" fill="none" stroke="#d92b1f" stroke-width="1.5"/>
+    <!-- Legend in graph -->
+    <line x1="365" y1="243" x2="385" y2="243" stroke="#1e4f8a" stroke-width="1.5"/>
+    <text x="390" y="246" font-family="Inter, sans-serif" font-size="8" fill="#111">Stable (0 mm/yr)</text>
+    <line x1="365" y1="253" x2="385" y2="253" stroke="#d92b1f" stroke-width="1.5"/>
+    <text x="390" y="256" font-family="Inter, sans-serif" font-size="8" fill="#111">Subsiding (−15 mm/yr)</text>
+  </svg>
+  <p class="diagram-caption">PS-InSAR workflow: multiple SAR passes observe a network of persistent scatterers. Phase inversion yields displacement time series at each PS point, revealing stable areas (blue) and subsiding zones (red) at millimetre precision.</p>
+</div>
+
 ## PS-InSAR vs DInSAR vs SBAS fundamentals
 
 ### Conventional DInSAR

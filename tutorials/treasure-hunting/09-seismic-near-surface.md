@@ -19,6 +19,145 @@ In Central Asia, seismic methods are essential for engineering site characteriza
   Seismic methods measure travel times of elastic waves through the subsurface. Different materials have different velocities, and velocity contrasts create reflections and refractions that reveal layer boundaries, structures, and anomalies.
 </div>
 
+<div class="learning-objectives">
+  <div class="learning-objectives-header">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1e4f8a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    <h3>What you will learn</h3>
+  </div>
+  <ul>
+    <li>How P-wave, S-wave, and surface-wave velocities relate to elastic moduli and reveal material properties of Central Asian subsurface soils</li>
+    <li>Seismic refraction theory—Snell's law, critical angle, head waves—and the intercept-time method for determining layer depths and velocities</li>
+    <li>Seismic reflection principles including normal-moveout correction, stacking, and how to image buried interfaces in layered sediments</li>
+    <li>MASW (Multichannel Analysis of Surface Waves) for building shear-wave velocity profiles from Rayleigh-wave dispersion curves</li>
+    <li>Practical survey design: geophone spacing, source selection (hammer, weight drop), and field procedures for loess, alluvial, and bedrock terrains</li>
+  </ul>
+</div>
+
+<div class="prerequisites">
+  <div class="prerequisites-header">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8b5e00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+    <h3>Prerequisites</h3>
+  </div>
+  <ul>
+    <li>Understanding of wave propagation (frequency, wavelength, velocity) and Snell's law at the introductory physics level</li>
+    <li>Familiarity with trigonometric functions and the ability to interpret travel-time versus offset graphs</li>
+    <li>Completion of Tutorial 08 (ERT) or equivalent exposure to geophysical imaging and cross-section interpretation</li>
+    <li>Basic comfort with spectral analysis concepts (Fourier transforms, dispersion) for the MASW section</li>
+  </ul>
+</div>
+
+<div class="concept-diagram">
+  <svg viewBox="0 0 620 320" xmlns="http://www.w3.org/2000/svg" style="max-width: 580px;">
+    <!-- Background -->
+    <rect x="0" y="0" width="620" height="320" fill="#f8f7f4" rx="6"/>
+
+    <!-- Title -->
+    <text x="310" y="22" text-anchor="middle" font-family="Inter, sans-serif" font-size="13" font-weight="600" fill="#111">Seismic Refraction &amp; Reflection — Wave Paths and Travel-Time Graph</text>
+
+    <!-- LEFT PANEL: Cross-section -->
+    <text x="195" y="42" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="600" fill="#111">Cross-section</text>
+
+    <!-- Ground surface -->
+    <line x1="20" y1="80" x2="380" y2="80" stroke="#8b5e00" stroke-width="2"/>
+
+    <!-- Layer 1 -->
+    <rect x="20" y="80" width="360" height="70" fill="#e8dcc8" rx="0"/>
+    <text x="30" y="118" font-family="Inter, sans-serif" font-size="10" fill="#68625b">Layer 1: V₁ = 400 m/s</text>
+
+    <!-- Layer boundary -->
+    <line x1="20" y1="150" x2="380" y2="150" stroke="#111" stroke-width="1.5" stroke-dasharray="6,3"/>
+
+    <!-- Layer 2 -->
+    <rect x="20" y="150" width="360" height="80" fill="#d9ccb0" rx="0"/>
+    <text x="30" y="195" font-family="Inter, sans-serif" font-size="10" fill="#68625b">Layer 2: V₂ = 1800 m/s</text>
+
+    <!-- Source (hammer) -->
+    <g transform="translate(55,55)">
+      <line x1="0" y1="25" x2="0" y2="10" stroke="#d92b1f" stroke-width="2.5"/>
+      <line x1="-6" y1="10" x2="6" y2="10" stroke="#d92b1f" stroke-width="2.5"/>
+      <polygon points="0,25 -5,30 5,30" fill="#d92b1f"/>
+    </g>
+    <text x="55" y="50" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" font-weight="600" fill="#d92b1f">Source</text>
+
+    <!-- Geophones -->
+    <g fill="#1e4f8a" stroke="#1e4f8a" stroke-width="1">
+      <polygon points="115,80 110,70 120,70"/>
+      <polygon points="165,80 160,70 170,70"/>
+      <polygon points="215,80 210,70 220,70"/>
+      <polygon points="265,80 260,70 270,70"/>
+      <polygon points="315,80 310,70 320,70"/>
+      <polygon points="355,80 350,70 360,70"/>
+    </g>
+    <text x="355" y="65" font-family="Inter, sans-serif" font-size="9" fill="#1e4f8a">Geophones</text>
+
+    <!-- Direct wave (straight along surface) -->
+    <line x1="55" y1="82" x2="315" y2="82" stroke="#165d34" stroke-width="1.5"/>
+    <text x="190" y="96" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#165d34">Direct wave (V₁)</text>
+
+    <!-- Refracted wave path -->
+    <polyline points="55,82 100,150 280,150 315,82" fill="none" stroke="#d92b1f" stroke-width="1.5"/>
+    <text x="190" y="163" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#d92b1f">Head wave along interface (V₂)</text>
+
+    <!-- Critical angle arc -->
+    <path d="M 85 82 Q 85 110 100 130" fill="none" stroke="#8b5e00" stroke-width="1" stroke-dasharray="2,2"/>
+    <text x="72" y="115" font-family="Inter, sans-serif" font-size="9" fill="#8b5e00">θc</text>
+
+    <!-- Reflected wave path -->
+    <polyline points="55,82 170,150 265,82" fill="none" stroke="#1e4f8a" stroke-width="1.5" stroke-dasharray="5,3"/>
+    <text x="140" y="140" font-family="Inter, sans-serif" font-size="9" fill="#1e4f8a">Reflected</text>
+
+    <!-- Divider -->
+    <line x1="395" y1="35" x2="395" y2="310" stroke="#68625b" stroke-width="0.5" stroke-dasharray="3,3"/>
+
+    <!-- RIGHT PANEL: Travel-time graph -->
+    <text x="505" y="42" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="600" fill="#111">Travel-time graph</text>
+
+    <!-- Axes -->
+    <line x1="420" y1="240" x2="595" y2="240" stroke="#111" stroke-width="1.2"/>
+    <line x1="420" y1="240" x2="420" y2="60" stroke="#111" stroke-width="1.2"/>
+    <text x="510" y="260" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#111">Offset (m)</text>
+    <text x="412" y="145" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#111" transform="rotate(-90,412,145)">Time (ms)</text>
+
+    <!-- Offset tick marks -->
+    <g font-family="Inter, sans-serif" font-size="8" fill="#68625b" text-anchor="middle">
+      <line x1="445" y1="240" x2="445" y2="244" stroke="#68625b"/><text x="445" y="253">5</text>
+      <line x1="480" y1="240" x2="480" y2="244" stroke="#68625b"/><text x="480" y="253">15</text>
+      <line x1="515" y1="240" x2="515" y2="244" stroke="#68625b"/><text x="515" y="253">25</text>
+      <line x1="550" y1="240" x2="550" y2="244" stroke="#68625b"/><text x="550" y="253">35</text>
+      <line x1="585" y1="240" x2="585" y2="244" stroke="#68625b"/><text x="585" y="253">45</text>
+    </g>
+
+    <!-- Direct-wave line (steep slope = slow) -->
+    <line x1="420" y1="240" x2="575" y2="90" stroke="#165d34" stroke-width="2"/>
+    <text x="480" y="140" font-family="Inter, sans-serif" font-size="10" fill="#165d34" transform="rotate(-44,480,140)">slope = 1/V₁</text>
+
+    <!-- Refracted-wave line (shallower slope, intercept) -->
+    <line x1="500" y1="192" x2="585" y2="150" stroke="#d92b1f" stroke-width="2"/>
+    <text x="555" y="140" font-family="Inter, sans-serif" font-size="10" fill="#d92b1f">1/V₂</text>
+
+    <!-- Crossover point -->
+    <circle cx="510" cy="185" r="4" fill="none" stroke="#111" stroke-width="1.5"/>
+    <text x="520" y="200" font-family="Inter, sans-serif" font-size="9" fill="#111">x_cross</text>
+
+    <!-- Intercept time -->
+    <line x1="418" y1="212" x2="425" y2="212" stroke="#d92b1f" stroke-width="1"/>
+    <text x="435" y="216" font-family="Inter, sans-serif" font-size="9" fill="#d92b1f">tᵢ</text>
+
+    <!-- Reflected-wave hyperbola -->
+    <path d="M 420 210 Q 470 175 520 165 Q 560 158 590 155" fill="none" stroke="#1e4f8a" stroke-width="1.5" stroke-dasharray="5,3"/>
+    <text x="590" y="148" font-family="Inter, sans-serif" font-size="9" fill="#1e4f8a">Reflected</text>
+
+    <!-- Legend -->
+    <line x1="420" y1="285" x2="445" y2="285" stroke="#165d34" stroke-width="2"/>
+    <text x="450" y="289" font-family="Inter, sans-serif" font-size="9" fill="#111">Direct wave</text>
+    <line x1="420" y1="300" x2="445" y2="300" stroke="#d92b1f" stroke-width="2"/>
+    <text x="450" y="304" font-family="Inter, sans-serif" font-size="9" fill="#111">Refracted wave</text>
+    <line x1="530" y1="285" x2="555" y2="285" stroke="#1e4f8a" stroke-width="1.5" stroke-dasharray="5,3"/>
+    <text x="560" y="289" font-family="Inter, sans-serif" font-size="9" fill="#111">Reflected wave</text>
+  </svg>
+  <p class="diagram-caption">Left: seismic wave paths from a hammer source to a geophone array — the direct wave travels along the surface at V₁, the refracted head wave travels along the faster layer boundary at V₂, and the reflected wave bounces off the interface. Right: corresponding travel-time graph showing how slope inversions reveal layer velocities and crossover distance indicates layer depth.</p>
+</div>
+
 ## Seismic wave fundamentals
 
 ### Types of seismic waves

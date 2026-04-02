@@ -19,6 +19,123 @@ Ground surveys cannot keep pace with change. Remote sensing provides systematic,
   Urban areas have distinctive spectral and geometric signatures. Impervious surfaces reflect differently than vegetation. Buildings create characteristic SAR backscatter patterns. Thermal sensors reveal heat islands. Combining these data sources enables comprehensive urban monitoring.
 </div>
 
+<div class="learning-objectives">
+  <div class="learning-objectives-header">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1e4f8a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    <h3>What you will learn</h3>
+  </div>
+  <ul>
+    <li>Distinguish urban spectral signatures (concrete, asphalt, metal roofs) from vegetation and bare soil using NIR and SWIR reflectance properties</li>
+    <li>Calculate and combine built-up indices (NDBI, BU) to map impervious surfaces while suppressing bare-soil false positives in arid Central Asian cities</li>
+    <li>Perform multi-temporal urban expansion analysis using Landsat archives and change detection methods (image differencing, trajectory analysis)</li>
+    <li>Map urban heat islands using thermal remote sensing and the surface energy balance equation to assess heat stress in Tashkent, Almaty, and Bishkek</li>
+    <li>Extract building footprints using deep learning (U-Net) and monitor urban infrastructure with SAR interferometry (InSAR) for subsidence detection</li>
+  </ul>
+</div>
+
+<div class="prerequisites">
+  <div class="prerequisites-header">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8b5e00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+    <h3>Prerequisites</h3>
+  </div>
+  <ul>
+    <li>Understanding of spectral indices (NDVI) and multispectral image classification</li>
+    <li>Familiarity with Landsat and Sentinel-2 band designations and resolutions</li>
+    <li>Basic knowledge of SAR backscatter concepts for understanding urban SAR analysis</li>
+  </ul>
+</div>
+
+<div class="concept-diagram">
+  <svg viewBox="0 0 620 320" xmlns="http://www.w3.org/2000/svg" style="max-width: 580px;">
+    <rect x="0" y="0" width="620" height="320" fill="#f9f8f6" rx="8"/>
+    <text x="310" y="22" text-anchor="middle" font-family="Inter, sans-serif" font-size="13" font-weight="bold" fill="#111">Urban Remote Sensing: Expansion, Heat Islands, and Infrastructure</text>
+    <defs>
+      <marker id="arrU" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+        <path d="M0,0 L8,3 L0,6" fill="#68625b"/>
+      </marker>
+    </defs>
+    <!-- Left: Urban expansion mapping -->
+    <rect x="15" y="38" width="185" height="135" fill="#fff" stroke="#68625b" stroke-width="1" rx="4"/>
+    <text x="107" y="55" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="bold" fill="#1e4f8a">Urban Expansion</text>
+    <!-- 2000 footprint -->
+    <rect x="40" y="65" width="80" height="60" fill="#c4dbb0" stroke="#165d34" stroke-width="1" rx="2"/>
+    <text x="80" y="100" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#165d34">Agricultural</text>
+    <!-- Inner city core 2000 -->
+    <rect x="55" y="75" width="35" height="30" fill="#b0b8c8" stroke="#1e4f8a" stroke-width="1.2" rx="2"/>
+    <text x="72" y="93" text-anchor="middle" font-family="Inter, sans-serif" font-size="7" fill="#1e4f8a">2000</text>
+    <!-- 2020 expansion ring -->
+    <rect x="130" y="65" width="55" height="60" fill="#d8d0c4" stroke="#d92b1f" stroke-width="1.2" rx="2" stroke-dasharray="3,2"/>
+    <text x="157" y="88" text-anchor="middle" font-family="Inter, sans-serif" font-size="7" fill="#d92b1f">2020</text>
+    <text x="157" y="98" text-anchor="middle" font-family="Inter, sans-serif" font-size="7" fill="#d92b1f">expansion</text>
+    <!-- Growth rate -->
+    <text x="107" y="140" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#111">BU = NDBI − NDVI</text>
+    <text x="107" y="155" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#68625b">Tashkent: +1.9%/yr</text>
+    <text x="107" y="165" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#68625b">Almaty: +2.3%/yr</text>
+    <!-- Arrow -->
+    <line x1="205" y1="105" x2="218" y2="105" stroke="#68625b" stroke-width="1.5" marker-end="url(#arrU)"/>
+    <!-- Center: UHI temperature profile -->
+    <rect x="222" y="38" width="185" height="135" fill="#fff" stroke="#68625b" stroke-width="1" rx="4"/>
+    <text x="314" y="55" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="bold" fill="#d92b1f">Urban Heat Island</text>
+    <!-- Temperature profile axes -->
+    <line x1="242" y1="68" x2="242" y2="150" stroke="#111" stroke-width="0.8"/>
+    <line x1="242" y1="150" x2="392" y2="150" stroke="#111" stroke-width="0.8"/>
+    <text x="238" y="75" text-anchor="end" font-family="Inter, sans-serif" font-size="7" fill="#68625b">°C</text>
+    <!-- Temperature curve - rural to urban to rural -->
+    <polyline points="250,130 265,128 280,120 295,105 310,85 325,80 340,82 355,90 370,110 385,128" fill="none" stroke="#d92b1f" stroke-width="2"/>
+    <!-- Zone labels -->
+    <text x="260" y="146" text-anchor="middle" font-family="Inter, sans-serif" font-size="7" fill="#165d34">Rural</text>
+    <rect x="285" y="136" width="60" height="12" fill="#d8d0c4" rx="2"/>
+    <text x="315" y="146" text-anchor="middle" font-family="Inter, sans-serif" font-size="7" fill="#111">City center</text>
+    <text x="378" y="146" text-anchor="middle" font-family="Inter, sans-serif" font-size="7" fill="#165d34">Rural</text>
+    <!-- Delta T label -->
+    <line x1="325" y1="80" x2="325" y2="130" stroke="#d92b1f" stroke-width="0.8" stroke-dasharray="2,2"/>
+    <text x="340" y="100" font-family="Inter, sans-serif" font-size="8" fill="#d92b1f">ΔT ≈ 5-8°C</text>
+    <!-- Energy balance -->
+    <text x="314" y="166" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#111">Rn = H + LE + G</text>
+    <!-- Arrow -->
+    <line x1="412" y1="105" x2="425" y2="105" stroke="#68625b" stroke-width="1.5" marker-end="url(#arrU)"/>
+    <!-- Right: Building extraction + SAR -->
+    <rect x="430" y="38" width="175" height="135" fill="#fff" stroke="#68625b" stroke-width="1" rx="4"/>
+    <text x="517" y="55" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="bold" fill="#165d34">Infrastructure</text>
+    <!-- Building footprints -->
+    <rect x="448" y="65" width="22" height="18" fill="#b0b8c8" stroke="#1e4f8a" stroke-width="1" rx="1"/>
+    <rect x="476" y="65" width="30" height="14" fill="#b0b8c8" stroke="#1e4f8a" stroke-width="1" rx="1"/>
+    <rect x="448" y="90" width="18" height="22" fill="#b0b8c8" stroke="#1e4f8a" stroke-width="1" rx="1"/>
+    <rect x="472" y="86" width="26" height="16" fill="#b0b8c8" stroke="#1e4f8a" stroke-width="1" rx="1"/>
+    <rect x="504" y="68" width="16" height="16" fill="#b0b8c8" stroke="#1e4f8a" stroke-width="1" rx="1"/>
+    <!-- Road between buildings -->
+    <line x1="445" y1="85" x2="530" y2="85" stroke="#68625b" stroke-width="1.5" stroke-dasharray="4,2"/>
+    <!-- Shadow -->
+    <rect x="470" y="79" width="22" height="4" fill="#d8d0c4" rx="1" opacity="0.5"/>
+    <text x="530" y="100" font-family="Inter, sans-serif" font-size="8" fill="#1e4f8a">U-Net</text>
+    <text x="530" y="110" font-family="Inter, sans-serif" font-size="8" fill="#1e4f8a">extraction</text>
+    <!-- SAR subsidence label -->
+    <rect x="445" y="120" width="150" height="30" fill="#f0e8d8" stroke="#8b5e00" stroke-width="1" rx="3"/>
+    <text x="520" y="135" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#8b5e00">InSAR subsidence</text>
+    <text x="520" y="146" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#68625b">mm/yr deformation</text>
+    <!-- Bottom: Impervious surface detection -->
+    <rect x="40" y="190" width="540" height="50" fill="#fff" stroke="#1e4f8a" stroke-width="1.5" rx="4"/>
+    <text x="310" y="208" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="bold" fill="#1e4f8a">Impervious Surface Detection Chain</text>
+    <!-- Spectral bars -->
+    <rect x="65" y="215" width="30" height="15" fill="#1e4f8a" rx="2"/>
+    <text x="80" y="226" text-anchor="middle" font-family="Inter, sans-serif" font-size="7" fill="#fff">SWIR</text>
+    <text x="100" y="226" font-family="Inter, sans-serif" font-size="10" fill="#111">−</text>
+    <rect x="110" y="215" width="30" height="15" fill="#165d34" rx="2"/>
+    <text x="125" y="226" text-anchor="middle" font-family="Inter, sans-serif" font-size="7" fill="#fff">NIR</text>
+    <text x="148" y="226" font-family="Inter, sans-serif" font-size="9" fill="#111">→ NDBI</text>
+    <text x="205" y="226" font-family="Inter, sans-serif" font-size="10" fill="#111">−</text>
+    <text x="218" y="226" font-family="Inter, sans-serif" font-size="9" fill="#165d34">NDVI</text>
+    <text x="260" y="226" font-family="Inter, sans-serif" font-size="9" fill="#111">→ BU index</text>
+    <text x="340" y="226" font-family="Inter, sans-serif" font-size="9" fill="#111">→ classify</text>
+    <text x="420" y="226" font-family="Inter, sans-serif" font-size="9" fill="#111">→ change map</text>
+    <text x="520" y="226" font-family="Inter, sans-serif" font-size="9" fill="#d92b1f">→ growth rate</text>
+    <!-- Bottom labels -->
+    <text x="310" y="265" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#111">Data: Landsat archive (1984–present) · Sentinel-2 (10 m) · Landsat thermal (100 m) · Sentinel-1 SAR</text>
+    <text x="310" y="282" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#68625b">Central Asian cities: Tashkent · Almaty · Bishkek · Dushanbe · Ashgabat</text>
+  </svg>
+  <p class="diagram-caption">Figure: Urban remote sensing framework — mapping expansion with built-up indices, profiling heat islands with thermal data, and monitoring infrastructure with building extraction and InSAR subsidence analysis.</p>
+</div>
+
 ## Urban spectral signatures
 
 ### Impervious surfaces

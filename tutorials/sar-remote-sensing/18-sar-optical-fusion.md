@@ -17,6 +17,94 @@ Central Asia loses 30–60% of Sentinel-2 acquisitions to cloud cover during the
   SAR and optical data are complementary, not redundant. SAR responds to structure, roughness, and moisture. Optical responds to pigments, minerals, and reflectance. Combining them captures information that neither sensor provides alone.
 </div>
 
+<div class="learning-objectives">
+  <div class="learning-objectives-header">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1e4f8a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    <h3>What you will learn</h3>
+  </div>
+  <ul>
+    <li>Explain why SAR (structure, moisture) and optical (spectral, pigments) data are complementary rather than redundant</li>
+    <li>Co-register Sentinel-1 and Sentinel-2 imagery with proper preprocessing — radiometric terrain correction and cloud masking</li>
+    <li>Implement feature-level fusion by stacking SAR and optical bands and decision-level fusion using ensemble classifiers</li>
+    <li>Fill cloud gaps in optical time series using SAR-derived predictions and temporal harmonization techniques</li>
+    <li>Evaluate fusion accuracy gains (5–15 pp improvement) by comparing SAR-only, optical-only, and fused classification results</li>
+  </ul>
+</div>
+
+<div class="prerequisites">
+  <div class="prerequisites-header">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8b5e00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+    <h3>Prerequisites</h3>
+  </div>
+  <ul>
+    <li>Understanding of SAR backscatter (VV/VH polarization) and optical multispectral imagery (Sentinel-2 bands, NDVI)</li>
+    <li>Familiarity with supervised classification concepts (training data, Random Forest, accuracy metrics)</li>
+    <li>Python experience with geospatial libraries or Google Earth Engine JavaScript/Python API</li>
+    <li>Basic knowledge of image co-registration and coordinate reference systems</li>
+  </ul>
+</div>
+
+<div class="concept-diagram">
+  <svg viewBox="0 0 620 320" xmlns="http://www.w3.org/2000/svg" style="max-width: 580px;">
+    <defs>
+      <marker id="fusArrow" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#165d34"/></marker>
+      <marker id="fusArrowG" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#68625b"/></marker>
+    </defs>
+    <text x="310" y="18" font-family="Inter, sans-serif" font-size="13" fill="#111" text-anchor="middle" font-weight="bold">SAR-Optical Data Fusion for Land Cover Classification</text>
+    <!-- SAR input (left) -->
+    <rect x="20" y="40" width="170" height="120" rx="6" fill="#e8f0fa" stroke="#1e4f8a" stroke-width="1.5"/>
+    <text x="105" y="60" font-family="Inter, sans-serif" font-size="12" fill="#1e4f8a" text-anchor="middle" font-weight="bold">Sentinel-1 SAR</text>
+    <!-- SAR grayscale image representation -->
+    <rect x="38" y="70" width="55" height="55" rx="2" fill="#444" stroke="#68625b" stroke-width="0.5"/>
+    <rect x="42" y="74" width="10" height="10" fill="#999"/><rect x="54" y="74" width="10" height="10" fill="#555"/><rect x="66" y="74" width="10" height="10" fill="#bbb"/>
+    <rect x="42" y="86" width="10" height="10" fill="#666"/><rect x="54" y="86" width="10" height="10" fill="#aaa"/><rect x="66" y="86" width="10" height="10" fill="#777"/>
+    <rect x="42" y="98" width="10" height="10" fill="#888"/><rect x="54" y="98" width="10" height="10" fill="#555"/><rect x="66" y="98" width="10" height="10" fill="#ccc"/>
+    <text x="65" y="135" font-family="Inter, sans-serif" font-size="8" fill="#68625b" text-anchor="middle">VV + VH bands</text>
+    <!-- SAR info bullets -->
+    <text x="105" y="78" font-family="Inter, sans-serif" font-size="9" fill="#111" text-anchor="start">✓ All-weather</text>
+    <text x="105" y="92" font-family="Inter, sans-serif" font-size="9" fill="#111" text-anchor="start">✓ Structure</text>
+    <text x="105" y="106" font-family="Inter, sans-serif" font-size="9" fill="#111" text-anchor="start">✓ Moisture</text>
+    <text x="105" y="120" font-family="Inter, sans-serif" font-size="9" fill="#111" text-anchor="start">✓ Roughness</text>
+    <text x="105" y="148" font-family="Inter, sans-serif" font-size="9" fill="#d92b1f" text-anchor="middle">✗ Limited spectral info</text>
+    <!-- Optical input (right) -->
+    <rect x="430" y="40" width="170" height="120" rx="6" fill="#fdf6e3" stroke="#8b5e00" stroke-width="1.5"/>
+    <text x="515" y="60" font-family="Inter, sans-serif" font-size="12" fill="#8b5e00" text-anchor="middle" font-weight="bold">Sentinel-2 Optical</text>
+    <!-- Optical color image representation -->
+    <rect x="448" y="70" width="55" height="55" rx="2" fill="#eee" stroke="#68625b" stroke-width="0.5"/>
+    <rect x="452" y="74" width="10" height="10" fill="#165d34"/><rect x="464" y="74" width="10" height="10" fill="#6aa843"/><rect x="476" y="74" width="10" height="10" fill="#165d34"/>
+    <rect x="452" y="86" width="10" height="10" fill="#8b5e00"/><rect x="464" y="86" width="10" height="10" fill="#c4a56e"/><rect x="476" y="86" width="10" height="10" fill="#6aa843"/>
+    <rect x="452" y="98" width="10" height="10" fill="#1e4f8a"/><rect x="464" y="98" width="10" height="10" fill="#165d34"/><rect x="476" y="98" width="10" height="10" fill="#8b5e00"/>
+    <text x="475" y="135" font-family="Inter, sans-serif" font-size="8" fill="#68625b" text-anchor="middle">13 spectral bands</text>
+    <!-- Optical info bullets -->
+    <text x="515" y="78" font-family="Inter, sans-serif" font-size="9" fill="#111" text-anchor="start">✓ Spectral</text>
+    <text x="515" y="92" font-family="Inter, sans-serif" font-size="9" fill="#111" text-anchor="start">✓ Vegetation</text>
+    <text x="515" y="106" font-family="Inter, sans-serif" font-size="9" fill="#111" text-anchor="start">✓ Minerals</text>
+    <text x="515" y="120" font-family="Inter, sans-serif" font-size="9" fill="#111" text-anchor="start">✓ Color</text>
+    <text x="515" y="148" font-family="Inter, sans-serif" font-size="9" fill="#d92b1f" text-anchor="middle">✗ Blocked by clouds</text>
+    <!-- Fusion arrows converging -->
+    <line x1="190" y1="110" x2="245" y2="200" stroke="#1e4f8a" stroke-width="2" marker-end="url(#fusArrow)"/>
+    <line x1="430" y1="110" x2="375" y2="200" stroke="#8b5e00" stroke-width="2" marker-end="url(#fusArrow)"/>
+    <!-- Plus symbol -->
+    <circle cx="310" cy="165" r="16" fill="#fff" stroke="#165d34" stroke-width="2"/>
+    <line x1="302" y1="165" x2="318" y2="165" stroke="#165d34" stroke-width="2.5"/>
+    <line x1="310" y1="157" x2="310" y2="173" stroke="#165d34" stroke-width="2.5"/>
+    <!-- Fused product (center bottom) -->
+    <rect x="210" y="200" width="200" height="70" rx="6" fill="#f0f7f2" stroke="#165d34" stroke-width="2"/>
+    <text x="310" y="220" font-family="Inter, sans-serif" font-size="12" fill="#165d34" text-anchor="middle" font-weight="bold">Fused Classification</text>
+    <!-- Mini classified map -->
+    <rect x="240" y="230" width="12" height="10" fill="#165d34"/><rect x="254" y="230" width="12" height="10" fill="#6aa843"/>
+    <rect x="268" y="230" width="12" height="10" fill="#8b5e00"/><rect x="282" y="230" width="12" height="10" fill="#1e4f8a"/>
+    <rect x="296" y="230" width="12" height="10" fill="#165d34"/><rect x="310" y="230" width="12" height="10" fill="#c4a56e"/>
+    <rect x="324" y="230" width="12" height="10" fill="#6aa843"/><rect x="338" y="230" width="12" height="10" fill="#68625b"/>
+    <rect x="352" y="230" width="12" height="10" fill="#165d34"/><rect x="366" y="230" width="12" height="10" fill="#8b5e00"/>
+    <text x="310" y="257" font-family="Inter, sans-serif" font-size="9" fill="#111" text-anchor="middle">Crop · Water · Urban · Desert · Forest</text>
+    <!-- Accuracy comparison -->
+    <rect x="100" y="285" width="420" height="28" rx="4" fill="#f5f5f0" stroke="#68625b" stroke-width="0.5"/>
+    <text x="310" y="303" font-family="Inter, sans-serif" font-size="10" fill="#111" text-anchor="middle">Typical accuracy: SAR-only ~72% · Optical-only ~82% · <tspan font-weight="bold" fill="#165d34">Fused ~90%</tspan></text>
+  </svg>
+  <p class="diagram-caption">SAR-optical fusion combines Sentinel-1 structural/moisture information with Sentinel-2 spectral data, producing classified maps with 5–15 percentage-point accuracy improvement over either sensor alone.</p>
+</div>
+
 ## SAR versus optical: what each sensor sees
 
 Sentinel-1 transmits C-band microwaves (5.405 GHz, ~5.6 cm wavelength). Backscatter intensity depends on surface roughness, dielectric constant (moisture), geometry, and vegetation structure. The backscatter coefficient:

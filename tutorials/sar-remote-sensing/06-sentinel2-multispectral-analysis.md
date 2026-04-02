@@ -35,6 +35,151 @@ For Central Asia, Sentinel-2 excels at monitoring:
 - snow cover dynamics in the Tien Shan and Pamir mountains,
 - land cover change across rapidly developing regions.
 
+<div class="learning-objectives">
+  <div class="learning-objectives-header">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1e4f8a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    <h3>What you will learn</h3>
+  </div>
+  <ul>
+    <li>How Sentinel-2 captures reflected solar radiation across 13 spectral bands from visible to shortwave infrared</li>
+    <li>How to compute and interpret spectral indices including NDVI, NDWI, and NDBI for vegetation, water, and built-up areas</li>
+    <li>How different surface materials (vegetation, soil, water, snow) produce distinctive spectral signatures</li>
+    <li>How to combine Sentinel-1 SAR and Sentinel-2 optical data for more robust landscape analysis</li>
+    <li>How to apply multispectral analysis to Central Asian challenges: irrigation monitoring, Aral Sea change, and land cover mapping</li>
+  </ul>
+</div>
+
+<div class="prerequisites">
+  <div class="prerequisites-header">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8b5e00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+    <h3>Prerequisites</h3>
+  </div>
+  <ul>
+    <li>Basic understanding of electromagnetic radiation, wavelength, and photon energy</li>
+    <li>Familiarity with raster image band math and normalized difference indices</li>
+    <li>Completed SAR tutorials (01-05) recommended for understanding SAR-optical synergy</li>
+  </ul>
+</div>
+
+<div class="concept-diagram">
+  <svg viewBox="0 0 620 320" xmlns="http://www.w3.org/2000/svg" style="max-width: 580px;">
+    <!-- Background -->
+    <rect x="0" y="0" width="620" height="320" fill="#f8f9fa" rx="8"/>
+    <text x="310" y="22" text-anchor="middle" font-family="Inter, sans-serif" font-size="13" font-weight="bold" fill="#1e4f8a">Sentinel-2 Spectral Bands and Surface Spectral Signatures</text>
+
+    <!-- Spectrum bar area -->
+    <rect x="40" y="40" width="540" height="50" rx="4" fill="#fff" stroke="#e0ddd8" stroke-width="1"/>
+
+    <!-- Spectrum gradient bands -->
+    <!-- Blue ~443-490nm -->
+    <rect x="65" y="48" width="50" height="34" rx="2" fill="#2255cc" opacity="0.7"/>
+    <text x="90" y="68" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" font-weight="bold" fill="#fff">Blue</text>
+    <text x="90" y="78" text-anchor="middle" font-family="Inter, sans-serif" font-size="7" fill="#c5d5ea">490 nm</text>
+
+    <!-- Green ~560nm -->
+    <rect x="120" y="48" width="50" height="34" rx="2" fill="#22aa44" opacity="0.7"/>
+    <text x="145" y="68" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" font-weight="bold" fill="#fff">Green</text>
+    <text x="145" y="78" text-anchor="middle" font-family="Inter, sans-serif" font-size="7" fill="#eeffee">560 nm</text>
+
+    <!-- Red ~665nm -->
+    <rect x="175" y="48" width="50" height="34" rx="2" fill="#cc2222" opacity="0.7"/>
+    <text x="200" y="68" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" font-weight="bold" fill="#fff">Red</text>
+    <text x="200" y="78" text-anchor="middle" font-family="Inter, sans-serif" font-size="7" fill="#fdd">665 nm</text>
+
+    <!-- Red Edge ~705-783nm -->
+    <rect x="230" y="48" width="65" height="34" rx="2" fill="#991111" opacity="0.6"/>
+    <text x="262" y="68" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" font-weight="bold" fill="#fff">Red Edge</text>
+    <text x="262" y="78" text-anchor="middle" font-family="Inter, sans-serif" font-size="7" fill="#fdd">705-783</text>
+
+    <!-- NIR ~842nm -->
+    <rect x="300" y="48" width="70" height="34" rx="2" fill="#882222" opacity="0.5"/>
+    <text x="335" y="68" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" font-weight="bold" fill="#fff">NIR</text>
+    <text x="335" y="78" text-anchor="middle" font-family="Inter, sans-serif" font-size="7" fill="#fdd">842 nm</text>
+
+    <!-- SWIR1 ~1610nm -->
+    <rect x="395" y="48" width="75" height="34" rx="2" fill="#554433" opacity="0.6"/>
+    <text x="432" y="68" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" font-weight="bold" fill="#fff">SWIR1</text>
+    <text x="432" y="78" text-anchor="middle" font-family="Inter, sans-serif" font-size="7" fill="#e8e0d0">1610 nm</text>
+
+    <!-- SWIR2 ~2190nm -->
+    <rect x="475" y="48" width="75" height="34" rx="2" fill="#332211" opacity="0.6"/>
+    <text x="512" y="68" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" font-weight="bold" fill="#fff">SWIR2</text>
+    <text x="512" y="78" text-anchor="middle" font-family="Inter, sans-serif" font-size="7" fill="#e8e0d0">2190 nm</text>
+
+    <!-- Wavelength axis label -->
+    <text x="310" y="100" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#68625b">Wavelength &rarr;</text>
+
+    <!-- Spectral response chart -->
+    <rect x="40" y="110" width="540" height="165" rx="4" fill="#fff" stroke="#e0ddd8" stroke-width="1"/>
+
+    <!-- Y-axis for reflectance -->
+    <line x1="65" y1="125" x2="65" y2="265" stroke="#111" stroke-width="1"/>
+    <text x="50" y="195" font-family="Inter, sans-serif" font-size="8" fill="#111" transform="rotate(-90, 50, 195)">Reflectance</text>
+    <text x="62" y="132" text-anchor="end" font-family="Inter, sans-serif" font-size="7" fill="#68625b">High</text>
+    <text x="62" y="262" text-anchor="end" font-family="Inter, sans-serif" font-size="7" fill="#68625b">Low</text>
+
+    <!-- X-axis bands -->
+    <line x1="65" y1="265" x2="560" y2="265" stroke="#111" stroke-width="1"/>
+    <text x="90" y="275" text-anchor="middle" font-family="Inter, sans-serif" font-size="7" fill="#68625b">B</text>
+    <text x="145" y="275" text-anchor="middle" font-family="Inter, sans-serif" font-size="7" fill="#68625b">G</text>
+    <text x="200" y="275" text-anchor="middle" font-family="Inter, sans-serif" font-size="7" fill="#68625b">R</text>
+    <text x="262" y="275" text-anchor="middle" font-family="Inter, sans-serif" font-size="7" fill="#68625b">RE</text>
+    <text x="335" y="275" text-anchor="middle" font-family="Inter, sans-serif" font-size="7" fill="#68625b">NIR</text>
+    <text x="432" y="275" text-anchor="middle" font-family="Inter, sans-serif" font-size="7" fill="#68625b">SWIR1</text>
+    <text x="512" y="275" text-anchor="middle" font-family="Inter, sans-serif" font-size="7" fill="#68625b">SWIR2</text>
+
+    <!-- Vegetation spectral curve (green) - low in blue/red, high in NIR, dip in SWIR -->
+    <polyline points="90,230 145,215 200,235 262,175 335,140 432,195 512,210" stroke="#165d34" stroke-width="2.5" fill="none"/>
+    <circle cx="90" cy="230" r="3" fill="#165d34"/>
+    <circle cx="145" cy="215" r="3" fill="#165d34"/>
+    <circle cx="200" cy="235" r="3" fill="#165d34"/>
+    <circle cx="262" cy="175" r="3" fill="#165d34"/>
+    <circle cx="335" cy="140" r="3" fill="#165d34"/>
+    <circle cx="432" cy="195" r="3" fill="#165d34"/>
+    <circle cx="512" cy="210" r="3" fill="#165d34"/>
+
+    <!-- Bare soil spectral curve (brown) - gradually increasing -->
+    <polyline points="90,245 145,235 200,225 262,218 335,210 432,200 512,195" stroke="#8b5e00" stroke-width="2.5" fill="none" stroke-dasharray="6,3"/>
+    <circle cx="90" cy="245" r="3" fill="#8b5e00"/>
+    <circle cx="145" cy="235" r="3" fill="#8b5e00"/>
+    <circle cx="200" cy="225" r="3" fill="#8b5e00"/>
+    <circle cx="262" cy="218" r="3" fill="#8b5e00"/>
+    <circle cx="335" cy="210" r="3" fill="#8b5e00"/>
+    <circle cx="432" cy="200" r="3" fill="#8b5e00"/>
+    <circle cx="512" cy="195" r="3" fill="#8b5e00"/>
+
+    <!-- Water spectral curve (blue) - high in blue/green, drops off -->
+    <polyline points="90,195 145,210 200,240 262,250 335,255 432,258 512,258" stroke="#1e4f8a" stroke-width="2.5" fill="none" stroke-dasharray="2,3"/>
+    <circle cx="90" cy="195" r="3" fill="#1e4f8a"/>
+    <circle cx="145" cy="210" r="3" fill="#1e4f8a"/>
+    <circle cx="200" cy="240" r="3" fill="#1e4f8a"/>
+    <circle cx="262" cy="250" r="3" fill="#1e4f8a"/>
+    <circle cx="335" cy="255" r="3" fill="#1e4f8a"/>
+    <circle cx="432" cy="258" r="3" fill="#1e4f8a"/>
+    <circle cx="512" cy="258" r="3" fill="#1e4f8a"/>
+
+    <!-- Red edge annotation -->
+    <path d="M 230 175 L 230 145 L 270 145" stroke="#d92b1f" stroke-width="1" fill="none" stroke-dasharray="3,2"/>
+    <text x="275" y="148" font-family="Inter, sans-serif" font-size="8" fill="#d92b1f">Red edge &mdash; key for</text>
+    <text x="275" y="157" font-family="Inter, sans-serif" font-size="8" fill="#d92b1f">vegetation detection</text>
+
+    <!-- Legend -->
+    <rect x="400" y="120" width="155" height="55" rx="4" fill="#fff" stroke="#e0ddd8" stroke-width="1"/>
+    <line x1="410" y1="133" x2="430" y2="133" stroke="#165d34" stroke-width="2.5"/>
+    <text x="435" y="137" font-family="Inter, sans-serif" font-size="9" fill="#111">Vegetation</text>
+    <line x1="410" y1="148" x2="430" y2="148" stroke="#8b5e00" stroke-width="2.5" stroke-dasharray="6,3"/>
+    <text x="435" y="152" font-family="Inter, sans-serif" font-size="9" fill="#111">Bare soil</text>
+    <line x1="410" y1="163" x2="430" y2="163" stroke="#1e4f8a" stroke-width="2.5" stroke-dasharray="2,3"/>
+    <text x="435" y="167" font-family="Inter, sans-serif" font-size="9" fill="#111">Water</text>
+
+    <!-- NDVI annotation -->
+    <rect x="40" y="288" width="540" height="24" rx="4" fill="#eef2f7" stroke="#1e4f8a" stroke-width="1"/>
+    <text x="310" y="304" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#1e4f8a">Key index: NDVI = (NIR &minus; Red) / (NIR + Red)  |  Vegetation: NDVI &gt; 0.3  |  Water: NDVI &lt; 0  |  Soil: NDVI &asymp; 0.1&ndash;0.2</text>
+  </svg>
+  <p class="diagram-caption">Figure: Sentinel-2 spectral bands spanning visible to shortwave infrared, with characteristic spectral signatures for vegetation (high NIR reflectance), bare soil (gradually increasing), and water (rapid decrease beyond visible). The red edge region is critical for vegetation health assessment.</p>
+</div>
+
+
 ## The electromagnetic spectrum and Sentinel-2 bands
 
 ### Electromagnetic radiation basics

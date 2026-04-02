@@ -19,6 +19,121 @@ In Central Asia, InSAR is valuable for landslides, glacier motion, subsidence, u
   InSAR measures phase difference, not motion directly. Displacement is inferred only after you interpret the phase carefully.
 </div>
 
+<div class="learning-objectives">
+  <div class="learning-objectives-header">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1e4f8a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    <h3>What you will learn</h3>
+  </div>
+  <ul>
+    <li>How interferometric phase difference between two SAR acquisitions encodes surface displacement</li>
+    <li>How to compute line-of-sight displacement from the formula d = &lambda;&Delta;&phi; / 4&pi;</li>
+    <li>How to interpret coherence as a measure of scattering stability between two dates</li>
+    <li>Why phase unwrapping is necessary and where it can fail</li>
+    <li>How to apply InSAR for landslide, glacier, and subsidence monitoring in Central Asia</li>
+  </ul>
+</div>
+
+<div class="prerequisites">
+  <div class="prerequisites-header">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8b5e00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+    <h3>Prerequisites</h3>
+  </div>
+  <ul>
+    <li>Completed Tutorial 02 on Sentinel-1 data processing and calibration</li>
+    <li>Understanding of complex numbers, phase, and trigonometric functions</li>
+    <li>Familiarity with SAR imaging geometry (slant range, look angle, line of sight)</li>
+  </ul>
+</div>
+
+<div class="concept-diagram">
+  <svg viewBox="0 0 620 320" xmlns="http://www.w3.org/2000/svg" style="max-width: 580px;">
+    <!-- Background -->
+    <rect x="0" y="0" width="620" height="320" fill="#f8f9fa" rx="8"/>
+    <text x="310" y="22" text-anchor="middle" font-family="Inter, sans-serif" font-size="13" font-weight="bold" fill="#1e4f8a">InSAR: Measuring Surface Displacement from Phase Difference</text>
+
+    <!-- Satellite Pass 1 -->
+    <rect x="90" y="38" width="60" height="30" rx="4" fill="#1e4f8a"/>
+    <text x="120" y="57" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" font-weight="bold" fill="#fff">SAT t&#x2081;</text>
+    <!-- Solar panels pass 1 -->
+    <rect x="72" y="43" width="18" height="20" rx="2" fill="#1e4f8a" stroke="#c5d5ea" stroke-width="1"/>
+    <rect x="150" y="43" width="18" height="20" rx="2" fill="#1e4f8a" stroke="#c5d5ea" stroke-width="1"/>
+
+    <!-- Satellite Pass 2 -->
+    <rect x="230" y="38" width="60" height="30" rx="4" fill="#d92b1f"/>
+    <text x="260" y="57" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" font-weight="bold" fill="#fff">SAT t&#x2082;</text>
+    <!-- Solar panels pass 2 -->
+    <rect x="212" y="43" width="18" height="20" rx="2" fill="#d92b1f" stroke="#fdd" stroke-width="1"/>
+    <rect x="290" y="43" width="18" height="20" rx="2" fill="#d92b1f" stroke="#fdd" stroke-width="1"/>
+
+    <!-- Radar beams -->
+    <line x1="120" y1="68" x2="180" y2="175" stroke="#1e4f8a" stroke-width="1.5" stroke-dasharray="6,3"/>
+    <line x1="260" y1="68" x2="200" y2="175" stroke="#d92b1f" stroke-width="1.5" stroke-dasharray="6,3"/>
+
+    <!-- Ground surface -->
+    <path d="M 30 200 Q 100 180 180 195 Q 220 202 280 190 Q 360 175 440 195 Q 520 210 600 200" stroke="#8b5e00" stroke-width="2.5" fill="none"/>
+    <!-- Ground fill -->
+    <path d="M 30 200 Q 100 180 180 195 Q 220 202 280 190 Q 360 175 440 195 Q 520 210 600 200 L 600 230 L 30 230 Z" fill="#f0e8d8" stroke="none"/>
+
+    <!-- Target point -->
+    <circle cx="190" cy="195" r="5" fill="#d92b1f" stroke="#111" stroke-width="1.5"/>
+    <text x="190" y="215" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#111">Target</text>
+
+    <!-- Deformation arrow -->
+    <line x1="190" y1="192" x2="190" y2="178" stroke="#d92b1f" stroke-width="2"/>
+    <polygon points="185,180 190,172 195,180" fill="#d92b1f"/>
+    <text x="210" y="177" font-family="Inter, sans-serif" font-size="8" fill="#d92b1f" font-weight="bold">d&#x2097;&#x2092;&#x209b;</text>
+
+    <!-- Phase labels: range distances -->
+    <text x="125" y="130" font-family="Inter, sans-serif" font-size="9" fill="#1e4f8a" transform="rotate(-50, 125, 130)">R&#x2081;</text>
+    <text x="245" y="130" font-family="Inter, sans-serif" font-size="9" fill="#d92b1f" transform="rotate(50, 245, 130)">R&#x2082;</text>
+
+    <!-- Interferogram panel -->
+    <rect x="370" y="38" width="230" height="110" rx="6" fill="#fff" stroke="#1e4f8a" stroke-width="1.5"/>
+    <text x="485" y="56" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="bold" fill="#1e4f8a">Interferogram</text>
+
+    <!-- Phase fringe visualization -->
+    <rect x="385" y="65" width="200" height="30" rx="3" fill="none" stroke="#e0ddd8" stroke-width="1"/>
+    <!-- Color fringe bands -->
+    <rect x="385" y="65" width="25" height="30" rx="3" fill="#1e4f8a" opacity="0.3"/>
+    <rect x="410" y="65" width="25" height="30" fill="#1e4f8a" opacity="0.6"/>
+    <rect x="435" y="65" width="25" height="30" fill="#1e4f8a" opacity="0.9"/>
+    <rect x="460" y="65" width="25" height="30" fill="#d92b1f" opacity="0.3"/>
+    <rect x="485" y="65" width="25" height="30" fill="#d92b1f" opacity="0.6"/>
+    <rect x="510" y="65" width="25" height="30" fill="#d92b1f" opacity="0.9"/>
+    <rect x="535" y="65" width="25" height="30" fill="#1e4f8a" opacity="0.3"/>
+    <rect x="560" y="65" width="25" height="30" rx="3" fill="#1e4f8a" opacity="0.6"/>
+    <text x="485" y="110" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#68625b">&larr; one fringe = &lambda;/2 &asymp; 2.8 cm LOS displacement &rarr;</text>
+
+    <!-- Formula -->
+    <text x="485" y="133" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#111">&Delta;&phi; = &phi;&#x2082; &minus; &phi;&#x2081;  &rarr;  d = &lambda;&Delta;&phi; / 4&pi;</text>
+
+    <!-- Coherence panel -->
+    <rect x="370" y="158" width="230" height="72" rx="6" fill="#fff" stroke="#165d34" stroke-width="1.5"/>
+    <text x="485" y="176" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="bold" fill="#165d34">Coherence (&gamma;)</text>
+
+    <!-- Coherence bar -->
+    <rect x="390" y="186" width="190" height="14" rx="3" fill="none" stroke="#e0ddd8" stroke-width="1"/>
+    <defs>
+      <linearGradient id="cohGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" style="stop-color:#d92b1f;stop-opacity:0.8"/>
+        <stop offset="50%" style="stop-color:#8b5e00;stop-opacity:0.7"/>
+        <stop offset="100%" style="stop-color:#165d34;stop-opacity:0.9"/>
+      </linearGradient>
+    </defs>
+    <rect x="390" y="186" width="190" height="14" rx="3" fill="url(#cohGrad)"/>
+    <text x="395" y="214" font-family="Inter, sans-serif" font-size="8" fill="#d92b1f">0 (decorrelated)</text>
+    <text x="575" y="214" text-anchor="end" font-family="Inter, sans-serif" font-size="8" fill="#165d34">1 (stable)</text>
+
+    <!-- Bottom annotation -->
+    <rect x="30" y="245" width="560" height="60" rx="5" fill="#eef2f7" stroke="#1e4f8a" stroke-width="1"/>
+    <text x="310" y="264" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" font-weight="bold" fill="#1e4f8a">Phase contributions:</text>
+    <text x="310" y="282" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#111">&Delta;&phi; = &phi;&#x1D41F;&#x1D425;&#x1D41E;&#x1D42D; + &phi;&#x1D42D;&#x1D428;&#x1D429;&#x1D428; + &phi;&#x1D41D;&#x1D422;&#x1D42C;&#x1D429; + &phi;&#x1D41E;&#x1D42D;&#x1D426; + &phi;&#x1D427;&#x1D428;&#x1D422;&#x1D42C;&#x1D41E;</text>
+    <text x="310" y="297" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#68625b">Only after removing flat-earth, topographic, and atmospheric contributions can displacement be isolated</text>
+  </svg>
+  <p class="diagram-caption">Figure: InSAR principle — two satellite passes observe the same target. The phase difference between acquisitions encodes surface displacement, while coherence indicates measurement reliability.</p>
+</div>
+
+
 ## The interferometric phase idea
 
 If two SAR images observe the same target, a simplified interferometric phase difference can be written as

@@ -19,6 +19,102 @@ In Central Asia, magnetometry excels at revealing kurgans, fired structures (kil
   Magnetometry does not detect "objects" directly. It detects contrasts in magnetic properties between archaeological features and surrounding soil. A fired hearth, a filled ditch, or a collapsed mudbrick wall each create characteristic magnetic signatures.
 </div>
 
+<div class="learning-objectives">
+  <div class="learning-objectives-header">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1e4f8a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    <h3>What you will learn</h3>
+  </div>
+  <ul>
+    <li>How magnetic susceptibility contrast between archaeological features and surrounding soil produces detectable anomalies</li>
+    <li>The mathematical dipole model for predicting anomaly amplitude, shape, and depth estimation from magnetometry data</li>
+    <li>How fluxgate gradiometers and cesium magnetometers differ in sensitivity, drift, and suitability for archaeological surveys</li>
+    <li>Survey design principles including traverse spacing, sample interval, and diurnal correction for Central Asian field conditions</li>
+    <li>Interpretation of magnetic signatures from kurgans, kilns, hearths, ditches, and mudbrick architecture typical of Silk Road sites</li>
+  </ul>
+</div>
+
+<div class="prerequisites">
+  <div class="prerequisites-header">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8b5e00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+    <h3>Prerequisites</h3>
+  </div>
+  <ul>
+    <li>Basic understanding of vector fields and the concept of magnetic flux density (introductory physics level)</li>
+    <li>Familiarity with SI units, especially tesla and nanotesla, and ability to work with scientific notation</li>
+    <li>Experience reading contour or raster maps (e.g., from GIS or remote-sensing tutorials in this series)</li>
+  </ul>
+</div>
+
+<div class="concept-diagram">
+  <svg viewBox="0 0 620 320" xmlns="http://www.w3.org/2000/svg" style="max-width: 580px;">
+    <!-- Background -->
+    <rect x="0" y="0" width="620" height="320" fill="#f8f7f4" rx="6"/>
+
+    <!-- Title -->
+    <text x="310" y="22" text-anchor="middle" font-family="Inter, sans-serif" font-size="13" font-weight="600" fill="#111">Fluxgate Magnetometer — Detecting a Buried Kiln</text>
+
+    <!-- Sky / air region -->
+    <rect x="40" y="35" width="540" height="90" fill="#e8f0fa" rx="3"/>
+    <text x="55" y="52" font-family="Inter, sans-serif" font-size="10" fill="#1e4f8a">Air</text>
+
+    <!-- Earth's field arrows (uniform, tilted ~60°) -->
+    <g stroke="#1e4f8a" stroke-width="1.2" fill="#1e4f8a">
+      <line x1="90" y1="55" x2="82" y2="85"/><polygon points="82,85 79,78 85,78"/>
+      <line x1="170" y1="55" x2="162" y2="85"/><polygon points="162,85 159,78 165,78"/>
+      <line x1="250" y1="55" x2="242" y2="85"/><polygon points="242,85 239,78 245,78"/>
+      <line x1="330" y1="55" x2="322" y2="85"/><polygon points="322,85 319,78 325,78"/>
+      <line x1="410" y1="55" x2="402" y2="85"/><polygon points="402,85 399,78 405,78"/>
+      <line x1="490" y1="55" x2="482" y2="85"/><polygon points="482,85 479,78 485,78"/>
+    </g>
+    <text x="535" y="75" font-family="Inter, sans-serif" font-size="10" fill="#1e4f8a">B₀ ≈ 52 000 nT</text>
+
+    <!-- Ground surface -->
+    <line x1="40" y1="125" x2="580" y2="125" stroke="#8b5e00" stroke-width="2"/>
+    <text x="55" y="120" font-family="Inter, sans-serif" font-size="10" fill="#8b5e00">Ground surface</text>
+
+    <!-- Subsurface soil -->
+    <rect x="40" y="125" width="540" height="160" fill="#f0e6d3" rx="0"/>
+
+    <!-- Buried kiln (fired feature) -->
+    <ellipse cx="310" cy="210" rx="50" ry="30" fill="#d92b1f" opacity="0.35" stroke="#d92b1f" stroke-width="1.5"/>
+    <text x="310" y="206" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" font-weight="600" fill="#d92b1f">Fired kiln</text>
+    <text x="310" y="220" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#d92b1f">χ high + TRM</text>
+
+    <!-- Surrounding soil label -->
+    <text x="140" y="195" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#68625b">Soil χ low</text>
+    <text x="480" y="195" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#68625b">Soil χ low</text>
+
+    <!-- Depth arrow -->
+    <line x1="390" y1="130" x2="390" y2="210" stroke="#68625b" stroke-width="1" stroke-dasharray="4,3"/>
+    <text x="400" y="172" font-family="Inter, sans-serif" font-size="10" fill="#68625b">~1 m depth</text>
+
+    <!-- Magnetometer on surface -->
+    <rect x="295" y="97" width="30" height="28" fill="#fff" stroke="#1e4f8a" stroke-width="1.5" rx="3"/>
+    <line x1="310" y1="97" x2="310" y2="82" stroke="#1e4f8a" stroke-width="1.5"/>
+    <circle cx="310" cy="79" r="4" fill="#1e4f8a"/>
+    <text x="310" y="140" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" font-weight="600" fill="#1e4f8a">Sensor</text>
+
+    <!-- Anomaly profile on top -->
+    <polyline points="80,95 130,95 170,96 200,97 230,100 250,103 270,107 285,110 295,108 305,95 310,80 315,70 320,80 330,95 340,107 355,110 370,107 390,100 420,97 460,96 500,95 540,95"
+      fill="none" stroke="#d92b1f" stroke-width="2"/>
+    <text x="315" y="65" text-anchor="start" font-family="Inter, sans-serif" font-size="10" fill="#d92b1f">+25 nT peak</text>
+    <text x="270" y="118" font-family="Inter, sans-serif" font-size="9" fill="#d92b1f">−5 nT</text>
+
+    <!-- Dipolar anomaly label -->
+    <text x="80" y="99" font-family="Inter, sans-serif" font-size="10" fill="#d92b1f">ΔB profile</text>
+
+    <!-- Legend -->
+    <rect x="40" y="295" width="12" height="8" fill="#d92b1f" opacity="0.35" stroke="#d92b1f" stroke-width="1"/>
+    <text x="57" y="303" font-family="Inter, sans-serif" font-size="10" fill="#111">Magnetically enhanced feature</text>
+    <line x1="230" y1="299" x2="255" y2="299" stroke="#d92b1f" stroke-width="2"/>
+    <text x="260" y="303" font-family="Inter, sans-serif" font-size="10" fill="#111">Measured anomaly ΔB</text>
+    <line x1="420" y1="299" x2="445" y2="299" stroke="#1e4f8a" stroke-width="1.2"/>
+    <polygon points="445,299 440,296 440,302" fill="#1e4f8a"/>
+    <text x="450" y="303" font-family="Inter, sans-serif" font-size="10" fill="#111">Earth's field B₀</text>
+  </svg>
+  <p class="diagram-caption">Cross-section showing how a buried fired kiln with high magnetic susceptibility (χ) and thermoremanent magnetization (TRM) distorts Earth's ambient field, producing a dipolar anomaly detectable by a surface fluxgate magnetometer.</p>
+</div>
+
 ## Key concepts in archaeological magnetometry
 
 ### 1. Earth's magnetic field

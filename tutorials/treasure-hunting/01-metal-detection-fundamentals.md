@@ -18,6 +18,126 @@ Metal detection technology allows us to locate these buried metallic objects wit
 Archaeological sites in Kyrgyzstan and neighboring countries are protected by law. Unauthorized excavation of cultural heritage sites is a criminal offense. Always obtain proper permits from the relevant Ministry of Culture and work with licensed archaeologists. This tutorial is for educational purposes.
 </div>
 
+<div class="learning-objectives">
+  <div class="learning-objectives-header">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1e4f8a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    <h3>What you will learn</h3>
+  </div>
+  <ul>
+    <li>Understand Faraday’s Law and how metal detectors use electromagnetic induction, eddy currents, and secondary magnetic fields to locate buried metallic objects</li>
+    <li>Compare VLF and Pulse Induction detector technologies, including phase-angle discrimination and exponential decay analysis for target identification</li>
+    <li>Calculate skin depth in different metals and apply the inverse sixth-power law to estimate signal strength versus burial depth</li>
+    <li>Interpret the conductivity-ferromagnetism plane to discriminate archaeological targets (Scythian gold, Kushan coins, bronze artifacts) from modern debris</li>
+    <li>Apply practical field techniques for Central Asian terrain: ground balancing for mineralized loess soils, seasonal survey planning, and systematic grid methods</li>
+  </ul>
+</div>
+
+<div class="prerequisites">
+  <div class="prerequisites-header">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8b5e00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+    <h3>Prerequisites</h3>
+  </div>
+  <ul>
+    <li>Basic physics concepts (magnetic fields, electric current, frequency)</li>
+    <li>Comfort with algebra and exponential functions for signal calculations</li>
+    <li>General awareness of Central Asian history and Silk Road archaeology (helpful but not required)</li>
+  </ul>
+</div>
+
+<div class="concept-diagram">
+  <svg viewBox="0 0 620 320" xmlns="http://www.w3.org/2000/svg" style="max-width: 580px;">
+    <rect x="0" y="0" width="620" height="320" fill="#f9f8f6" rx="8"/>
+    <text x="310" y="22" text-anchor="middle" font-family="Inter, sans-serif" font-size="13" font-weight="bold" fill="#111">Metal Detector: Search Coil, Signal Path, and Target Response</text>
+    <defs>
+      <marker id="arrMD" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+        <path d="M0,0 L8,3 L0,6" fill="#1e4f8a"/>
+      </marker>
+      <marker id="arrMR" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+        <path d="M0,0 L8,3 L0,6" fill="#d92b1f"/>
+      </marker>
+    </defs>
+    <!-- Detector housing / shaft -->
+    <rect x="135" y="35" width="65" height="30" fill="#e8e6e2" stroke="#68625b" stroke-width="1.5" rx="5"/>
+    <text x="167" y="54" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" font-weight="bold" fill="#111">Control</text>
+    <!-- Shaft -->
+    <line x1="167" y1="65" x2="167" y2="100" stroke="#68625b" stroke-width="3"/>
+    <!-- Search coil (Tx+Rx) -->
+    <ellipse cx="167" cy="115" rx="70" ry="15" fill="none" stroke="#1e4f8a" stroke-width="2.5"/>
+    <text x="167" y="103" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#1e4f8a">Tx coil (primary)</text>
+    <ellipse cx="167" cy="119" rx="45" ry="9" fill="none" stroke="#d92b1f" stroke-width="1.5" stroke-dasharray="3,2"/>
+    <text x="250" y="122" font-family="Inter, sans-serif" font-size="8" fill="#d92b1f">Rx coil</text>
+    <!-- Ground surface -->
+    <line x1="20" y1="145" x2="380" y2="145" stroke="#8b5e00" stroke-width="2"/>
+    <text x="25" y="140" font-family="Inter, sans-serif" font-size="8" fill="#8b5e00">Ground</text>
+    <!-- Soil fill -->
+    <rect x="20" y="145" width="360" height="100" fill="#ede8dc" rx="0"/>
+    <!-- Primary field lines going down -->
+    <path d="M 130 115 Q 80 160 130 210" fill="none" stroke="#1e4f8a" stroke-width="1.2" stroke-dasharray="4,3"/>
+    <path d="M 204 115 Q 254 160 204 210" fill="none" stroke="#1e4f8a" stroke-width="1.2" stroke-dasharray="4,3"/>
+    <path d="M 167 130 Q 167 170 167 210" fill="none" stroke="#1e4f8a" stroke-width="1" stroke-dasharray="3,2"/>
+    <text x="80" y="175" font-family="Inter, sans-serif" font-size="8" fill="#1e4f8a">Bp primary</text>
+    <!-- Buried target -->
+    <circle cx="167" cy="205" r="15" fill="#d4a84a" stroke="#8b5e00" stroke-width="2"/>
+    <text x="167" y="209" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" font-weight="bold" fill="#111">Coin</text>
+    <!-- Eddy currents symbol -->
+    <ellipse cx="167" cy="205" rx="10" ry="4" fill="none" stroke="#8b5e00" stroke-width="1" stroke-dasharray="2,1"/>
+    <text x="195" y="215" font-family="Inter, sans-serif" font-size="7" fill="#8b5e00">eddy currents</text>
+    <!-- Secondary field going up -->
+    <path d="M 155 195 Q 120 165 145 130" fill="none" stroke="#d92b1f" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arrMR)"/>
+    <path d="M 180 195 Q 215 165 190 130" fill="none" stroke="#d92b1f" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arrMR)"/>
+    <text x="238" y="170" font-family="Inter, sans-serif" font-size="8" fill="#d92b1f">Bs secondary</text>
+    <!-- Depth label -->
+    <line x1="55" y1="145" x2="55" y2="205" stroke="#68625b" stroke-width="1"/>
+    <line x1="50" y1="145" x2="60" y2="145" stroke="#68625b" stroke-width="1"/>
+    <line x1="50" y1="205" x2="60" y2="205" stroke="#68625b" stroke-width="1"/>
+    <text x="48" y="180" text-anchor="end" font-family="Inter, sans-serif" font-size="8" fill="#68625b">depth d</text>
+    <!-- Signal law -->
+    <text x="48" y="250" font-family="Inter, sans-serif" font-size="9" fill="#111">S ∝ 1/d⁶</text>
+    <!-- Right side: Signal processing diagram -->
+    <rect x="400" y="35" width="200" height="110" fill="#fff" stroke="#68625b" stroke-width="1" rx="4"/>
+    <text x="500" y="52" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="bold" fill="#111">Phase Discrimination</text>
+    <!-- Conductivity-ferromagnetism plane -->
+    <line x1="430" y1="60" x2="430" y2="130" stroke="#111" stroke-width="1"/>
+    <line x1="430" y1="130" x2="585" y2="130" stroke="#111" stroke-width="1"/>
+    <text x="425" y="68" text-anchor="end" font-family="Inter, sans-serif" font-size="7" fill="#68625b">Ferro-</text>
+    <text x="425" y="76" text-anchor="end" font-family="Inter, sans-serif" font-size="7" fill="#68625b">magnetic</text>
+    <text x="570" y="140" font-family="Inter, sans-serif" font-size="7" fill="#68625b">Conductivity →</text>
+    <!-- Iron nail (high ferro, medium cond) -->
+    <circle cx="475" cy="75" r="5" fill="#68625b"/>
+    <text x="475" y="68" text-anchor="middle" font-family="Inter, sans-serif" font-size="7" fill="#68625b">Iron nail</text>
+    <!-- Gold ring (no ferro, medium-high cond) -->
+    <circle cx="510" cy="118" r="5" fill="#d4a84a"/>
+    <text x="510" y="112" text-anchor="middle" font-family="Inter, sans-serif" font-size="7" fill="#8b5e00">Gold ring</text>
+    <!-- Silver coin (no ferro, very high cond) -->
+    <circle cx="565" cy="120" r="5" fill="#c0c0c0" stroke="#68625b" stroke-width="0.5"/>
+    <text x="565" y="113" text-anchor="middle" font-family="Inter, sans-serif" font-size="7" fill="#68625b">Silver coin</text>
+    <!-- Bronze artifact -->
+    <circle cx="530" cy="108" r="5" fill="#b87333"/>
+    <text x="546" y="102" font-family="Inter, sans-serif" font-size="7" fill="#8b5e00">Bronze</text>
+    <!-- Right bottom: VLF vs PI -->
+    <rect x="400" y="160" width="200" height="85" fill="#fff" stroke="#1e4f8a" stroke-width="1" rx="4"/>
+    <text x="500" y="178" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" font-weight="bold" fill="#1e4f8a">VLF vs PI Detectors</text>
+    <!-- VLF -->
+    <rect x="415" y="186" width="80" height="22" fill="#e8e6e2" rx="3"/>
+    <text x="455" y="200" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#1e4f8a">VLF (3-30 kHz)</text>
+    <text x="455" y="218" text-anchor="middle" font-family="Inter, sans-serif" font-size="7" fill="#68625b">Phase analysis</text>
+    <text x="455" y="228" text-anchor="middle" font-family="Inter, sans-serif" font-size="7" fill="#68625b">~25-30 cm depth</text>
+    <!-- PI -->
+    <rect x="505" y="186" width="80" height="22" fill="#e8e6e2" rx="3"/>
+    <text x="545" y="200" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#d92b1f">PI (pulse)</text>
+    <text x="545" y="218" text-anchor="middle" font-family="Inter, sans-serif" font-size="7" fill="#68625b">Decay: V₀e^(-t/τ)</text>
+    <text x="545" y="228" text-anchor="middle" font-family="Inter, sans-serif" font-size="7" fill="#68625b">~35-45 cm depth</text>
+    <!-- Bottom: CA archaeological targets -->
+    <rect x="40" y="265" width="540" height="40" fill="#fff" stroke="#8b5e00" stroke-width="1" rx="4"/>
+    <text x="310" y="280" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" font-weight="bold" fill="#8b5e00">Central Asian Targets along the Silk Road</text>
+    <text x="120" y="296" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#111">Scythian gold</text>
+    <text x="240" y="296" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#111">Kushan coins</text>
+    <text x="360" y="296" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#111">Bronze buckles</text>
+    <text x="480" y="296" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#111">Chinese coins</text>
+  </svg>
+  <p class="diagram-caption">Figure: Metal detector schematic — the search coil transmits a primary field into the ground, inducing eddy currents in a buried target that produce a secondary field. Phase discrimination separates target types on the conductivity-ferromagnetism plane.</p>
+</div>
+
 ## Physics of Electromagnetic Induction
 
 Every metal detector relies on **Faraday's Law of Electromagnetic Induction**:

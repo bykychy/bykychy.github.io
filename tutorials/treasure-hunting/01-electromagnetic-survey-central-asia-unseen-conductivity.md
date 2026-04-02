@@ -19,6 +19,97 @@ In Central Asia, those contrasts matter. Ancient irrigation, paleochannels, mudb
   EM survey is strongest when you ask a conductivity question. Where does the ground conduct differently, and why?
 </div>
 
+<div class="learning-objectives">
+  <div class="learning-objectives-header">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1e4f8a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    <h3>What you will learn</h3>
+  </div>
+  <ul>
+    <li>Understand the physics of electromagnetic induction: how a transmitter coil creates eddy currents and a measurable secondary field in conductive subsurface targets</li>
+    <li>Calculate skin depth, apparent conductivity, and resistivity, and interpret the quadrature response under low-induction-number conditions</li>
+    <li>Interpret EM maps in terms of conductivity contrast — distinguishing buried irrigation channels, occupation surfaces, salinity patterns, and metallurgical zones</li>
+    <li>Design EM survey workflows by matching coil spacing to target depth and formulating testable conductivity hypotheses for Central Asian field sites</li>
+    <li>Integrate EM results with SAR, GPR, and XRF evidence chains to validate conductivity anomalies from ancient canals, kurgan margins, and saline depressions</li>
+  </ul>
+</div>
+
+<div class="prerequisites">
+  <div class="prerequisites-header">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8b5e00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+    <h3>Prerequisites</h3>
+  </div>
+  <ul>
+    <li>Basic physics of electromagnetism (magnetic fields, Faraday’s law, conductivity vs. resistivity)</li>
+    <li>Familiarity with field survey concepts (gridded measurements, spatial mapping)</li>
+    <li>Understanding of Central Asian landscape contexts (irrigation systems, arid basins, archaeological mounds)</li>
+  </ul>
+</div>
+
+<div class="concept-diagram">
+  <svg viewBox="0 0 620 320" xmlns="http://www.w3.org/2000/svg" style="max-width: 580px;">
+    <rect x="0" y="0" width="620" height="320" fill="#f9f8f6" rx="8"/>
+    <text x="310" y="22" text-anchor="middle" font-family="Inter, sans-serif" font-size="13" font-weight="bold" fill="#111">Electromagnetic Induction: Transmitter, Target, Receiver</text>
+    <defs>
+      <marker id="arrEM" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+        <path d="M0,0 L8,3 L0,6" fill="#1e4f8a"/>
+      </marker>
+      <marker id="arrRed" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+        <path d="M0,0 L8,3 L0,6" fill="#d92b1f"/>
+      </marker>
+    </defs>
+    <!-- Ground surface line -->
+    <line x1="30" y1="145" x2="590" y2="145" stroke="#8b5e00" stroke-width="2"/>
+    <text x="35" y="140" font-family="Inter, sans-serif" font-size="9" fill="#8b5e00">Ground surface</text>
+    <!-- Subsurface fill -->
+    <rect x="30" y="145" width="560" height="110" fill="#ede8dc" rx="0"/>
+    <!-- Transmitter coil -->
+    <ellipse cx="170" cy="130" rx="55" ry="12" fill="none" stroke="#1e4f8a" stroke-width="2.5"/>
+    <text x="170" y="115" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="bold" fill="#1e4f8a">Tx Coil</text>
+    <text x="170" y="105" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#68625b">Alternating current</text>
+    <!-- Primary field loops (blue, dashed arcs going down) -->
+    <path d="M 130 130 Q 100 180 170 210" fill="none" stroke="#1e4f8a" stroke-width="1.5" stroke-dasharray="5,3"/>
+    <path d="M 210 130 Q 240 180 170 210" fill="none" stroke="#1e4f8a" stroke-width="1.5" stroke-dasharray="5,3"/>
+    <path d="M 145 130 Q 125 170 170 195" fill="none" stroke="#1e4f8a" stroke-width="1" stroke-dasharray="3,3"/>
+    <path d="M 195 130 Q 215 170 170 195" fill="none" stroke="#1e4f8a" stroke-width="1" stroke-dasharray="3,3"/>
+    <text x="105" y="185" font-family="Inter, sans-serif" font-size="9" fill="#1e4f8a">Primary</text>
+    <text x="105" y="196" font-family="Inter, sans-serif" font-size="9" fill="#1e4f8a">field Hp</text>
+    <!-- Conductive target -->
+    <ellipse cx="310" cy="210" rx="65" ry="25" fill="#d4c4a0" stroke="#8b5e00" stroke-width="2"/>
+    <text x="310" y="207" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" font-weight="bold" fill="#111">Conductive</text>
+    <text x="310" y="220" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" font-weight="bold" fill="#111">Target</text>
+    <!-- Eddy current arrows (circular inside target) -->
+    <ellipse cx="310" cy="210" rx="40" ry="14" fill="none" stroke="#8b5e00" stroke-width="1.5" stroke-dasharray="3,2"/>
+    <text x="310" y="240" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#8b5e00">Eddy currents</text>
+    <!-- Primary field arrow to target -->
+    <line x1="200" y1="165" x2="260" y2="198" stroke="#1e4f8a" stroke-width="1.5" marker-end="url(#arrEM)"/>
+    <!-- Secondary field loops (red, going up from target to receiver) -->
+    <path d="M 280 195 Q 340 160 420 170" fill="none" stroke="#d92b1f" stroke-width="1.5" stroke-dasharray="5,3"/>
+    <path d="M 340 195 Q 390 150 450 135" fill="none" stroke="#d92b1f" stroke-width="1.5" stroke-dasharray="5,3"/>
+    <path d="M 310 190 Q 370 145 440 140" fill="none" stroke="#d92b1f" stroke-width="1.5" stroke-dasharray="5,3"/>
+    <text x="400" y="178" font-family="Inter, sans-serif" font-size="9" fill="#d92b1f">Secondary</text>
+    <text x="400" y="189" font-family="Inter, sans-serif" font-size="9" fill="#d92b1f">field Hs</text>
+    <!-- Receiver coil -->
+    <ellipse cx="450" cy="130" rx="55" ry="12" fill="none" stroke="#d92b1f" stroke-width="2.5"/>
+    <text x="450" y="115" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="bold" fill="#d92b1f">Rx Coil</text>
+    <text x="450" y="105" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#68625b">Measures Hp + Hs</text>
+    <!-- Coil spacing label -->
+    <line x1="170" y1="90" x2="450" y2="90" stroke="#68625b" stroke-width="1"/>
+    <line x1="170" y1="87" x2="170" y2="93" stroke="#68625b" stroke-width="1"/>
+    <line x1="450" y1="87" x2="450" y2="93" stroke="#68625b" stroke-width="1"/>
+    <text x="310" y="86" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#68625b">Coil spacing → controls depth sensitivity</text>
+    <!-- Formulas box -->
+    <rect x="30" y="265" width="260" height="45" fill="#fff" stroke="#1e4f8a" stroke-width="1" rx="4"/>
+    <text x="160" y="282" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#1e4f8a">Skin depth: δ = √(2 / ωμσ)</text>
+    <text x="160" y="300" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#1e4f8a">Apparent: σa ≈ Σ wᵢσᵢ</text>
+    <!-- Applications box -->
+    <rect x="310" y="265" width="280" height="45" fill="#fff" stroke="#165d34" stroke-width="1" rx="4"/>
+    <text x="450" y="278" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" font-weight="bold" fill="#165d34">Central Asia Applications</text>
+    <text x="450" y="292" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#111">Ancient canals · Kurgan margins · Saline basins</text>
+    <text x="450" y="304" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#111">Metallurgical zones · Occupation surfaces</text>
+  </svg>
+  <p class="diagram-caption">Figure: Electromagnetic induction principle — the transmitter coil generates a primary field that induces eddy currents in a conductive subsurface target, which produces a secondary field detected by the receiver coil.</p>
+</div>
+
 ## What EM survey can reveal in Central Asia
 
 ### 1. Buried irrigation and water-management traces

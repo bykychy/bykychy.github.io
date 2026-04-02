@@ -6,10 +6,43 @@ description: "Museum-style, math-first tutorials on electromagnetic sensing, GPR
 
 # Treasure Hunting Technologies
 
-This gallery focuses on sensing methods that help reveal hidden geometry, buried contrasts, and material differences near the ground. The goal is disciplined inference from physical evidence, not folklore.
+<div class="hero-pattern" style="margin-bottom: 1.5rem;">
+  <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+    <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="24" cy="24" r="22" stroke="#1e4f8a" stroke-width="2" fill="#f0f4fa"/>
+      <path d="M24 8 L24 14 M24 34 L24 40 M8 24 L14 24 M34 24 L40 24" stroke="#1e4f8a" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="24" cy="24" r="8" stroke="#d92b1f" stroke-width="2" fill="none"/>
+      <circle cx="24" cy="24" r="3" fill="#d92b1f"/>
+      <path d="M18 18 L14 14 M30 18 L34 14 M18 30 L14 34 M30 30 L34 34" stroke="#8b5e00" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
+    </svg>
+    <div>
+      <p style="margin: 0; font-size: 1.1rem; color: var(--ink);">This gallery focuses on sensing methods that help reveal hidden geometry, buried contrasts, and material differences near the ground. The goal is disciplined inference from physical evidence, not folklore.</p>
+    </div>
+  </div>
+</div>
+
+<div class="stats-bar">
+  <div class="stat-item">
+    <span class="stat-number">16</span>
+    <span class="stat-label">Tutorials</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-number">480</span>
+    <span class="stat-label">Exercises</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-number">6</span>
+    <span class="stat-label">Core Methods</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-number">∞</span>
+    <span class="stat-label">Buried Secrets</span>
+  </div>
+</div>
 
 <div class="path-grid">
   <div class="path-card">
+    <div class="topic-icon topic-icon-field"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="3"/><line x1="12" y1="8" x2="12" y2="21"/><path d="M8 14 L12 10 L16 14"/></svg></div>
     <div class="eyebrow">Suggested route</div>
     <h2>Field methods sequence</h2>
     <p>Start with single-target conductive logic, then scale up to broad conductivity, shallow geometry, material identification, and advanced methods.</p>
@@ -21,9 +54,10 @@ This gallery focuses on sensing methods that help reveal hidden geometry, buried
       <li><span class="path-step-num">05</span><div><a class="path-step-link" href="{{ '/tutorials/treasure-hunting/08-electrical-resistivity-tomography' | relative_url }}">Electrical Resistivity</a><span class="desc">Resistivity imaging and depth sections.</span></div></li>
       <li><span class="path-step-num">06</span><div><a class="path-step-link" href="{{ '/tutorials/treasure-hunting/09-seismic-near-surface' | relative_url }}">Seismic Methods</a><span class="desc">Wave propagation and subsurface structure.</span></div></li>
     </ol>
-    <a class="cta-button" href="{{ '/tutorials/treasure-hunting/04-metal-detection-fundamentals-central-asia' | relative_url }}">Start this route</a>
+    <a class="cta-button" href="{{ '/tutorials/treasure-hunting/04-metal-detection-fundamentals-central-asia' | relative_url }}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 0.4rem;"><polygon points="5 3 19 12 5 21 5 3"/></svg>Start this route</a>
   </div>
   <div class="path-card">
+    <div class="topic-icon topic-icon-earth"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2 C14.5 5 15.5 8.5 15.5 12 C15.5 15.5 14.5 19 12 22"/><path d="M12 2 C9.5 5 8.5 8.5 8.5 12 C8.5 15.5 9.5 19 12 22"/></svg></div>
     <div class="eyebrow">Integration track</div>
     <h2>Multi-method & analysis</h2>
     <p>Combine geophysical methods with geochemistry, positioning, and integrate results for robust interpretation.</p>
@@ -33,7 +67,7 @@ This gallery focuses on sensing methods that help reveal hidden geometry, buried
       <li><span class="path-step-num">07</span><div><a class="path-step-link" href="{{ '/tutorials/treasure-hunting/07-geochemical-soil-sampling' | relative_url }}">Geochemical Sampling</a><span class="desc">Element ratios and activity signatures.</span></div></li>
       <li><span class="path-step-num">10</span><div><a class="path-step-link" href="{{ '/tutorials/treasure-hunting/10-multi-method-integration' | relative_url }}">Multi-Method Integration</a><span class="desc">Combining methods for robust interpretation.</span></div></li>
     </ol>
-    <a class="cta-button" href="{{ '/tutorials/treasure-hunting/06-gnss-surveying-georeferencing' | relative_url }}">Start integration track</a>
+    <a class="cta-button" href="{{ '/tutorials/treasure-hunting/06-gnss-surveying-georeferencing' | relative_url }}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 0.4rem;"><polygon points="5 3 19 12 5 21 5 3"/></svg>Start integration track</a>
   </div>
 </div>
 

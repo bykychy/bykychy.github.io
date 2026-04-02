@@ -19,6 +19,113 @@ Remote sensing transforms this equation. Satellites provide systematic coverage 
   Remote sensing does not replace fieldwork—it makes fieldwork dramatically more efficient. Instead of searching blindly, archaeologists target specific anomalies, shifting from discovery mode to verification mode.
 </div>
 
+<div class="learning-objectives">
+  <div class="learning-objectives-header">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1e4f8a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    <h3>What you will learn</h3>
+  </div>
+  <ul>
+    <li>Identify crop marks, soil marks, shadow marks, and moisture anomalies as indicators of buried archaeological features</li>
+    <li>Apply NDVI and SAVI vegetation indices to multispectral imagery for detecting subsurface walls and ditches</li>
+    <li>Use SAR penetration depth and backscatter contrast to locate archaeological structures beneath arid Central Asian soils</li>
+    <li>Detect kurgans, mounds, and linear features (qanats, canals, ancient roads) using DEM analysis and edge-detection techniques</li>
+    <li>Design a multi-sensor prospection workflow for Silk Road site discovery combining optical, SAR, and historical CORONA imagery</li>
+  </ul>
+</div>
+
+<div class="prerequisites">
+  <div class="prerequisites-header">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8b5e00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+    <h3>Prerequisites</h3>
+  </div>
+  <ul>
+    <li>Familiarity with satellite imagery (optical bands, resolution concepts) from earlier tutorials in this series</li>
+    <li>Basic understanding of SAR backscatter and interferometric coherence</li>
+    <li>Experience with a GIS platform (QGIS, Google Earth Engine, or similar) for visualizing raster data</li>
+    <li>General knowledge of Central Asian geography and archaeological site types (helpful but not required)</li>
+  </ul>
+</div>
+
+<div class="concept-diagram">
+  <svg viewBox="0 0 620 320" xmlns="http://www.w3.org/2000/svg" style="max-width: 580px;">
+    <!-- Sky background -->
+    <rect x="0" y="0" width="620" height="100" fill="#d6e8f7"/>
+    <!-- Satellite -->
+    <rect x="280" y="12" width="30" height="20" rx="3" fill="#68625b" stroke="#111" stroke-width="1"/>
+    <line x1="270" y1="22" x2="280" y2="22" stroke="#1e4f8a" stroke-width="2"/>
+    <line x1="310" y1="22" x2="320" y2="22" stroke="#1e4f8a" stroke-width="2"/>
+    <rect x="260" y="18" width="10" height="8" fill="#1e4f8a"/>
+    <rect x="320" y="18" width="10" height="8" fill="#1e4f8a"/>
+    <text x="295" y="50" font-family="Inter, sans-serif" font-size="10" fill="#111" text-anchor="middle">Satellite sensor</text>
+    <!-- Radar beam -->
+    <polygon points="295,32 180,100 410,100" fill="#1e4f8a" opacity="0.08" stroke="#1e4f8a" stroke-width="0.5" stroke-dasharray="4,3"/>
+    <!-- Ground surface -->
+    <rect x="0" y="100" width="620" height="10" fill="#c4a56e"/>
+    <!-- Soil layer -->
+    <rect x="0" y="110" width="620" height="130" fill="#ddd0b5"/>
+    <!-- Buried wall (subsurface) -->
+    <rect x="170" y="135" width="12" height="50" fill="#8b5e00" stroke="#68625b" stroke-width="1"/>
+    <rect x="270" y="135" width="12" height="50" fill="#8b5e00" stroke="#68625b" stroke-width="1"/>
+    <rect x="370" y="135" width="12" height="50" fill="#8b5e00" stroke="#68625b" stroke-width="1"/>
+    <text x="275" y="210" font-family="Inter, sans-serif" font-size="10" fill="#8b5e00" text-anchor="middle">Buried walls</text>
+    <!-- Buried ditch -->
+    <path d="M440,135 Q460,185 480,135" fill="#68625b" stroke="#68625b" stroke-width="1"/>
+    <text x="460" y="210" font-family="Inter, sans-serif" font-size="10" fill="#68625b" text-anchor="middle">Ditch</text>
+    <!-- Vegetation on surface: stressed over walls, vigorous over ditch -->
+    <!-- Stressed crops over wall 1 -->
+    <line x1="165" y1="100" x2="165" y2="88" stroke="#a8c060" stroke-width="2"/>
+    <line x1="170" y1="100" x2="170" y2="90" stroke="#a8c060" stroke-width="2"/>
+    <line x1="176" y1="100" x2="176" y2="87" stroke="#a8c060" stroke-width="2"/>
+    <line x1="182" y1="100" x2="182" y2="89" stroke="#a8c060" stroke-width="2"/>
+    <!-- Stressed crops over wall 2 -->
+    <line x1="265" y1="100" x2="265" y2="88" stroke="#a8c060" stroke-width="2"/>
+    <line x1="270" y1="100" x2="270" y2="91" stroke="#a8c060" stroke-width="2"/>
+    <line x1="276" y1="100" x2="276" y2="87" stroke="#a8c060" stroke-width="2"/>
+    <line x1="282" y1="100" x2="282" y2="90" stroke="#a8c060" stroke-width="2"/>
+    <!-- Stressed crops over wall 3 -->
+    <line x1="365" y1="100" x2="365" y2="89" stroke="#a8c060" stroke-width="2"/>
+    <line x1="370" y1="100" x2="370" y2="91" stroke="#a8c060" stroke-width="2"/>
+    <line x1="376" y1="100" x2="376" y2="88" stroke="#a8c060" stroke-width="2"/>
+    <line x1="382" y1="100" x2="382" y2="90" stroke="#a8c060" stroke-width="2"/>
+    <!-- Vigorous crops over ditch -->
+    <line x1="440" y1="100" x2="440" y2="78" stroke="#165d34" stroke-width="2"/>
+    <line x1="448" y1="100" x2="448" y2="75" stroke="#165d34" stroke-width="2"/>
+    <line x1="455" y1="100" x2="455" y2="72" stroke="#165d34" stroke-width="2"/>
+    <line x1="462" y1="100" x2="462" y2="74" stroke="#165d34" stroke-width="2"/>
+    <line x1="470" y1="100" x2="470" y2="76" stroke="#165d34" stroke-width="2"/>
+    <line x1="478" y1="100" x2="478" y2="78" stroke="#165d34" stroke-width="2"/>
+    <!-- Normal crops elsewhere -->
+    <line x1="100" y1="100" x2="100" y2="84" stroke="#6aa843" stroke-width="2"/>
+    <line x1="110" y1="100" x2="110" y2="82" stroke="#6aa843" stroke-width="2"/>
+    <line x1="120" y1="100" x2="120" y2="85" stroke="#6aa843" stroke-width="2"/>
+    <line x1="130" y1="100" x2="130" y2="83" stroke="#6aa843" stroke-width="2"/>
+    <line x1="220" y1="100" x2="220" y2="83" stroke="#6aa843" stroke-width="2"/>
+    <line x1="230" y1="100" x2="230" y2="85" stroke="#6aa843" stroke-width="2"/>
+    <line x1="320" y1="100" x2="320" y2="84" stroke="#6aa843" stroke-width="2"/>
+    <line x1="330" y1="100" x2="330" y2="82" stroke="#6aa843" stroke-width="2"/>
+    <line x1="520" y1="100" x2="520" y2="83" stroke="#6aa843" stroke-width="2"/>
+    <line x1="530" y1="100" x2="530" y2="85" stroke="#6aa843" stroke-width="2"/>
+    <!-- Labels -->
+    <text x="176" y="75" font-family="Inter, sans-serif" font-size="9" fill="#d92b1f" text-anchor="middle">Stressed</text>
+    <text x="455" y="65" font-family="Inter, sans-serif" font-size="9" fill="#165d34" text-anchor="middle">Vigorous</text>
+    <!-- NDVI profile at bottom -->
+    <rect x="30" y="245" width="560" height="65" rx="4" fill="#f5f5f0" stroke="#68625b" stroke-width="0.5"/>
+    <text x="45" y="260" font-family="Inter, sans-serif" font-size="10" fill="#111" font-weight="bold">NDVI profile</text>
+    <line x1="60" y1="265" x2="60" y2="300" stroke="#111" stroke-width="1"/>
+    <line x1="60" y1="300" x2="570" y2="300" stroke="#111" stroke-width="1"/>
+    <text x="55" y="275" font-family="Inter, sans-serif" font-size="8" fill="#111" text-anchor="end">High</text>
+    <text x="55" y="298" font-family="Inter, sans-serif" font-size="8" fill="#111" text-anchor="end">Low</text>
+    <!-- NDVI curve: dips over walls, peaks over ditch -->
+    <polyline points="70,280 130,280 160,293 190,280 250,280 260,293 290,280 340,280 360,293 390,280 430,280 445,270 460,268 475,270 490,280 550,280" fill="none" stroke="#165d34" stroke-width="2"/>
+    <!-- Dip labels -->
+    <text x="176" y="307" font-family="Inter, sans-serif" font-size="8" fill="#d92b1f" text-anchor="middle">wall</text>
+    <text x="276" y="307" font-family="Inter, sans-serif" font-size="8" fill="#d92b1f" text-anchor="middle">wall</text>
+    <text x="376" y="307" font-family="Inter, sans-serif" font-size="8" fill="#d92b1f" text-anchor="middle">wall</text>
+    <text x="460" y="307" font-family="Inter, sans-serif" font-size="8" fill="#165d34" text-anchor="middle">ditch</text>
+  </svg>
+  <p class="diagram-caption">Cross-section showing how buried archaeological features affect surface vegetation, creating detectable crop marks. Walls impede root growth (lower NDVI), while ditches retain moisture (higher NDVI).</p>
+</div>
+
 ## Principles: crop marks, soil marks, shadow marks, moisture anomalies
 
 ### Crop marks

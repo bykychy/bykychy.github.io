@@ -19,6 +19,129 @@ In Central Asia, GNSS surveying faces unique challenges: vast distances between 
   GNSS does not measure position directly. It measures distance to satellites. Position emerges from solving a system of equations.
 </div>
 
+<div class="learning-objectives">
+  <div class="learning-objectives-header">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1e4f8a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    <h3>What you will learn</h3>
+  </div>
+  <ul>
+    <li>How pseudorange and carrier-phase measurements are converted into 3-D positions through trilateration and least-squares adjustment</li>
+    <li>The role of GPS, GLONASS, Galileo, and BeiDou constellations and why multi-constellation receivers improve accuracy in Central Asia</li>
+    <li>Error sources—ionospheric delay, tropospheric delay, multipath, and satellite geometry (DOP)—and how each degrades position accuracy</li>
+    <li>Differential GNSS and RTK correction concepts that reduce metre-level errors to centimetre-level precision for survey-grade work</li>
+    <li>Coordinate system transformations between WGS-84, legacy Soviet Pulkovo-1942, and local UTM zones used across Central Asian countries</li>
+  </ul>
+</div>
+
+<div class="prerequisites">
+  <div class="prerequisites-header">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8b5e00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+    <h3>Prerequisites</h3>
+  </div>
+  <ul>
+    <li>Comfort with solving systems of nonlinear equations and the idea of linearization (introductory calculus or linear algebra)</li>
+    <li>Basic knowledge of latitude, longitude, and map projections (e.g., UTM) from any GIS or geography course</li>
+    <li>Familiarity with electromagnetic wave propagation concepts such as frequency, wavelength, and speed of light</li>
+  </ul>
+</div>
+
+<div class="concept-diagram">
+  <svg viewBox="0 0 620 320" xmlns="http://www.w3.org/2000/svg" style="max-width: 580px;">
+    <!-- Background -->
+    <rect x="0" y="0" width="620" height="320" fill="#f8f7f4" rx="6"/>
+
+    <!-- Title -->
+    <text x="310" y="22" text-anchor="middle" font-family="Inter, sans-serif" font-size="13" font-weight="600" fill="#111">GNSS Positioning — Satellite Trilateration &amp; Differential Correction</text>
+
+    <!-- Satellites -->
+    <g fill="#1e4f8a" font-family="Inter, sans-serif" font-size="10">
+      <!-- Sat 1 (GPS) -->
+      <rect x="70" y="40" width="40" height="22" rx="4" fill="#1e4f8a"/>
+      <text x="90" y="55" text-anchor="middle" fill="#fff" font-size="9" font-weight="600">GPS</text>
+      <line x1="80" y1="48" x2="65" y2="48" stroke="#1e4f8a" stroke-width="1.5"/>
+      <line x1="120" y1="48" x2="135" y2="48" stroke="#1e4f8a" stroke-width="1.5"/>
+
+      <!-- Sat 2 (GLONASS) -->
+      <rect x="210" y="34" width="55" height="22" rx="4" fill="#165d34"/>
+      <text x="237" y="49" text-anchor="middle" fill="#fff" font-size="9" font-weight="600">GLONASS</text>
+      <line x1="220" y1="42" x2="205" y2="42" stroke="#165d34" stroke-width="1.5"/>
+      <line x1="255" y1="42" x2="270" y2="42" stroke="#165d34" stroke-width="1.5"/>
+
+      <!-- Sat 3 (Galileo) -->
+      <rect x="370" y="34" width="50" height="22" rx="4" fill="#8b5e00"/>
+      <text x="395" y="49" text-anchor="middle" fill="#fff" font-size="9" font-weight="600">Galileo</text>
+      <line x1="380" y1="42" x2="365" y2="42" stroke="#8b5e00" stroke-width="1.5"/>
+      <line x1="410" y1="42" x2="425" y2="42" stroke="#8b5e00" stroke-width="1.5"/>
+
+      <!-- Sat 4 (BeiDou) -->
+      <rect x="500" y="40" width="52" height="22" rx="4" fill="#d92b1f"/>
+      <text x="526" y="55" text-anchor="middle" fill="#fff" font-size="9" font-weight="600">BeiDou</text>
+      <line x1="510" y1="48" x2="495" y2="48" stroke="#d92b1f" stroke-width="1.5"/>
+      <line x1="542" y1="48" x2="557" y2="48" stroke="#d92b1f" stroke-width="1.5"/>
+    </g>
+
+    <!-- Signal paths to rover -->
+    <line x1="90" y1="62" x2="330" y2="195" stroke="#1e4f8a" stroke-width="1" stroke-dasharray="6,3"/>
+    <line x1="237" y1="56" x2="330" y2="195" stroke="#165d34" stroke-width="1" stroke-dasharray="6,3"/>
+    <line x1="395" y1="56" x2="330" y2="195" stroke="#8b5e00" stroke-width="1" stroke-dasharray="6,3"/>
+    <line x1="526" y1="62" x2="330" y2="195" stroke="#d92b1f" stroke-width="1" stroke-dasharray="6,3"/>
+
+    <!-- Pseudorange labels -->
+    <text x="195" y="120" font-family="Inter, sans-serif" font-size="10" fill="#1e4f8a" transform="rotate(-32,195,120)">ρ₁ = c · Δt₁</text>
+    <text x="290" y="115" font-family="Inter, sans-serif" font-size="10" fill="#165d34" transform="rotate(-18,290,115)">ρ₂</text>
+    <text x="375" y="115" font-family="Inter, sans-serif" font-size="10" fill="#8b5e00" transform="rotate(18,375,115)">ρ₃</text>
+    <text x="445" y="120" font-family="Inter, sans-serif" font-size="10" fill="#d92b1f" transform="rotate(32,445,120)">ρ₄</text>
+
+    <!-- Ground surface -->
+    <line x1="30" y1="230" x2="590" y2="230" stroke="#8b5e00" stroke-width="2"/>
+
+    <!-- Rover receiver -->
+    <rect x="318" y="200" width="24" height="30" fill="#fff" stroke="#1e4f8a" stroke-width="1.5" rx="3"/>
+    <line x1="330" y1="200" x2="330" y2="185" stroke="#1e4f8a" stroke-width="1.5"/>
+    <circle cx="330" cy="182" r="4" fill="#1e4f8a"/>
+    <text x="330" y="248" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" font-weight="600" fill="#1e4f8a">Rover</text>
+    <text x="330" y="260" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#68625b">(x, y, z, b)</text>
+
+    <!-- Base station -->
+    <rect x="98" y="200" width="24" height="30" fill="#fff" stroke="#165d34" stroke-width="1.5" rx="3"/>
+    <line x1="110" y1="200" x2="110" y2="185" stroke="#165d34" stroke-width="1.5"/>
+    <circle cx="110" cy="182" r="4" fill="#165d34"/>
+    <text x="110" y="248" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" font-weight="600" fill="#165d34">Base station</text>
+    <text x="110" y="260" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#68625b">(known coords)</text>
+
+    <!-- Differential correction arrow -->
+    <line x1="135" y1="215" x2="305" y2="215" stroke="#165d34" stroke-width="1.5" marker-end="url(#arrowGreen)"/>
+    <text x="220" y="210" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#165d34">Corrections Δρ</text>
+
+    <defs>
+      <marker id="arrowGreen" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+        <polygon points="0,0 8,3 0,6" fill="#165d34"/>
+      </marker>
+    </defs>
+
+    <!-- Coordinate frame -->
+    <g transform="translate(500,250)">
+      <line x1="0" y1="0" x2="45" y2="0" stroke="#111" stroke-width="1.2" marker-end="url(#arrowBlack)"/>
+      <line x1="0" y1="0" x2="0" y2="-40" stroke="#111" stroke-width="1.2" marker-end="url(#arrowBlack)"/>
+      <line x1="0" y1="0" x2="-25" y2="20" stroke="#111" stroke-width="1.2" marker-end="url(#arrowBlack)"/>
+      <text x="50" y="4" font-family="Inter, sans-serif" font-size="10" fill="#111">East</text>
+      <text x="4" y="-42" font-family="Inter, sans-serif" font-size="10" fill="#111">Up</text>
+      <text x="-45" y="30" font-family="Inter, sans-serif" font-size="10" fill="#111">North</text>
+    </g>
+    <defs>
+      <marker id="arrowBlack" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+        <polygon points="0,0 8,3 0,6" fill="#111"/>
+      </marker>
+    </defs>
+
+    <!-- Accuracy box -->
+    <rect x="40" y="275" width="200" height="35" fill="#fff" stroke="#68625b" stroke-width="1" rx="4"/>
+    <text x="50" y="290" font-family="Inter, sans-serif" font-size="10" fill="#68625b">Standalone: ±2–5 m</text>
+    <text x="50" y="303" font-family="Inter, sans-serif" font-size="10" fill="#165d34">DGNSS/RTK: ±0.01–0.03 m</text>
+  </svg>
+  <p class="diagram-caption">GNSS positioning uses pseudorange measurements (ρ) from at least four satellites to solve for three position coordinates plus receiver clock bias. A nearby base station with known coordinates transmits differential corrections (Δρ) that reduce errors from metres to centimetres.</p>
+</div>
+
 ## GNSS fundamentals: the four constellations
 
 ### GPS (United States)

@@ -26,6 +26,112 @@ Remote sensing provides the only practical means to monitor land degradation acr
   Land degradation is a reduction in land productivity caused by human activities or climate change. Remote sensing detects degradation through changes in vegetation cover, soil properties, surface albedo, and land use patterns over time.
 </div>
 
+<div class="learning-objectives">
+  <div class="learning-objectives-header">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1e4f8a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    <h3>What you will learn</h3>
+  </div>
+  <ul>
+    <li>Calculate vegetation indices (NDVI, VCI) and Rain Use Efficiency to quantify desertification and separate climate effects from human-caused degradation</li>
+    <li>Map soil salinization using optical spectral indices and SAR backscatter sensitivity to dielectric properties</li>
+    <li>Estimate soil erosion rates with the RUSLE model, deriving each factor from satellite and DEM data</li>
+    <li>Perform NDVI time-series trend analysis (Sen’s slope, Mann-Kendall test) to detect long-term vegetation degradation across Central Asian rangelands</li>
+    <li>Identify land degradation hotspots in the Aral Sea basin, Fergana Valley, and Kazakh steppe using multi-decadal Landsat archives</li>
+  </ul>
+</div>
+
+<div class="prerequisites">
+  <div class="prerequisites-header">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8b5e00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+    <h3>Prerequisites</h3>
+  </div>
+  <ul>
+    <li>Familiarity with spectral indices (NDVI) and basic satellite image interpretation</li>
+    <li>Understanding of SAR backscatter fundamentals (C-band, Sentinel-1)</li>
+    <li>Basic statistics knowledge (regression, trend analysis)</li>
+    <li>Experience with GIS or remote sensing software (QGIS, Google Earth Engine, or similar)</li>
+  </ul>
+</div>
+
+<div class="concept-diagram">
+  <svg viewBox="0 0 620 320" xmlns="http://www.w3.org/2000/svg" style="max-width: 580px;">
+    <!-- Background -->
+    <rect x="0" y="0" width="620" height="320" fill="#f9f8f6" rx="8"/>
+    <!-- Title -->
+    <text x="310" y="24" text-anchor="middle" font-family="Inter, sans-serif" font-size="13" font-weight="bold" fill="#111">Land Degradation Indicators from Remote Sensing</text>
+    <!-- NDVI decline graph -->
+    <rect x="20" y="42" width="180" height="120" fill="#fff" stroke="#68625b" stroke-width="1" rx="4"/>
+    <text x="110" y="58" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="bold" fill="#1e4f8a">NDVI Trend (20 yr)</text>
+    <!-- Axes -->
+    <line x1="45" y1="68" x2="45" y2="148" stroke="#111" stroke-width="1"/>
+    <line x1="45" y1="148" x2="185" y2="148" stroke="#111" stroke-width="1"/>
+    <text x="38" y="75" text-anchor="end" font-family="Inter, sans-serif" font-size="9" fill="#68625b">0.6</text>
+    <text x="38" y="112" text-anchor="end" font-family="Inter, sans-serif" font-size="9" fill="#68625b">0.3</text>
+    <text x="38" y="148" text-anchor="end" font-family="Inter, sans-serif" font-size="9" fill="#68625b">0.0</text>
+    <text x="50" y="158" font-family="Inter, sans-serif" font-size="8" fill="#68625b">2000</text>
+    <text x="170" y="158" text-anchor="end" font-family="Inter, sans-serif" font-size="8" fill="#68625b">2020</text>
+    <!-- Declining NDVI line -->
+    <polyline points="50,80 65,78 80,85 95,88 110,95 125,100 140,108 155,115 170,125 180,132" fill="none" stroke="#165d34" stroke-width="2"/>
+    <!-- Trend line -->
+    <line x1="50" y1="78" x2="180" y2="134" stroke="#d92b1f" stroke-width="1.5" stroke-dasharray="4,3"/>
+    <text x="110" y="144" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#d92b1f">declining trend</text>
+    <!-- Arrow to salinization -->
+    <line x1="205" y1="100" x2="225" y2="100" stroke="#68625b" stroke-width="1.5" marker-end="url(#arrowGray)"/>
+    <!-- Salinization zones -->
+    <rect x="230" y="42" width="160" height="120" fill="#fff" stroke="#68625b" stroke-width="1" rx="4"/>
+    <text x="310" y="58" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="bold" fill="#8b5e00">Salinization Zones</text>
+    <!-- Soil cross-section -->
+    <rect x="248" y="70" width="124" height="60" fill="#e8dcc8" rx="3"/>
+    <rect x="248" y="70" width="40" height="60" fill="#c4dbb0" rx="3"/>
+    <text x="268" y="105" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#165d34">Healthy</text>
+    <rect x="292" y="70" width="40" height="60" fill="#e8d78e" rx="0"/>
+    <text x="312" y="105" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#8b5e00">Moderate</text>
+    <rect x="336" y="70" width="36" height="60" fill="#f0f0f0" rx="0 3 3 0"/>
+    <text x="354" y="105" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#d92b1f">Severe</text>
+    <!-- Salt crystals symbols -->
+    <text x="354" y="88" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#d92b1f">⬡ ⬡</text>
+    <text x="310" y="144" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#111">EC increases →</text>
+    <!-- Arrow to desertification -->
+    <line x1="395" y1="100" x2="415" y2="100" stroke="#68625b" stroke-width="1.5" marker-end="url(#arrowGray)"/>
+    <!-- Desertification progression -->
+    <rect x="420" y="42" width="180" height="120" fill="#fff" stroke="#68625b" stroke-width="1" rx="4"/>
+    <text x="510" y="58" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="bold" fill="#d92b1f">Desertification Stages</text>
+    <!-- Stage boxes -->
+    <rect x="435" y="68" width="65" height="24" fill="#c4dbb0" stroke="#165d34" stroke-width="1" rx="3"/>
+    <text x="467" y="84" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#111">Vegetated</text>
+    <line x1="467" y1="92" x2="467" y2="100" stroke="#68625b" stroke-width="1" marker-end="url(#arrowGray)"/>
+    <rect x="435" y="100" width="65" height="24" fill="#e8d78e" stroke="#8b5e00" stroke-width="1" rx="3"/>
+    <text x="467" y="116" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#111">Degraded</text>
+    <line x1="467" y1="124" x2="467" y2="132" stroke="#68625b" stroke-width="1" marker-end="url(#arrowGray)"/>
+    <rect x="435" y="132" width="65" height="24" fill="#f2d6c4" stroke="#d92b1f" stroke-width="1" rx="3"/>
+    <text x="467" y="148" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#111">Bare soil</text>
+    <!-- Albedo labels -->
+    <text x="520" y="84" font-family="Inter, sans-serif" font-size="8" fill="#68625b">α ≈ 0.15</text>
+    <text x="520" y="116" font-family="Inter, sans-serif" font-size="8" fill="#68625b">α ≈ 0.25</text>
+    <text x="520" y="148" font-family="Inter, sans-serif" font-size="8" fill="#68625b">α ≈ 0.40</text>
+    <!-- Bottom: RUSLE model -->
+    <rect x="80" y="180" width="460" height="55" fill="#fff" stroke="#1e4f8a" stroke-width="1.5" rx="4"/>
+    <text x="310" y="198" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="bold" fill="#1e4f8a">RUSLE Erosion Model: A = R × K × LS × C × P</text>
+    <text x="130" y="218" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#68625b">R: Rainfall</text>
+    <text x="220" y="218" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#68625b">K: Soil</text>
+    <text x="310" y="218" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#1e4f8a">LS: DEM</text>
+    <text x="400" y="218" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#165d34">C: NDVI</text>
+    <text x="480" y="218" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#68625b">P: Practice</text>
+    <!-- Bottom caption area -->
+    <text x="310" y="260" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#111">Satellite inputs: Landsat NDVI trends · Sentinel-1 SAR backscatter · SRTM DEM · GPM precipitation</text>
+    <!-- Feedback loop arrow -->
+    <path d="M 435 280 Q 520 300 510 270" fill="none" stroke="#d92b1f" stroke-width="1.2" stroke-dasharray="3,2"/>
+    <text x="310" y="295" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#d92b1f">Positive feedback: vegetation loss → albedo increase → less rainfall → more degradation</text>
+    <!-- Arrowhead marker -->
+    <defs>
+      <marker id="arrowGray" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+        <path d="M0,0 L8,3 L0,6" fill="#68625b"/>
+      </marker>
+    </defs>
+  </svg>
+  <p class="diagram-caption">Figure: Three pillars of land degradation monitoring — NDVI decline trends, salinization zone mapping, and desertification stage progression — unified through the RUSLE erosion model with satellite-derived inputs.</p>
+</div>
+
 ## Desertification indicators from remote sensing
 
 Desertification is the degradation of drylands resulting from climate variability and human activities. Remote sensing captures three primary indicators.

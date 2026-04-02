@@ -19,6 +19,109 @@ Central Asia's dramatic seasonal contrasts—from frozen winter steppe to summer
   Time-series analysis transforms SAR from a snapshot tool into a process-monitoring instrument. The mathematics of temporal statistics separates persistent structure from transient change.
 </div>
 
+<div class="learning-objectives">
+  <div class="learning-objectives-header">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1e4f8a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    <h3>What you will learn</h3>
+  </div>
+  <ul>
+    <li>How to build a SAR time-series from co-registered Sentinel-1 acquisitions and compute temporal statistics</li>
+    <li>How to decompose backscatter into seasonal patterns and long-term trends using harmonic models</li>
+    <li>How to detect anomalies by comparing observed backscatter against expected seasonal behavior</li>
+    <li>How temporal coefficient of variation separates stable from dynamic landscape elements</li>
+    <li>How to apply CUSUM and z-score methods for abrupt change detection in Central Asian landscapes</li>
+  </ul>
+</div>
+
+<div class="prerequisites">
+  <div class="prerequisites-header">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8b5e00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+    <h3>Prerequisites</h3>
+  </div>
+  <ul>
+    <li>Completed Tutorials 02-03 on Sentinel-1 processing and InSAR fundamentals</li>
+    <li>Understanding of basic statistics (mean, standard deviation, z-scores) and trigonometric functions</li>
+    <li>Experience with multi-temporal raster data stacking and pixel-wise analysis</li>
+  </ul>
+</div>
+
+<div class="concept-diagram">
+  <svg viewBox="0 0 620 320" xmlns="http://www.w3.org/2000/svg" style="max-width: 580px;">
+    <!-- Background -->
+    <rect x="0" y="0" width="620" height="320" fill="#f8f9fa" rx="8"/>
+    <text x="310" y="22" text-anchor="middle" font-family="Inter, sans-serif" font-size="13" font-weight="bold" fill="#1e4f8a">SAR Time-Series Analysis: From Acquisitions to Anomaly Detection</text>
+
+    <!-- Timeline axis -->
+    <line x1="40" y1="270" x2="580" y2="270" stroke="#111" stroke-width="1.5"/>
+    <polygon points="580,266 590,270 580,274" fill="#111"/>
+    <text x="598" y="274" font-family="Inter, sans-serif" font-size="9" fill="#111">time</text>
+
+    <!-- Y-axis -->
+    <line x1="40" y1="55" x2="40" y2="270" stroke="#111" stroke-width="1.5"/>
+    <polygon points="36,55 40,45 44,55" fill="#111"/>
+    <text x="22" y="160" font-family="Inter, sans-serif" font-size="9" fill="#111" transform="rotate(-90, 22, 160)">&sigma;&sup0; (dB)</text>
+
+    <!-- Season labels -->
+    <text x="115" y="288" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#68625b">Winter</text>
+    <text x="235" y="288" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#68625b">Spring</text>
+    <text x="350" y="288" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#68625b">Summer</text>
+    <text x="465" y="288" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#68625b">Autumn</text>
+
+    <!-- Season dividers -->
+    <line x1="175" y1="60" x2="175" y2="270" stroke="#e0ddd8" stroke-width="1" stroke-dasharray="4,3"/>
+    <line x1="295" y1="60" x2="295" y2="270" stroke="#e0ddd8" stroke-width="1" stroke-dasharray="4,3"/>
+    <line x1="410" y1="60" x2="410" y2="270" stroke="#e0ddd8" stroke-width="1" stroke-dasharray="4,3"/>
+    <line x1="530" y1="60" x2="530" y2="270" stroke="#e0ddd8" stroke-width="1" stroke-dasharray="4,3"/>
+
+    <!-- Seasonal model curve (sinusoidal) -->
+    <path d="M 60 190 Q 95 220 130 210 Q 165 200 200 160 Q 235 120 270 110 Q 305 100 340 120 Q 375 140 410 170 Q 445 200 480 210 Q 515 215 550 195" stroke="#1e4f8a" stroke-width="2.5" fill="none"/>
+    <text x="560" y="195" font-family="Inter, sans-serif" font-size="9" fill="#1e4f8a" font-weight="bold">model</text>
+
+    <!-- Individual SAR acquisition points -->
+    <circle cx="70" cy="195" r="4" fill="#68625b" stroke="#111" stroke-width="1"/>
+    <circle cx="100" cy="215" r="4" fill="#68625b" stroke="#111" stroke-width="1"/>
+    <circle cx="130" cy="205" r="4" fill="#68625b" stroke="#111" stroke-width="1"/>
+    <circle cx="160" cy="195" r="4" fill="#68625b" stroke="#111" stroke-width="1"/>
+    <circle cx="190" cy="170" r="4" fill="#68625b" stroke="#111" stroke-width="1"/>
+    <circle cx="220" cy="145" r="4" fill="#68625b" stroke="#111" stroke-width="1"/>
+    <circle cx="250" cy="115" r="4" fill="#68625b" stroke="#111" stroke-width="1"/>
+    <circle cx="280" cy="108" r="4" fill="#68625b" stroke="#111" stroke-width="1"/>
+    <circle cx="310" cy="105" r="4" fill="#68625b" stroke="#111" stroke-width="1"/>
+    <circle cx="340" cy="125" r="4" fill="#68625b" stroke="#111" stroke-width="1"/>
+
+    <!-- Anomaly point -->
+    <circle cx="370" cy="80" r="6" fill="#d92b1f" stroke="#d92b1f" stroke-width="2"/>
+    <line x1="370" y1="86" x2="370" y2="145" stroke="#d92b1f" stroke-width="1.5" stroke-dasharray="3,2"/>
+    <text x="378" y="75" font-family="Inter, sans-serif" font-size="9" fill="#d92b1f" font-weight="bold">Anomaly!</text>
+    <text x="378" y="86" font-family="Inter, sans-serif" font-size="8" fill="#d92b1f">z-score &gt; threshold</text>
+
+    <!-- Normal points continued -->
+    <circle cx="400" cy="165" r="4" fill="#68625b" stroke="#111" stroke-width="1"/>
+    <circle cx="430" cy="195" r="4" fill="#68625b" stroke="#111" stroke-width="1"/>
+    <circle cx="460" cy="208" r="4" fill="#68625b" stroke="#111" stroke-width="1"/>
+    <circle cx="490" cy="215" r="4" fill="#68625b" stroke="#111" stroke-width="1"/>
+    <circle cx="520" cy="205" r="4" fill="#68625b" stroke="#111" stroke-width="1"/>
+    <circle cx="550" cy="190" r="4" fill="#68625b" stroke="#111" stroke-width="1"/>
+
+    <!-- Mean line -->
+    <line x1="60" y1="165" x2="550" y2="165" stroke="#8b5e00" stroke-width="1" stroke-dasharray="8,4"/>
+    <text x="560" y="165" font-family="Inter, sans-serif" font-size="8" fill="#8b5e00">mean</text>
+
+    <!-- Legend box -->
+    <rect x="60" y="38" width="240" height="46" rx="4" fill="#fff" stroke="#e0ddd8" stroke-width="1"/>
+    <circle cx="75" cy="52" r="4" fill="#68625b" stroke="#111" stroke-width="1"/>
+    <text x="85" y="56" font-family="Inter, sans-serif" font-size="9" fill="#111">SAR acquisitions (6-12 day repeat)</text>
+    <circle cx="75" cy="72" r="5" fill="#d92b1f" stroke="#d92b1f" stroke-width="1.5"/>
+    <text x="85" y="76" font-family="Inter, sans-serif" font-size="9" fill="#111">Detected anomaly (deviation from model)</text>
+
+    <!-- Bottom annotation -->
+    <rect x="40" y="298" width="540" height="18" rx="3" fill="#eef2f7"/>
+    <text x="310" y="311" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#1e4f8a">Harmonic model: &sigma;&sup0;(t) = a&#x2080; + a&#x2081;cos(2&pi;t/T) + b&#x2081;sin(2&pi;t/T) &mdash; residuals reveal anomalous change</text>
+  </svg>
+  <p class="diagram-caption">Figure: SAR time-series analysis detects anomalies by comparing each acquisition against a seasonal model. Points deviating significantly from expected backscatter indicate landscape change events such as flooding, construction, or land use shifts.</p>
+</div>
+
+
 ## The time-series concept in SAR
 
 A SAR time-series is a sequence of co-registered images over the same area, typically acquired at regular intervals (e.g., Sentinel-1's 6-12 day repeat cycle).

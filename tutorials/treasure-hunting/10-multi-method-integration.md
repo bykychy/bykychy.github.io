@@ -21,6 +21,124 @@ This tutorial synthesizes concepts from previous modules—magnetometry, GPR, re
   Integration strength comes from independence: if two methods with different physical bases both indicate the same feature, confidence increases multiplicatively. When they disagree, the discrepancy itself becomes diagnostic information.
 </div>
 
+<div class="learning-objectives">
+  <div class="learning-objectives-header">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1e4f8a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    <h3>What you will learn</h3>
+  </div>
+  <ul>
+    <li>How to evaluate method complementarity using detection-set overlap to choose optimal technique combinations for Central Asian sites</li>
+    <li>A hierarchical survey strategy from satellite reconnaissance through geophysical mapping to targeted excavation with decision criteria at each stage</li>
+    <li>Data integration approaches—GIS overlay, joint inversion, Bayesian fusion—for combining measurements on different physical scales</li>
+    <li>Scale-matching and coordinate-system harmonization techniques for merging datasets from magnetometry, GPR, ERT, geochemistry, and remote sensing</li>
+    <li>Interpretation workflows and reporting standards that synthesize multi-method evidence into defensible archaeological or engineering conclusions</li>
+  </ul>
+</div>
+
+<div class="prerequisites">
+  <div class="prerequisites-header">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8b5e00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+    <h3>Prerequisites</h3>
+  </div>
+  <ul>
+    <li>Completion of at least three earlier tutorials in this series (magnetometry, GPR, EM, ERT, or geochemistry) to understand individual method strengths</li>
+    <li>Working knowledge of GIS software for layering and comparing georeferenced datasets from different survey methods</li>
+    <li>Familiarity with basic probability and set theory (union, intersection) used in complementarity and Bayesian confidence calculations</li>
+  </ul>
+</div>
+
+<div class="concept-diagram">
+  <svg viewBox="0 0 620 320" xmlns="http://www.w3.org/2000/svg" style="max-width: 580px;">
+    <!-- Background -->
+    <rect x="0" y="0" width="620" height="320" fill="#f8f7f4" rx="6"/>
+
+    <!-- Title -->
+    <text x="310" y="22" text-anchor="middle" font-family="Inter, sans-serif" font-size="13" font-weight="600" fill="#111">Multi-Method Integration — Converging on a Target</text>
+
+    <!-- Central target area -->
+    <ellipse cx="310" cy="190" rx="60" ry="45" fill="#d92b1f" opacity="0.12" stroke="#d92b1f" stroke-width="1.5" stroke-dasharray="5,3"/>
+    <text x="310" y="185" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="600" fill="#d92b1f">Target</text>
+    <text x="310" y="200" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#d92b1f">Archaeological site</text>
+
+    <!-- METHOD 1: Magnetometer (top-left) -->
+    <g transform="translate(75,55)">
+      <rect x="-30" y="-15" width="60" height="50" fill="#fff" stroke="#1e4f8a" stroke-width="1.5" rx="5"/>
+      <line x1="0" y1="-15" x2="0" y2="-28" stroke="#1e4f8a" stroke-width="1.5"/>
+      <circle cx="0" cy="-31" r="4" fill="#1e4f8a"/>
+      <text x="0" y="5" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" font-weight="600" fill="#1e4f8a">Magneto-</text>
+      <text x="0" y="16" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" font-weight="600" fill="#1e4f8a">meter</text>
+      <text x="0" y="28" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#68625b">Δχ, TRM</text>
+    </g>
+    <!-- Arrow to target -->
+    <line x1="115" y1="85" x2="260" y2="170" stroke="#1e4f8a" stroke-width="1.5" marker-end="url(#arrowBlue10)"/>
+
+    <!-- METHOD 2: GPR antenna (top-right) -->
+    <g transform="translate(540,55)">
+      <rect x="-28" y="-10" width="56" height="44" fill="#fff" stroke="#165d34" stroke-width="1.5" rx="5"/>
+      <rect x="-18" y="-5" width="36" height="12" fill="#165d34" opacity="0.3" rx="2"/>
+      <text x="0" y="18" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" font-weight="600" fill="#165d34">GPR</text>
+      <text x="0" y="28" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#68625b">ε contrast</text>
+    </g>
+    <line x1="505" y1="80" x2="365" y2="170" stroke="#165d34" stroke-width="1.5" marker-end="url(#arrowGreen10)"/>
+
+    <!-- METHOD 3: ERT array (bottom-left) -->
+    <g transform="translate(70,275)">
+      <rect x="-35" y="-18" width="70" height="44" fill="#fff" stroke="#8b5e00" stroke-width="1.5" rx="5"/>
+      <!-- Tiny electrode symbols -->
+      <line x1="-18" y1="-5" x2="-18" y2="5" stroke="#8b5e00" stroke-width="1.5"/>
+      <line x1="-6" y1="-5" x2="-6" y2="5" stroke="#8b5e00" stroke-width="1.5"/>
+      <line x1="6" y1="-5" x2="6" y2="5" stroke="#8b5e00" stroke-width="1.5"/>
+      <line x1="18" y1="-5" x2="18" y2="5" stroke="#8b5e00" stroke-width="1.5"/>
+      <text x="0" y="18" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" font-weight="600" fill="#8b5e00">ERT</text>
+    </g>
+    <text x="70" y="307" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#68625b">ρ imaging</text>
+    <line x1="120" y1="270" x2="260" y2="215" stroke="#8b5e00" stroke-width="1.5" marker-end="url(#arrowEarth10)"/>
+
+    <!-- METHOD 4: Soil sampler (bottom-right) -->
+    <g transform="translate(545,275)">
+      <rect x="-32" y="-18" width="64" height="44" fill="#fff" stroke="#68625b" stroke-width="1.5" rx="5"/>
+      <circle cx="0" cy="-2" r="8" fill="none" stroke="#68625b" stroke-width="1.2"/>
+      <line x1="0" y1="6" x2="0" y2="14" stroke="#68625b" stroke-width="1.2"/>
+      <text x="0" y="18" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" font-weight="600" fill="#68625b">Geochem</text>
+    </g>
+    <text x="545" y="307" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#68625b">P, Cu, Pb, Zn</text>
+    <line x1="500" y1="270" x2="365" y2="215" stroke="#68625b" stroke-width="1.5" marker-end="url(#arrowGray10)"/>
+
+    <!-- Integration box at center-bottom -->
+    <rect x="220" y="248" width="180" height="55" fill="#fff" stroke="#111" stroke-width="1.5" rx="6"/>
+    <text x="310" y="268" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" font-weight="600" fill="#111">GIS Integration Layer</text>
+    <text x="310" y="282" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#68625b">Overlay · Joint inversion</text>
+    <text x="310" y="294" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#68625b">Bayesian fusion · Confidence map</text>
+
+    <!-- Connection from target to integration -->
+    <line x1="310" y1="235" x2="310" y2="248" stroke="#111" stroke-width="1" stroke-dasharray="3,2"/>
+
+    <!-- Satellite (top-center) -->
+    <g transform="translate(310,55)">
+      <rect x="-25" y="-15" width="50" height="36" fill="#fff" stroke="#d92b1f" stroke-width="1.5" rx="5"/>
+      <line x1="-25" y1="0" x2="-35" y2="0" stroke="#d92b1f" stroke-width="1.5"/>
+      <line x1="25" y1="0" x2="35" y2="0" stroke="#d92b1f" stroke-width="1.5"/>
+      <text x="0" y="3" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" font-weight="600" fill="#d92b1f">Remote</text>
+      <text x="0" y="14" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" font-weight="600" fill="#d92b1f">sensing</text>
+    </g>
+    <text x="310" y="86" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#68625b">SAR, optical, thermal</text>
+    <line x1="310" y1="94" x2="310" y2="145" stroke="#d92b1f" stroke-width="1.5" marker-end="url(#arrowRed10)"/>
+
+    <!-- Confidence label -->
+    <text x="310" y="155" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#111" font-style="italic">Confidence ↑ as methods converge</text>
+
+    <!-- Arrow markers -->
+    <defs>
+      <marker id="arrowBlue10" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0,0 8,3 0,6" fill="#1e4f8a"/></marker>
+      <marker id="arrowGreen10" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0,0 8,3 0,6" fill="#165d34"/></marker>
+      <marker id="arrowEarth10" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0,0 8,3 0,6" fill="#8b5e00"/></marker>
+      <marker id="arrowGray10" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0,0 8,3 0,6" fill="#68625b"/></marker>
+      <marker id="arrowRed10" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0,0 8,3 0,6" fill="#d92b1f"/></marker>
+    </defs>
+  </svg>
+  <p class="diagram-caption">Multi-method integration: five complementary techniques—magnetometry, GPR, ERT, geochemical sampling, and remote sensing—each sensitive to different physical properties, converge on the same target. A GIS integration layer combines evidence through overlay, joint inversion, and Bayesian fusion to build a high-confidence site interpretation.</p>
+</div>
+
 ## Method complementarity
 
 ### What each technique reveals

@@ -26,6 +26,151 @@ Accuracy assessment transforms classification products from visual interpretatio
 
 Consider two land cover maps of Uzbekistan's Fergana Valley. Both show irrigated agriculture in green. Without accuracy assessment, they appear equivalent. But one might correctly classify 92% of cropland while the other achieves only 71%. This difference profoundly affects water management decisions.
 
+<div class="learning-objectives">
+  <div class="learning-objectives-header">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1e4f8a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    <h3>What you will learn</h3>
+  </div>
+  <ul>
+    <li>Design statistically rigorous sampling strategies (random, stratified, systematic) with proper sample sizes for validation</li>
+    <li>Construct and interpret a confusion matrix — extracting overall accuracy, producer's accuracy, and user's accuracy per class</li>
+    <li>Calculate the Kappa coefficient and understand its role in measuring agreement beyond chance</li>
+    <li>Apply F1-score, balanced accuracy, and area-weighted estimators for imbalanced land cover classes common in Central Asia</li>
+    <li>Implement spatial cross-validation that accounts for autocorrelation and report results following peer-reviewed standards</li>
+  </ul>
+</div>
+
+<div class="prerequisites">
+  <div class="prerequisites-header">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8b5e00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+    <h3>Prerequisites</h3>
+  </div>
+  <ul>
+    <li>Experience producing a land cover classification from satellite imagery (supervised or unsupervised)</li>
+    <li>Basic statistics knowledge: means, proportions, confidence intervals, and hypothesis testing concepts</li>
+    <li>Python programming with NumPy and scikit-learn for computing classification metrics</li>
+  </ul>
+</div>
+
+<div class="concept-diagram">
+  <svg viewBox="0 0 620 320" xmlns="http://www.w3.org/2000/svg" style="max-width: 580px;">
+    <text x="310" y="18" font-family="Inter, sans-serif" font-size="13" fill="#111" text-anchor="middle" font-weight="bold">Accuracy Assessment: Confusion Matrix &amp; Validation Metrics</text>
+    <!-- Classified map (left) -->
+    <rect x="20" y="35" width="155" height="140" rx="5" fill="#f5f5f0" stroke="#68625b" stroke-width="1"/>
+    <text x="97" y="52" font-family="Inter, sans-serif" font-size="10" fill="#111" text-anchor="middle" font-weight="bold">Classified Map</text>
+    <!-- Map grid with colors -->
+    <rect x="32" y="58" width="18" height="18" fill="#165d34"/><rect x="52" y="58" width="18" height="18" fill="#165d34"/><rect x="72" y="58" width="18" height="18" fill="#6aa843"/><rect x="92" y="58" width="18" height="18" fill="#1e4f8a"/><rect x="112" y="58" width="18" height="18" fill="#6aa843"/><rect x="132" y="58" width="18" height="18" fill="#8b5e00"/>
+    <rect x="32" y="78" width="18" height="18" fill="#165d34"/><rect x="52" y="78" width="18" height="18" fill="#6aa843"/><rect x="72" y="78" width="18" height="18" fill="#6aa843"/><rect x="92" y="78" width="18" height="18" fill="#1e4f8a"/><rect x="112" y="78" width="18" height="18" fill="#8b5e00"/><rect x="132" y="78" width="18" height="18" fill="#8b5e00"/>
+    <rect x="32" y="98" width="18" height="18" fill="#8b5e00"/><rect x="52" y="98" width="18" height="18" fill="#8b5e00"/><rect x="72" y="98" width="18" height="18" fill="#6aa843"/><rect x="92" y="98" width="18" height="18" fill="#6aa843"/><rect x="112" y="98" width="18" height="18" fill="#1e4f8a"/><rect x="132" y="98" width="18" height="18" fill="#165d34"/>
+    <rect x="32" y="118" width="18" height="18" fill="#1e4f8a"/><rect x="52" y="118" width="18" height="18" fill="#8b5e00"/><rect x="72" y="118" width="18" height="18" fill="#8b5e00"/><rect x="92" y="118" width="18" height="18" fill="#1e4f8a"/><rect x="112" y="118" width="18" height="18" fill="#1e4f8a"/><rect x="132" y="118" width="18" height="18" fill="#165d34"/>
+    <!-- Reference points scattered on map -->
+    <circle cx="41" cy="67" r="4" fill="none" stroke="#d92b1f" stroke-width="1.5"/>
+    <circle cx="81" cy="87" r="4" fill="none" stroke="#d92b1f" stroke-width="1.5"/>
+    <circle cx="121" cy="107" r="4" fill="none" stroke="#d92b1f" stroke-width="1.5"/>
+    <circle cx="61" cy="127" r="4" fill="none" stroke="#d92b1f" stroke-width="1.5"/>
+    <circle cx="101" cy="67" r="4" fill="none" stroke="#d92b1f" stroke-width="1.5"/>
+    <circle cx="141" cy="87" r="4" fill="none" stroke="#d92b1f" stroke-width="1.5"/>
+    <circle cx="41" cy="107" r="4" fill="none" stroke="#d92b1f" stroke-width="1.5"/>
+    <circle cx="101" cy="127" r="4" fill="none" stroke="#d92b1f" stroke-width="1.5"/>
+    <!-- Legend -->
+    <rect x="32" y="145" width="10" height="10" fill="#165d34"/><text x="47" y="154" font-family="Inter, sans-serif" font-size="7" fill="#111">Forest</text>
+    <rect x="72" y="145" width="10" height="10" fill="#6aa843"/><text x="87" y="154" font-family="Inter, sans-serif" font-size="7" fill="#111">Crop</text>
+    <rect x="107" y="145" width="10" height="10" fill="#1e4f8a"/><text x="122" y="154" font-family="Inter, sans-serif" font-size="7" fill="#111">Water</text>
+    <circle cx="37" cy="166" r="4" fill="none" stroke="#d92b1f" stroke-width="1.2"/>
+    <text x="47" y="169" font-family="Inter, sans-serif" font-size="7" fill="#d92b1f">Reference pt</text>
+    <rect x="107" y="161" width="10" height="10" fill="#8b5e00"/><text x="122" y="170" font-family="Inter, sans-serif" font-size="7" fill="#111">Bare</text>
+    <!-- Arrow to confusion matrix -->
+    <line x1="175" y1="100" x2="200" y2="100" stroke="#68625b" stroke-width="1.5"/>
+    <polygon points="200,95 210,100 200,105" fill="#68625b"/>
+    <!-- Confusion matrix (center) -->
+    <rect x="215" y="35" width="210" height="155" rx="5" fill="#fff" stroke="#111" stroke-width="1.2"/>
+    <text x="320" y="52" font-family="Inter, sans-serif" font-size="10" fill="#111" text-anchor="middle" font-weight="bold">Confusion Matrix</text>
+    <!-- Headers -->
+    <text x="220" y="68" font-family="Inter, sans-serif" font-size="8" fill="#68625b" transform="rotate(-30,220,68)">Predicted →</text>
+    <text x="235" y="80" font-family="Inter, sans-serif" font-size="8" fill="#68625b">Ref ↓</text>
+    <text x="275" y="72" font-family="Inter, sans-serif" font-size="8" fill="#165d34" text-anchor="middle">For</text>
+    <text x="315" y="72" font-family="Inter, sans-serif" font-size="8" fill="#6aa843" text-anchor="middle">Crp</text>
+    <text x="355" y="72" font-family="Inter, sans-serif" font-size="8" fill="#1e4f8a" text-anchor="middle">Wtr</text>
+    <text x="395" y="72" font-family="Inter, sans-serif" font-size="8" fill="#8b5e00" text-anchor="middle">Bar</text>
+    <!-- Row 1: Forest -->
+    <text x="245" y="93" font-family="Inter, sans-serif" font-size="8" fill="#165d34" text-anchor="middle">Forest</text>
+    <rect x="258" y="80" width="35" height="20" rx="2" fill="#165d34" opacity="0.2" stroke="#165d34" stroke-width="0.5"/>
+    <text x="275" y="93" font-family="Inter, sans-serif" font-size="10" fill="#165d34" text-anchor="middle" font-weight="bold">42</text>
+    <rect x="298" y="80" width="35" height="20" rx="2" fill="#fff" stroke="#68625b" stroke-width="0.3"/>
+    <text x="315" y="93" font-family="Inter, sans-serif" font-size="10" fill="#68625b" text-anchor="middle">3</text>
+    <rect x="338" y="80" width="35" height="20" rx="2" fill="#fff" stroke="#68625b" stroke-width="0.3"/>
+    <text x="355" y="93" font-family="Inter, sans-serif" font-size="10" fill="#68625b" text-anchor="middle">0</text>
+    <rect x="378" y="80" width="35" height="20" rx="2" fill="#fff" stroke="#68625b" stroke-width="0.3"/>
+    <text x="395" y="93" font-family="Inter, sans-serif" font-size="10" fill="#68625b" text-anchor="middle">5</text>
+    <!-- Row 2: Crop -->
+    <text x="245" y="117" font-family="Inter, sans-serif" font-size="8" fill="#6aa843" text-anchor="middle">Crop</text>
+    <rect x="258" y="104" width="35" height="20" rx="2" fill="#fff" stroke="#68625b" stroke-width="0.3"/>
+    <text x="275" y="117" font-family="Inter, sans-serif" font-size="10" fill="#68625b" text-anchor="middle">4</text>
+    <rect x="298" y="104" width="35" height="20" rx="2" fill="#6aa843" opacity="0.2" stroke="#6aa843" stroke-width="0.5"/>
+    <text x="315" y="117" font-family="Inter, sans-serif" font-size="10" fill="#6aa843" text-anchor="middle" font-weight="bold">38</text>
+    <rect x="338" y="104" width="35" height="20" rx="2" fill="#fff" stroke="#68625b" stroke-width="0.3"/>
+    <text x="355" y="117" font-family="Inter, sans-serif" font-size="10" fill="#68625b" text-anchor="middle">1</text>
+    <rect x="378" y="104" width="35" height="20" rx="2" fill="#fff" stroke="#68625b" stroke-width="0.3"/>
+    <text x="395" y="117" font-family="Inter, sans-serif" font-size="10" fill="#68625b" text-anchor="middle">7</text>
+    <!-- Row 3: Water -->
+    <text x="245" y="141" font-family="Inter, sans-serif" font-size="8" fill="#1e4f8a" text-anchor="middle">Water</text>
+    <rect x="258" y="128" width="35" height="20" rx="2" fill="#fff" stroke="#68625b" stroke-width="0.3"/>
+    <text x="275" y="141" font-family="Inter, sans-serif" font-size="10" fill="#68625b" text-anchor="middle">0</text>
+    <rect x="298" y="128" width="35" height="20" rx="2" fill="#fff" stroke="#68625b" stroke-width="0.3"/>
+    <text x="315" y="141" font-family="Inter, sans-serif" font-size="10" fill="#68625b" text-anchor="middle">0</text>
+    <rect x="338" y="128" width="35" height="20" rx="2" fill="#1e4f8a" opacity="0.2" stroke="#1e4f8a" stroke-width="0.5"/>
+    <text x="355" y="141" font-family="Inter, sans-serif" font-size="10" fill="#1e4f8a" text-anchor="middle" font-weight="bold">29</text>
+    <rect x="378" y="128" width="35" height="20" rx="2" fill="#fff" stroke="#68625b" stroke-width="0.3"/>
+    <text x="395" y="141" font-family="Inter, sans-serif" font-size="10" fill="#68625b" text-anchor="middle">1</text>
+    <!-- Row 4: Bare -->
+    <text x="245" y="165" font-family="Inter, sans-serif" font-size="8" fill="#8b5e00" text-anchor="middle">Bare</text>
+    <rect x="258" y="152" width="35" height="20" rx="2" fill="#fff" stroke="#68625b" stroke-width="0.3"/>
+    <text x="275" y="165" font-family="Inter, sans-serif" font-size="10" fill="#68625b" text-anchor="middle">2</text>
+    <rect x="298" y="152" width="35" height="20" rx="2" fill="#fff" stroke="#68625b" stroke-width="0.3"/>
+    <text x="315" y="165" font-family="Inter, sans-serif" font-size="10" fill="#68625b" text-anchor="middle">6</text>
+    <rect x="338" y="152" width="35" height="20" rx="2" fill="#fff" stroke="#68625b" stroke-width="0.3"/>
+    <text x="355" y="165" font-family="Inter, sans-serif" font-size="10" fill="#68625b" text-anchor="middle">2</text>
+    <rect x="378" y="152" width="35" height="20" rx="2" fill="#8b5e00" opacity="0.2" stroke="#8b5e00" stroke-width="0.5"/>
+    <text x="395" y="165" font-family="Inter, sans-serif" font-size="10" fill="#8b5e00" text-anchor="middle" font-weight="bold">40</text>
+    <!-- Diagonal highlight -->
+    <text x="320" y="183" font-family="Inter, sans-serif" font-size="8" fill="#165d34" text-anchor="middle">Diagonal = correct classifications</text>
+    <!-- Metrics panel (right) -->
+    <rect x="440" y="35" width="165" height="155" rx="5" fill="#fdf6e3" stroke="#8b5e00" stroke-width="1"/>
+    <text x="522" y="52" font-family="Inter, sans-serif" font-size="10" fill="#111" text-anchor="middle" font-weight="bold">Accuracy Metrics</text>
+    <!-- OA -->
+    <text x="455" y="72" font-family="Inter, sans-serif" font-size="9" fill="#111">Overall Accuracy</text>
+    <text x="590" y="72" font-family="Inter, sans-serif" font-size="11" fill="#165d34" text-anchor="end" font-weight="bold">83%</text>
+    <line x1="455" y1="78" x2="595" y2="78" stroke="#68625b" stroke-width="0.3"/>
+    <!-- Kappa -->
+    <text x="455" y="93" font-family="Inter, sans-serif" font-size="9" fill="#111">Kappa (κ)</text>
+    <text x="590" y="93" font-family="Inter, sans-serif" font-size="11" fill="#1e4f8a" text-anchor="end" font-weight="bold">0.77</text>
+    <line x1="455" y1="99" x2="595" y2="99" stroke="#68625b" stroke-width="0.3"/>
+    <!-- Per-class -->
+    <text x="455" y="114" font-family="Inter, sans-serif" font-size="9" fill="#111" font-weight="bold">Producer's Acc.</text>
+    <text x="460" y="128" font-family="Inter, sans-serif" font-size="8" fill="#165d34">Forest: 84%</text>
+    <text x="530" y="128" font-family="Inter, sans-serif" font-size="8" fill="#6aa843">Crop: 76%</text>
+    <text x="460" y="141" font-family="Inter, sans-serif" font-size="8" fill="#1e4f8a">Water: 97%</text>
+    <text x="530" y="141" font-family="Inter, sans-serif" font-size="8" fill="#8b5e00">Bare: 80%</text>
+    <line x1="455" y1="148" x2="595" y2="148" stroke="#68625b" stroke-width="0.3"/>
+    <text x="455" y="162" font-family="Inter, sans-serif" font-size="9" fill="#111" font-weight="bold">User's Accuracy</text>
+    <text x="460" y="176" font-family="Inter, sans-serif" font-size="8" fill="#165d34">Forest: 88%</text>
+    <text x="530" y="176" font-family="Inter, sans-serif" font-size="8" fill="#6aa843">Crop: 81%</text>
+    <text x="460" y="189" font-family="Inter, sans-serif" font-size="8" fill="#1e4f8a">Water: 91%</text>
+    <text x="530" y="189" font-family="Inter, sans-serif" font-size="8" fill="#8b5e00">Bare: 75%</text>
+    <!-- Bottom: formulas -->
+    <rect x="30" y="210" width="560" height="100" rx="5" fill="#f5f5f0" stroke="#68625b" stroke-width="0.5"/>
+    <text x="310" y="228" font-family="Inter, sans-serif" font-size="10" fill="#111" text-anchor="middle" font-weight="bold">Key Formulas</text>
+    <text x="155" y="250" font-family="Inter, sans-serif" font-size="10" fill="#1e4f8a" text-anchor="middle">Overall Accuracy =</text>
+    <text x="155" y="265" font-family="Inter, sans-serif" font-size="10" fill="#1e4f8a" text-anchor="middle">Σ diagonal / N total</text>
+    <text x="465" y="250" font-family="Inter, sans-serif" font-size="10" fill="#8b5e00" text-anchor="middle">κ = (p₀ − pₑ) / (1 − pₑ)</text>
+    <text x="465" y="265" font-family="Inter, sans-serif" font-size="10" fill="#8b5e00" text-anchor="middle">observed − expected chance</text>
+    <text x="155" y="290" font-family="Inter, sans-serif" font-size="9" fill="#165d34" text-anchor="middle">Producer's = TP / (TP + FN)</text>
+    <text x="465" y="290" font-family="Inter, sans-serif" font-size="9" fill="#d92b1f" text-anchor="middle">User's = TP / (TP + FP)</text>
+    <text x="310" y="305" font-family="Inter, sans-serif" font-size="9" fill="#68625b" text-anchor="middle">F1 = 2 · (Precision · Recall) / (Precision + Recall)</text>
+  </svg>
+  <p class="diagram-caption">Accuracy assessment workflow: reference points on a classified map are compared against ground truth via a confusion matrix, yielding overall accuracy, Kappa, and per-class producer's/user's accuracy metrics.</p>
+</div>
+
 ## Reference data sources
 
 Accuracy assessment requires independent reference data—ground truth against which we compare our classification. Three primary sources exist, each with tradeoffs.
