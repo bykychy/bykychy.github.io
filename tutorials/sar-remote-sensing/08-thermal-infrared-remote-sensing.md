@@ -19,6 +19,74 @@ For Central Asia, thermal imaging is indispensable. The region experiences extre
   Thermal infrared measures what surfaces emit, not what they reflect. This reveals temperature—a fundamental physical property invisible to optical and SAR sensors. Temperature patterns indicate energy exchange, moisture status, and subsurface processes.
 </div>
 
+<div class="learning-objectives">
+  <div class="learning-objectives-header">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1e4f8a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    <h3>What you will learn</h3>
+  </div>
+  <ul>
+    <li>Derive spectral radiance from Planck’s law and apply Wien’s displacement law to Earth-temperature bodies</li>
+    <li>Distinguish brightness temperature from kinetic temperature using emissivity corrections</li>
+    <li>Convert Landsat and MODIS thermal bands to land surface temperature (LST) for Central Asia</li>
+    <li>Detect urban heat islands and geothermal anomalies from thermal contrast patterns</li>
+    <li>Apply split-window and single-channel algorithms for atmospheric correction in the 8–14 µm window</li>
+  </ul>
+</div>
+
+<div class="prerequisites">
+  <div class="prerequisites-header">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8b5e00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+    <h3>Prerequisites</h3>
+  </div>
+  <ul>
+    <li>Familiarity with electromagnetic spectrum fundamentals (wavelength, frequency, energy)</li>
+    <li>Basic calculus (derivatives, integrals) for working with Planck’s function</li>
+    <li>Experience opening and visualizing raster data in QGIS or Python (rasterio/GDAL)</li>
+    <li>Completion of earlier tutorials in this series (optical and SAR basics)</li>
+  </ul>
+</div>
+
+<div class="concept-diagram">
+  <svg viewBox="0 0 620 320" xmlns="http://www.w3.org/2000/svg" style="max-width: 580px;">
+    <!-- Axes -->
+    <line x1="70" y1="280" x2="590" y2="280" stroke="#111" stroke-width="1.5"/>
+    <line x1="70" y1="280" x2="70" y2="20" stroke="#111" stroke-width="1.5"/>
+    <text x="330" y="310" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" fill="#111">Wavelength (µm)</text>
+    <text x="22" y="150" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" fill="#111" transform="rotate(-90 22 150)">Spectral Radiance</text>
+    <!-- Wavelength ticks -->
+    <text x="70" y="296" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#68625b">0</text>
+    <text x="174" y="296" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#68625b">5</text>
+    <text x="278" y="296" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#68625b">10</text>
+    <text x="382" y="296" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#68625b">15</text>
+    <text x="486" y="296" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#68625b">20</text>
+    <text x="590" y="296" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#68625b">25</text>
+    <!-- Thermal IR band shading 8-14 um -->
+    <rect x="237" y="20" width="125" height="260" fill="#1e4f8a" opacity="0.08" rx="3"/>
+    <text x="300" y="38" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#1e4f8a" font-weight="600">Thermal IR window</text>
+    <text x="300" y="50" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#1e4f8a">8–14 µm</text>
+    <!-- Planck curve Sun 6000K (scaled, dashed) -->
+    <polyline points="70,280 91,260 112,180 133,100 154,60 174,45 195,50 216,65 237,85 258,108 278,130 299,152 320,172 340,188 361,202 382,214 403,224 424,232 444,238 465,244 486,248 507,252 528,255 548,258 569,260 590,262" fill="none" stroke="#d92b1f" stroke-width="2" stroke-dasharray="6 3"/>
+    <text x="200" y="40" font-family="Inter, sans-serif" font-size="11" fill="#d92b1f" font-weight="600">Sun ≈ 6000 K</text>
+    <text x="200" y="53" font-family="Inter, sans-serif" font-size="10" fill="#d92b1f">λ_max ≈ 0.5 µm (visible)</text>
+    <!-- Planck curve 320K hot desert -->
+    <polyline points="70,280 91,280 112,280 133,279 154,276 174,268 195,250 216,225 237,195 258,165 278,140 299,128 320,125 340,130 361,140 382,153 403,167 424,180 444,192 465,202 486,211 507,218 528,224 548,230 569,234 590,238" fill="none" stroke="#d92b1f" stroke-width="2.5"/>
+    <text x="440" y="118" font-family="Inter, sans-serif" font-size="11" fill="#d92b1f" font-weight="600">Hot desert 320 K (47°C)</text>
+    <!-- Planck curve 270K mountain -->
+    <polyline points="70,280 91,280 112,280 133,280 154,279 174,278 195,274 216,265 237,250 258,232 278,214 299,198 320,186 340,180 361,178 382,180 403,184 424,190 444,197 465,204 486,210 507,216 528,221 548,226 569,230 590,233" fill="none" stroke="#1e4f8a" stroke-width="2.5"/>
+    <text x="440" y="170" font-family="Inter, sans-serif" font-size="11" fill="#1e4f8a" font-weight="600">Mountain 270 K (−3°C)</text>
+    <!-- Wien peak dashed lines -->
+    <line x1="315" y1="125" x2="315" y2="280" stroke="#d92b1f" stroke-width="1" stroke-dasharray="3 3"/>
+    <text x="315" y="270" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#d92b1f">λ_max</text>
+    <line x1="358" y1="178" x2="358" y2="280" stroke="#1e4f8a" stroke-width="1" stroke-dasharray="3 3"/>
+    <text x="358" y="270" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#1e4f8a">λ_max</text>
+    <!-- Emissivity note box -->
+    <rect x="430" y="230" width="155" height="48" rx="5" fill="#fff" stroke="#8b5e00" stroke-width="1.2"/>
+    <text x="508" y="248" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#8b5e00" font-weight="600">Real surface (ε &lt; 1)</text>
+    <text x="508" y="262" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#8b5e00">L = ε · B(λ, T)</text>
+  </svg>
+  <p class="diagram-caption">Figure: Planck blackbody radiation curves at different temperatures. The thermal IR window (8–14 µm) captures peak emission from Earth-temperature surfaces. Real surfaces emit less than a blackbody by emissivity factor ε.</p>
+</div>
+
 ## Thermal radiation physics
 
 ### Blackbody radiation and Planck's law

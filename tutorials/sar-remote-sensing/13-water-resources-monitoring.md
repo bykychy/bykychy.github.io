@@ -25,6 +25,99 @@ Remote sensing provides the only practical means to monitor water resources acro
   Water exists in multiple forms: surface water, groundwater, snow, glaciers, soil moisture, and vapor. Remote sensing can detect most of these, each requiring different sensors and techniques.
 </div>
 
+<div class="learning-objectives">
+  <div class="learning-objectives-header">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1e4f8a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    <h3>What you will learn</h3>
+  </div>
+  <ul>
+    <li>Map surface water extent using NDWI, MNDWI, and Automated Water Extraction Index (AWEI)</li>
+    <li>Detect water bodies from SAR imagery using backscatter thresholding and Otsu’s method</li>
+    <li>Monitor snow cover and glacier change with NDSI and optical time-series analysis</li>
+    <li>Estimate soil moisture from Sentinel-1 SAR backscatter and interpret SMAP/SMOS products</li>
+    <li>Track the Aral Sea recession and irrigation-driven water use across Central Asia’s river basins</li>
+  </ul>
+</div>
+
+<div class="prerequisites">
+  <div class="prerequisites-header">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8b5e00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+    <h3>Prerequisites</h3>
+  </div>
+  <ul>
+    <li>Familiarity with spectral indices (NDVI, NDWI) and multispectral image interpretation</li>
+    <li>Basic SAR concepts: backscatter, speckle, and image geometry (Tutorials 01–07)</li>
+    <li>Experience with Google Earth Engine or Python geospatial libraries for time-series analysis</li>
+  </ul>
+</div>
+
+<div class="concept-diagram">
+  <svg viewBox="0 0 620 320" xmlns="http://www.w3.org/2000/svg" style="max-width: 580px;">
+    <text x="310" y="20" text-anchor="middle" font-family="Inter, sans-serif" font-size="13" fill="#111" font-weight="700">Satellite Monitoring of Water Resources</text>
+    <!-- Satellite icon -->
+    <rect x="280" y="32" width="60" height="20" rx="4" fill="#68625b"/>
+    <rect x="255" y="36" width="25" height="12" rx="2" fill="#1e4f8a" opacity="0.4"/>
+    <rect x="340" y="36" width="25" height="12" rx="2" fill="#1e4f8a" opacity="0.4"/>
+    <text x="310" y="47" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#fff">SAT</text>
+    <!-- Downward beams -->
+    <line x1="290" y1="52" x2="120" y2="115" stroke="#1e4f8a" stroke-width="1" stroke-dasharray="4 2" opacity="0.5"/>
+    <line x1="310" y1="52" x2="310" y2="115" stroke="#1e4f8a" stroke-width="1" stroke-dasharray="4 2" opacity="0.5"/>
+    <line x1="330" y1="52" x2="500" y2="115" stroke="#1e4f8a" stroke-width="1" stroke-dasharray="4 2" opacity="0.5"/>
+    <!-- Mountains / snow cover (left) -->
+    <polygon points="30,220 80,130 130,220" fill="#68625b" opacity="0.15" stroke="#68625b" stroke-width="1"/>
+    <polygon points="60,220 100,140 140,220" fill="#68625b" opacity="0.1"/>
+    <polygon points="70,155 80,130 90,150 85,148 80,135 75,148" fill="#fff" stroke="#1e4f8a" stroke-width="1"/>
+    <text x="80" y="125" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#1e4f8a" font-weight="600">Snow / Glacier</text>
+    <text x="80" y="240" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#68625b">NDSI &gt; 0.4</text>
+    <!-- Soil moisture (center-left) -->
+    <rect x="150" y="175" width="100" height="45" rx="5" fill="#8b5e00" opacity="0.12" stroke="#8b5e00" stroke-width="1.2"/>
+    <circle cx="170" cy="192" r="4" fill="#8b5e00" opacity="0.7"/>
+    <circle cx="185" cy="192" r="4" fill="#8b5e00" opacity="0.5"/>
+    <circle cx="200" cy="192" r="4" fill="#8b5e00" opacity="0.3"/>
+    <circle cx="215" cy="192" r="4" fill="#8b5e00" opacity="0.15"/>
+    <circle cx="230" cy="192" r="4" fill="#8b5e00" opacity="0.08"/>
+    <text x="200" y="165" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#8b5e00" font-weight="600">Soil Moisture</text>
+    <text x="200" y="234" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#68625b">SAR σ° / SMAP</text>
+    <!-- Surface water body (center) -->
+    <ellipse cx="340" cy="190" rx="65" ry="30" fill="#1e4f8a" opacity="0.18" stroke="#1e4f8a" stroke-width="1.5"/>
+    <ellipse cx="340" cy="190" rx="85" ry="40" fill="none" stroke="#d92b1f" stroke-width="1.2" stroke-dasharray="5 3"/>
+    <text x="340" y="175" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#1e4f8a" font-weight="600">Surface Water</text>
+    <text x="340" y="195" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#1e4f8a">Current extent</text>
+    <!-- Recession arrows -->
+    <line x1="270" y1="180" x2="285" y2="185" stroke="#d92b1f" stroke-width="1.3"/>
+    <polygon points="283,181 289,186 281,188" fill="#d92b1f"/>
+    <line x1="410" y1="180" x2="395" y2="185" stroke="#d92b1f" stroke-width="1.3"/>
+    <polygon points="397,181 391,186 399,188" fill="#d92b1f"/>
+    <text x="340" y="244" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#d92b1f">Historical extent (recession)</text>
+    <text x="340" y="258" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#68625b">NDWI / MNDWI / AWEI</text>
+    <!-- Irrigated agriculture (right) -->
+    <rect x="460" y="155" width="90" height="65" rx="4" fill="#165d34" opacity="0.1" stroke="#165d34" stroke-width="1.2"/>
+    <line x1="475" y1="170" x2="475" y2="210" stroke="#165d34" stroke-width="1" opacity="0.5"/>
+    <line x1="490" y1="170" x2="490" y2="210" stroke="#165d34" stroke-width="1" opacity="0.5"/>
+    <line x1="505" y1="170" x2="505" y2="210" stroke="#165d34" stroke-width="1" opacity="0.5"/>
+    <line x1="520" y1="170" x2="520" y2="210" stroke="#165d34" stroke-width="1" opacity="0.5"/>
+    <line x1="535" y1="170" x2="535" y2="210" stroke="#165d34" stroke-width="1" opacity="0.5"/>
+    <text x="505" y="150" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#165d34" font-weight="600">Irrigation</text>
+    <text x="505" y="234" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#68625b">NDVI time-series</text>
+    <!-- Seasonal timeline -->
+    <line x1="60" y1="290" x2="560" y2="290" stroke="#111" stroke-width="1.5"/>
+    <text x="60" y="306" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#111">Winter</text>
+    <text x="185" y="306" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#111">Spring melt</text>
+    <text x="310" y="306" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#111">Summer peak</text>
+    <text x="435" y="306" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#111">Autumn</text>
+    <text x="560" y="306" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#111">Winter</text>
+    <line x1="60" y1="286" x2="60" y2="294" stroke="#111" stroke-width="1.2"/>
+    <line x1="185" y1="286" x2="185" y2="294" stroke="#111" stroke-width="1.2"/>
+    <line x1="310" y1="286" x2="310" y2="294" stroke="#111" stroke-width="1.2"/>
+    <line x1="435" y1="286" x2="435" y2="294" stroke="#111" stroke-width="1.2"/>
+    <line x1="560" y1="286" x2="560" y2="294" stroke="#111" stroke-width="1.2"/>
+    <path d="M80,272 C120,265 160,265 180,272" fill="none" stroke="#1e4f8a" stroke-width="1.2"/>
+    <polygon points="177,269 183,274 176,275" fill="#1e4f8a"/>
+    <text x="130" y="265" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#1e4f8a">snowmelt → runoff</text>
+  </svg>
+  <p class="diagram-caption">Figure: Satellite monitoring of water resources in Central Asia. Different sensors and indices track snow/glacier cover, soil moisture, surface water extent and recession, and irrigation patterns across seasonal cycles.</p>
+</div>
+
 ## Surface water mapping
 
 ### The physics of water detection

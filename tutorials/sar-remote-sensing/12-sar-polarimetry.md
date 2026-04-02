@@ -21,6 +21,108 @@ For Central Asia, this matters enormously. The region's diverse landscapes—irr
   Polarimetry transforms SAR from measuring "how much energy returned" to understanding "how the target scattered the wave." This physical insight enables classification that single-pol data cannot achieve.
 </div>
 
+<div class="learning-objectives">
+  <div class="learning-objectives-header">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1e4f8a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    <h3>What you will learn</h3>
+  </div>
+  <ul>
+    <li>Describe electromagnetic polarization states using Jones vectors, Stokes parameters, and the Poincaré sphere</li>
+    <li>Interpret the 2×2 scattering matrix [S] and derive the coherency [T] and covariance [C] matrices</li>
+    <li>Apply Freeman–Durden and Cloude–Pottier decompositions to separate surface, volume, and double-bounce scattering</li>
+    <li>Classify land cover in Central Asia using polarimetric features (entropy, anisotropy, alpha angle)</li>
+    <li>Process quad-pol and dual-pol SAR data in SNAP and Python for real-world polarimetric analysis</li>
+  </ul>
+</div>
+
+<div class="prerequisites">
+  <div class="prerequisites-header">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8b5e00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+    <h3>Prerequisites</h3>
+  </div>
+  <ul>
+    <li>Solid understanding of SAR imaging geometry and backscatter fundamentals (Tutorials 01–07)</li>
+    <li>Linear algebra: complex numbers, matrix multiplication, eigenvalue decomposition</li>
+    <li>Familiarity with ESA SNAP toolbox for SAR data processing</li>
+    <li>Python with NumPy for matrix operations on raster data</li>
+  </ul>
+</div>
+
+<div class="concept-diagram">
+  <svg viewBox="0 0 620 320" xmlns="http://www.w3.org/2000/svg" style="max-width: 580px;">
+    <!-- Polarization ellipse (left) -->
+    <text x="100" y="22" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" fill="#111" font-weight="700">Polarization Ellipse</text>
+    <line x1="30" y1="100" x2="170" y2="100" stroke="#68625b" stroke-width="0.8"/>
+    <line x1="100" y1="35" x2="100" y2="165" stroke="#68625b" stroke-width="0.8"/>
+    <text x="175" y="104" font-family="Inter, sans-serif" font-size="10" fill="#68625b">H</text>
+    <text x="103" y="32" font-family="Inter, sans-serif" font-size="10" fill="#68625b">V</text>
+    <ellipse cx="100" cy="100" rx="55" ry="30" fill="none" stroke="#1e4f8a" stroke-width="2" transform="rotate(-25 100 100)"/>
+    <path d="M155,100 A55,55 0 0,0 145,78" fill="none" stroke="#d92b1f" stroke-width="1.2"/>
+    <text x="160" y="82" font-family="Inter, sans-serif" font-size="10" fill="#d92b1f">ψ</text>
+    <line x1="100" y1="100" x2="148" y2="73" stroke="#d92b1f" stroke-width="1.5"/>
+    <polygon points="146,69 153,73 146,77" fill="#d92b1f"/>
+    <text x="140" y="65" font-family="Inter, sans-serif" font-size="9" fill="#d92b1f">E⃗</text>
+    <!-- Scattering matrix (center) -->
+    <text x="310" y="22" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" fill="#111" font-weight="700">Scattering Matrix [S]</text>
+    <rect x="245" y="35" width="130" height="65" rx="5" fill="#fff" stroke="#1e4f8a" stroke-width="1.5"/>
+    <text x="270" y="60" font-family="Inter, sans-serif" font-size="13" fill="#1e4f8a" font-weight="700">S</text>
+    <text x="285" y="60" font-family="Inter, sans-serif" font-size="11" fill="#111">= [</text>
+    <text x="300" y="55" text-anchor="start" font-family="Inter, sans-serif" font-size="11" fill="#111">S</text><text x="309" y="59" font-family="Inter, sans-serif" font-size="8" fill="#111">HH</text>
+    <text x="335" y="55" text-anchor="start" font-family="Inter, sans-serif" font-size="11" fill="#111">S</text><text x="344" y="59" font-family="Inter, sans-serif" font-size="8" fill="#111">HV</text>
+    <text x="300" y="80" text-anchor="start" font-family="Inter, sans-serif" font-size="11" fill="#111">S</text><text x="309" y="84" font-family="Inter, sans-serif" font-size="8" fill="#111">VH</text>
+    <text x="335" y="80" text-anchor="start" font-family="Inter, sans-serif" font-size="11" fill="#111">S</text><text x="344" y="84" font-family="Inter, sans-serif" font-size="8" fill="#111">VV</text>
+    <text x="365" y="70" font-family="Inter, sans-serif" font-size="11" fill="#111">]</text>
+    <!-- Scattering mechanisms (right) -->
+    <text x="500" y="22" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" fill="#111" font-weight="700">Scattering Mechanisms</text>
+    <!-- Surface scattering -->
+    <line x1="430" y1="75" x2="570" y2="75" stroke="#8b5e00" stroke-width="2"/>
+    <line x1="460" y1="50" x2="485" y2="75" stroke="#1e4f8a" stroke-width="1.5"/>
+    <polygon points="483,72 488,78 480,78" fill="#1e4f8a"/>
+    <line x1="485" y1="75" x2="510" y2="50" stroke="#d92b1f" stroke-width="1.5"/>
+    <polygon points="508,54 514,47 506,50" fill="#d92b1f"/>
+    <text x="500" y="92" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#8b5e00" font-weight="600">Surface</text>
+    <!-- Double bounce -->
+    <line x1="430" y1="155" x2="570" y2="155" stroke="#8b5e00" stroke-width="2"/>
+    <rect x="510" y="120" width="20" height="35" fill="#68625b" opacity="0.3" stroke="#68625b" stroke-width="1"/>
+    <line x1="460" y1="128" x2="510" y2="155" stroke="#1e4f8a" stroke-width="1.5"/>
+    <polygon points="508,152 514,158 506,158" fill="#1e4f8a"/>
+    <line x1="510" y1="155" x2="510" y2="120" stroke="#d92b1f" stroke-width="1.5"/>
+    <polygon points="506,124 510,115 514,124" fill="#d92b1f"/>
+    <text x="500" y="172" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#d92b1f" font-weight="600">Double-bounce</text>
+    <!-- Volume scattering -->
+    <line x1="430" y1="240" x2="570" y2="240" stroke="#8b5e00" stroke-width="2"/>
+    <ellipse cx="500" cy="215" rx="35" ry="18" fill="#165d34" opacity="0.15" stroke="#165d34" stroke-width="1"/>
+    <line x1="500" y1="233" x2="500" y2="240" stroke="#8b5e00" stroke-width="2"/>
+    <line x1="465" y1="200" x2="480" y2="218" stroke="#1e4f8a" stroke-width="1.2"/>
+    <line x1="483" y1="215" x2="495" y2="207" stroke="#d92b1f" stroke-width="1"/>
+    <line x1="498" y1="210" x2="510" y2="222" stroke="#d92b1f" stroke-width="1"/>
+    <line x1="515" y1="218" x2="535" y2="200" stroke="#d92b1f" stroke-width="1.2"/>
+    <polygon points="533,204 539,197 531,200" fill="#d92b1f"/>
+    <text x="500" y="260" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#165d34" font-weight="600">Volume (cross-pol)</text>
+    <!-- Decomposition arrow -->
+    <text x="310" y="130" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="#111" font-weight="600">Decomposition</text>
+    <line x1="310" y1="138" x2="310" y2="175" stroke="#111" stroke-width="1.2"/>
+    <polygon points="306,172 310,182 314,172" fill="#111"/>
+    <!-- H/A/alpha box -->
+    <rect x="235" y="185" width="150" height="75" rx="6" fill="#fff" stroke="#165d34" stroke-width="1.5"/>
+    <text x="310" y="208" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="#165d34" font-weight="700">Cloude–Pottier</text>
+    <text x="310" y="226" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#111">H = Entropy (randomness)</text>
+    <text x="310" y="242" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#111">A = Anisotropy</text>
+    <text x="310" y="258" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#111">α = Mean scattering type</text>
+    <!-- Arrow from S to mechanisms -->
+    <line x1="375" y1="67" x2="428" y2="67" stroke="#111" stroke-width="1.2"/>
+    <polygon points="425,63 433,67 425,71" fill="#111"/>
+    <!-- Legend -->
+    <line x1="30" y1="290" x2="50" y2="290" stroke="#1e4f8a" stroke-width="2"/>
+    <polygon points="48,286 56,290 48,294" fill="#1e4f8a"/>
+    <text x="62" y="294" font-family="Inter, sans-serif" font-size="10" fill="#111">Incident wave</text>
+    <line x1="150" y1="290" x2="170" y2="290" stroke="#d92b1f" stroke-width="2"/>
+    <polygon points="168,286 176,290 168,294" fill="#d92b1f"/>
+    <text x="182" y="294" font-family="Inter, sans-serif" font-size="10" fill="#111">Scattered wave</text>
+  </svg>
+  <p class="diagram-caption">Figure: SAR polarimetry concepts. The polarization ellipse describes wave orientation. The scattering matrix [S] records all transmit–receive polarization combinations. Decomposition separates surface, double-bounce, and volume scattering mechanisms.</p>
+</div>
+
 ## Polarization fundamentals
 
 ### The electromagnetic wave

@@ -21,6 +21,96 @@ Google Earth Engine (GEE) solves this problem by bringing computation to the dat
 
 The platform hosts over 70 petabytes of geospatial data, including complete archives of Landsat (1972–present), Sentinel-1 and Sentinel-2 (2014–present), MODIS, climate datasets, terrain models, and land cover products. All are analysis-ready: preprocessed, georeferenced, and organized into queryable collections.
 
+<div class="learning-objectives">
+  <div class="learning-objectives-header">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1e4f8a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    <h3>What you will learn</h3>
+  </div>
+  <ul>
+    <li>Authenticate and initialise the GEE Python API (ee.Initialize) for cloud-based geospatial analysis</li>
+    <li>Work with core data structures: ee.Image, ee.ImageCollection, ee.Geometry, ee.Feature, ee.FeatureCollection</li>
+    <li>Filter, composite, and mosaic satellite image collections over Central Asia</li>
+    <li>Perform server-side map/reduce operations and understand lazy evaluation</li>
+    <li>Export results (GeoTIFF, CSV, assets) and visualise with geemap and folium</li>
+  </ul>
+</div>
+
+<div class="prerequisites">
+  <div class="prerequisites-header">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8b5e00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+    <h3>Prerequisites</h3>
+  </div>
+  <ul>
+    <li>Working Python 3 environment with pip/conda package management</li>
+    <li>A registered Google Earth Engine account (sign up at earthengine.google.com)</li>
+    <li>Basic Python programming: variables, loops, functions, list comprehensions</li>
+    <li>Familiarity with raster/vector geospatial concepts (coordinate systems, bands, pixels)</li>
+  </ul>
+</div>
+
+<div class="concept-diagram">
+  <svg viewBox="0 0 620 320" xmlns="http://www.w3.org/2000/svg" style="max-width: 580px;">
+    <!-- LOCAL MACHINE -->
+    <rect x="10" y="90" width="120" height="140" rx="8" fill="#fff" stroke="#1e4f8a" stroke-width="2"/>
+    <text x="70" y="115" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" fill="#1e4f8a" font-weight="700">Local Machine</text>
+    <rect x="30" y="128" width="80" height="28" rx="4" fill="#1e4f8a" opacity="0.1"/>
+    <text x="70" y="146" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#111">Python script</text>
+    <rect x="30" y="164" width="80" height="28" rx="4" fill="#1e4f8a" opacity="0.1"/>
+    <text x="70" y="182" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#111">ee library</text>
+    <text x="70" y="218" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#68625b">Defines operations</text>
+    <!-- Arrow Local to API -->
+    <line x1="130" y1="160" x2="195" y2="160" stroke="#1e4f8a" stroke-width="2"/>
+    <polygon points="195,155 205,160 195,165" fill="#1e4f8a"/>
+    <text x="167" y="150" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#1e4f8a">REST API</text>
+    <!-- GEE API gateway -->
+    <rect x="205" y="120" width="90" height="80" rx="8" fill="#fff" stroke="#165d34" stroke-width="2"/>
+    <text x="250" y="148" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="#165d34" font-weight="700">GEE API</text>
+    <text x="250" y="165" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#111">Computation</text>
+    <text x="250" y="178" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#111">graph builder</text>
+    <text x="250" y="192" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#68625b">Lazy evaluation</text>
+    <!-- Arrow API to Cloud -->
+    <line x1="295" y1="160" x2="360" y2="160" stroke="#165d34" stroke-width="2"/>
+    <polygon points="360,155 370,160 360,165" fill="#165d34"/>
+    <!-- CLOUD box -->
+    <rect x="370" y="40" width="240" height="240" rx="12" fill="#f7f7f5" stroke="#68625b" stroke-width="1.5" stroke-dasharray="6 3"/>
+    <text x="490" y="65" text-anchor="middle" font-family="Inter, sans-serif" font-size="13" fill="#68625b" font-weight="700">Google Cloud</text>
+    <!-- Data catalog -->
+    <rect x="390" y="80" width="100" height="55" rx="6" fill="#fff" stroke="#8b5e00" stroke-width="1.5"/>
+    <text x="440" y="100" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#8b5e00" font-weight="600">Data Catalog</text>
+    <text x="440" y="114" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#111">Landsat, Sentinel</text>
+    <text x="440" y="126" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#111">MODIS, DEMs…</text>
+    <!-- Compute cluster -->
+    <rect x="510" y="80" width="90" height="55" rx="6" fill="#fff" stroke="#d92b1f" stroke-width="1.5"/>
+    <text x="555" y="100" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#d92b1f" font-weight="600">Compute</text>
+    <text x="555" y="114" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#111">Map / Reduce</text>
+    <text x="555" y="126" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#111">Parallel tiles</text>
+    <!-- Arrow catalog to compute -->
+    <line x1="490" y1="107" x2="510" y2="107" stroke="#68625b" stroke-width="1.2"/>
+    <polygon points="507,103 515,107 507,111" fill="#68625b"/>
+    <!-- Results box -->
+    <rect x="430" y="155" width="130" height="50" rx="6" fill="#fff" stroke="#165d34" stroke-width="1.5"/>
+    <text x="495" y="175" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#165d34" font-weight="600">Results</text>
+    <text x="495" y="190" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#111">Tiles, stats, exports</text>
+    <!-- Arrow compute to results -->
+    <line x1="555" y1="135" x2="520" y2="155" stroke="#68625b" stroke-width="1.2"/>
+    <polygon points="523,151 518,158 527,155" fill="#68625b"/>
+    <!-- Export paths -->
+    <rect x="400" y="222" width="85" height="38" rx="5" fill="#fff" stroke="#1e4f8a" stroke-width="1.2"/>
+    <text x="442" y="240" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#1e4f8a" font-weight="600">Google Drive</text>
+    <text x="442" y="252" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#111">GeoTIFF / CSV</text>
+    <rect x="505" y="222" width="90" height="38" rx="5" fill="#fff" stroke="#1e4f8a" stroke-width="1.2"/>
+    <text x="550" y="240" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#1e4f8a" font-weight="600">GEE Assets</text>
+    <text x="550" y="252" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#111">Reusable layers</text>
+    <line x1="470" y1="205" x2="450" y2="222" stroke="#68625b" stroke-width="1"/>
+    <line x1="520" y1="205" x2="540" y2="222" stroke="#68625b" stroke-width="1"/>
+    <!-- Return arrow -->
+    <path d="M430,180 L250,180 L250,200 L130,200 L130,190" fill="none" stroke="#165d34" stroke-width="1.5" stroke-dasharray="5 3"/>
+    <polygon points="125,190 130,200 135,190" fill="#165d34"/>
+    <text x="250" y="215" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#165d34">getInfo() / map tiles</text>
+  </svg>
+  <p class="diagram-caption">Figure: GEE cloud computing architecture. Python code on your local machine defines operations; the GEE API builds a computation graph executed on Google Cloud where petabytes of satellite data already reside. Only results travel back to your machine.</p>
+</div>
+
 ## GEE core data structures
 
 Understanding GEE requires mastering five fundamental data types that represent spatial information at different levels of complexity.

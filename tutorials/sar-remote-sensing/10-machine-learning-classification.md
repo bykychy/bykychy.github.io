@@ -19,6 +19,96 @@ Machine learning transforms this. Algorithms learn patterns from labeled example
   Machine learning amplifies human expertise. Domain knowledge guides feature selection and training data collection. The algorithm handles repetitive classification at scale.
 </div>
 
+<div class="learning-objectives">
+  <div class="learning-objectives-header">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1e4f8a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    <h3>What you will learn</h3>
+  </div>
+  <ul>
+    <li>Formulate remote sensing classification as a supervised machine learning problem (features, labels, training/test split)</li>
+    <li>Implement Random Forest, SVM, and k-NN classifiers for multi-class land cover mapping</li>
+    <li>Engineer spectral, textural, and temporal features from Sentinel-2 and SAR imagery</li>
+    <li>Evaluate classifier accuracy with confusion matrices, overall accuracy, kappa, and F1-score</li>
+    <li>Apply spatial cross-validation to avoid inflated accuracy from spatial autocorrelation</li>
+  </ul>
+</div>
+
+<div class="prerequisites">
+  <div class="prerequisites-header">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8b5e00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+    <h3>Prerequisites</h3>
+  </div>
+  <ul>
+    <li>Intermediate Python with NumPy and familiarity with scikit-learn API</li>
+    <li>Basic statistics: mean, variance, probability distributions, Bayes’ theorem</li>
+    <li>Understanding of multispectral imagery and vegetation indices (NDVI, NDWI)</li>
+    <li>Completion of the GEE Python tutorial (Tutorial 09) for cloud-based workflows</li>
+  </ul>
+</div>
+
+<div class="concept-diagram">
+  <svg viewBox="0 0 620 320" xmlns="http://www.w3.org/2000/svg" style="max-width: 580px;">
+    <!-- Stage 1: Training data -->
+    <rect x="10" y="50" width="105" height="110" rx="7" fill="#fff" stroke="#8b5e00" stroke-width="1.8"/>
+    <text x="62" y="72" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="#8b5e00" font-weight="700">Training Data</text>
+    <rect x="22" y="84" width="14" height="14" rx="2" fill="#165d34"/><text x="42" y="95" font-family="Inter, sans-serif" font-size="9" fill="#111">Forest</text>
+    <rect x="22" y="102" width="14" height="14" rx="2" fill="#d92b1f"/><text x="42" y="113" font-family="Inter, sans-serif" font-size="9" fill="#111">Urban</text>
+    <rect x="22" y="120" width="14" height="14" rx="2" fill="#1e4f8a"/><text x="42" y="131" font-family="Inter, sans-serif" font-size="9" fill="#111">Water</text>
+    <rect x="22" y="138" width="14" height="14" rx="2" fill="#8b5e00"/><text x="42" y="149" font-family="Inter, sans-serif" font-size="9" fill="#111">Cropland</text>
+    <!-- Arrow 1-2 -->
+    <line x1="115" y1="105" x2="150" y2="105" stroke="#111" stroke-width="1.5"/>
+    <polygon points="150,100 160,105 150,110" fill="#111"/>
+    <!-- Stage 2: Feature extraction -->
+    <rect x="162" y="40" width="110" height="130" rx="7" fill="#fff" stroke="#1e4f8a" stroke-width="1.8"/>
+    <text x="217" y="62" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="#1e4f8a" font-weight="700">Feature</text>
+    <text x="217" y="76" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="#1e4f8a" font-weight="700">Extraction</text>
+    <text x="217" y="98" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#111">Spectral bands</text>
+    <text x="217" y="114" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#111">NDVI, NDWI</text>
+    <text x="217" y="130" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#111">SAR backscatter</text>
+    <text x="217" y="146" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#111">GLCM texture</text>
+    <text x="217" y="162" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#111">Temporal stats</text>
+    <!-- Arrow 2-3 -->
+    <line x1="272" y1="105" x2="307" y2="105" stroke="#111" stroke-width="1.5"/>
+    <polygon points="307,100 317,105 307,110" fill="#111"/>
+    <!-- Stage 3: Classifier -->
+    <rect x="319" y="45" width="110" height="120" rx="7" fill="#fff" stroke="#d92b1f" stroke-width="1.8"/>
+    <text x="374" y="67" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="#d92b1f" font-weight="700">Classifier</text>
+    <line x1="374" y1="82" x2="374" y2="105" stroke="#d92b1f" stroke-width="1.5"/>
+    <line x1="374" y1="82" x2="350" y2="100" stroke="#d92b1f" stroke-width="1.2"/>
+    <line x1="374" y1="82" x2="398" y2="100" stroke="#d92b1f" stroke-width="1.2"/>
+    <circle cx="350" cy="103" r="5" fill="#d92b1f" opacity="0.25"/>
+    <circle cx="398" cy="103" r="5" fill="#d92b1f" opacity="0.25"/>
+    <line x1="350" y1="108" x2="340" y2="120" stroke="#d92b1f" stroke-width="1"/>
+    <line x1="350" y1="108" x2="360" y2="120" stroke="#d92b1f" stroke-width="1"/>
+    <line x1="398" y1="108" x2="388" y2="120" stroke="#d92b1f" stroke-width="1"/>
+    <line x1="398" y1="108" x2="408" y2="120" stroke="#d92b1f" stroke-width="1"/>
+    <text x="374" y="145" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#111">Random Forest</text>
+    <text x="374" y="158" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#111">SVM / k-NN</text>
+    <!-- Arrow 3-4 -->
+    <line x1="429" y1="105" x2="464" y2="105" stroke="#111" stroke-width="1.5"/>
+    <polygon points="464,100 474,105 464,110" fill="#111"/>
+    <!-- Stage 4: Classified map -->
+    <rect x="476" y="50" width="130" height="110" rx="7" fill="#fff" stroke="#165d34" stroke-width="1.8"/>
+    <text x="541" y="72" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="#165d34" font-weight="700">Classified Map</text>
+    <rect x="494" y="82" width="16" height="16" fill="#165d34"/><rect x="510" y="82" width="16" height="16" fill="#165d34"/><rect x="526" y="82" width="16" height="16" fill="#8b5e00"/><rect x="542" y="82" width="16" height="16" fill="#8b5e00"/><rect x="558" y="82" width="16" height="16" fill="#d92b1f"/>
+    <rect x="494" y="98" width="16" height="16" fill="#165d34"/><rect x="510" y="98" width="16" height="16" fill="#8b5e00"/><rect x="526" y="98" width="16" height="16" fill="#8b5e00"/><rect x="542" y="98" width="16" height="16" fill="#1e4f8a"/><rect x="558" y="98" width="16" height="16" fill="#d92b1f"/>
+    <rect x="494" y="114" width="16" height="16" fill="#8b5e00"/><rect x="510" y="114" width="16" height="16" fill="#8b5e00"/><rect x="526" y="114" width="16" height="16" fill="#1e4f8a"/><rect x="542" y="114" width="16" height="16" fill="#1e4f8a"/><rect x="558" y="114" width="16" height="16" fill="#8b5e00"/>
+    <rect x="494" y="130" width="16" height="16" fill="#8b5e00"/><rect x="510" y="130" width="16" height="16" fill="#1e4f8a"/><rect x="526" y="130" width="16" height="16" fill="#1e4f8a"/><rect x="542" y="130" width="16" height="16" fill="#1e4f8a"/><rect x="558" y="130" width="16" height="16" fill="#8b5e00"/>
+    <!-- Accuracy assessment -->
+    <rect x="100" y="210" width="420" height="90" rx="7" fill="#fff" stroke="#68625b" stroke-width="1.5"/>
+    <text x="310" y="233" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="#68625b" font-weight="700">Accuracy Assessment</text>
+    <text x="170" y="258" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#111">Confusion Matrix</text>
+    <text x="310" y="258" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#111">OA / Kappa / F1</text>
+    <text x="440" y="258" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#111">Spatial CV</text>
+    <rect x="142" y="265" width="12" height="12" fill="#165d34" opacity="0.7"/><rect x="154" y="265" width="12" height="12" fill="#eee"/><rect x="166" y="265" width="12" height="12" fill="#eee"/>
+    <rect x="142" y="277" width="12" height="12" fill="#eee"/><rect x="154" y="277" width="12" height="12" fill="#1e4f8a" opacity="0.7"/><rect x="166" y="277" width="12" height="12" fill="#eee"/>
+    <rect x="142" y="289" width="12" height="12" fill="#eee"/><rect x="154" y="289" width="12" height="12" fill="#eee"/><rect x="166" y="289" width="12" height="12" fill="#d92b1f" opacity="0.7"/>
+    <line x1="541" y1="160" x2="541" y2="210" stroke="#68625b" stroke-width="1.2" stroke-dasharray="4 3"/>
+    <polygon points="537,207 541,215 545,207" fill="#68625b"/>
+  </svg>
+  <p class="diagram-caption">Figure: Supervised classification pipeline. Labeled training pixels are transformed into feature vectors, fed into a classifier (Random Forest, SVM), producing a land-cover map validated through accuracy assessment with spatial cross-validation.</p>
+</div>
+
 ## Machine learning fundamentals
 
 ### Features, labels, and learning

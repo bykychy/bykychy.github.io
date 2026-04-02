@@ -19,6 +19,82 @@ Every process on Earth's surface responds to gravity, and gravity follows terrai
 
 Digital Elevation Models encode terrain numerically, enabling quantitative analysis. This tutorial develops terrain analysis mathematics for Central Asia's diverse landscapes.
 
+<div class="learning-objectives">
+  <div class="learning-objectives-header">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1e4f8a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    <h3>What you will learn</h3>
+  </div>
+  <ul>
+    <li>Compare DEM sources (SRTM, Copernicus, ALOS) and select the best product for Central Asian terrain</li>
+    <li>Compute slope, aspect, and curvature from elevation grids using finite-difference methods</li>
+    <li>Derive hydrological products: flow direction, flow accumulation, watershed delineation, and stream networks</li>
+    <li>Calculate geomorphometric indices (TPI, TRI, roughness) for landform classification</li>
+    <li>Apply hillshade and visibility analysis for terrain visualisation and site assessment</li>
+  </ul>
+</div>
+
+<div class="prerequisites">
+  <div class="prerequisites-header">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8b5e00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+    <h3>Prerequisites</h3>
+  </div>
+  <ul>
+    <li>Understanding of coordinate systems and map projections (geographic vs. projected CRS)</li>
+    <li>Comfort with partial derivatives and basic matrix operations</li>
+    <li>Experience with raster processing in QGIS or Python (rasterio, GDAL)</li>
+  </ul>
+</div>
+
+<div class="concept-diagram">
+  <svg viewBox="0 0 620 320" xmlns="http://www.w3.org/2000/svg" style="max-width: 580px;">
+    <!-- Terrain cross-section fill -->
+    <path d="M30,260 Q80,258 120,240 Q160,220 200,170 Q230,130 260,100 Q290,75 320,62 Q350,55 370,58 Q400,65 430,90 Q460,120 490,160 Q510,185 530,210 Q550,230 580,250 L580,260 Z" fill="#8b5e00" opacity="0.12"/>
+    <!-- Terrain surface line -->
+    <path d="M30,260 Q80,258 120,240 Q160,220 200,170 Q230,130 260,100 Q290,75 320,62 Q350,55 370,58 Q400,65 430,90 Q460,120 490,160 Q510,185 530,210 Q550,230 580,250" fill="none" stroke="#8b5e00" stroke-width="2.5"/>
+    <!-- DEM grid point dots and ticks -->
+    <circle cx="80" cy="258" r="3" fill="#68625b"/><circle cx="130" cy="236" r="3" fill="#68625b"/>
+    <circle cx="180" cy="190" r="3" fill="#68625b"/><circle cx="230" cy="130" r="3" fill="#68625b"/>
+    <circle cx="280" cy="88" r="3" fill="#68625b"/><circle cx="330" cy="60" r="3" fill="#68625b"/>
+    <circle cx="380" cy="62" r="3" fill="#68625b"/><circle cx="430" cy="90" r="3" fill="#68625b"/>
+    <circle cx="480" cy="148" r="3" fill="#68625b"/><circle cx="530" cy="210" r="3" fill="#68625b"/>
+    <!-- Elevation labels -->
+    <text x="80" y="245" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#68625b">620 m</text>
+    <text x="230" y="118" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#68625b">2100 m</text>
+    <text x="330" y="48" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#68625b">3400 m</text>
+    <text x="380" y="50" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#68625b">3300 m</text>
+    <text x="530" y="198" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#68625b">880 m</text>
+    <!-- Slope arrow -->
+    <line x1="155" y1="210" x2="205" y2="166" stroke="#d92b1f" stroke-width="2"/>
+    <polygon points="203,160 210,168 200,170" fill="#d92b1f"/>
+    <text x="145" y="205" text-anchor="end" font-family="Inter, sans-serif" font-size="10" fill="#d92b1f" font-weight="600">Slope</text>
+    <!-- Aspect arrow -->
+    <line x1="350" y1="56" x2="350" y2="36" stroke="#1e4f8a" stroke-width="2"/>
+    <polygon points="345,38 350,28 355,38" fill="#1e4f8a"/>
+    <text x="350" y="25" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#1e4f8a" font-weight="600">Aspect (N)</text>
+    <!-- Flow accumulation arrows -->
+    <line x1="430" y1="95" x2="455" y2="125" stroke="#1e4f8a" stroke-width="1.5"/>
+    <polygon points="452,122 460,130 448,128" fill="#1e4f8a"/>
+    <line x1="458" y1="130" x2="478" y2="150" stroke="#1e4f8a" stroke-width="1.8"/>
+    <polygon points="475,147 483,155 472,153" fill="#1e4f8a"/>
+    <line x1="482" y1="155" x2="510" y2="190" stroke="#1e4f8a" stroke-width="2.2"/>
+    <polygon points="507,187 515,195 504,193" fill="#1e4f8a"/>
+    <text x="520" y="178" font-family="Inter, sans-serif" font-size="10" fill="#1e4f8a" font-weight="600">Flow</text>
+    <text x="520" y="191" font-family="Inter, sans-serif" font-size="10" fill="#1e4f8a">accumulation</text>
+    <!-- Contour lines -->
+    <path d="M50,260 Q100,258 140,245" fill="none" stroke="#165d34" stroke-width="0.8" opacity="0.5"/>
+    <path d="M50,240 Q130,225 175,200" fill="none" stroke="#165d34" stroke-width="0.8" opacity="0.5"/>
+    <path d="M50,220 Q150,190 210,158" fill="none" stroke="#165d34" stroke-width="0.8" opacity="0.5"/>
+    <text x="42" y="218" text-anchor="end" font-family="Inter, sans-serif" font-size="9" fill="#165d34">contours</text>
+    <!-- Legend -->
+    <rect x="20" y="275" width="570" height="38" rx="5" fill="#fff" stroke="#68625b" stroke-width="1"/>
+    <circle cx="40" cy="294" r="4" fill="#68625b"/><text x="50" y="298" font-family="Inter, sans-serif" font-size="10" fill="#111">DEM grid points</text>
+    <line x1="160" y1="294" x2="180" y2="294" stroke="#d92b1f" stroke-width="2"/><text x="188" y="298" font-family="Inter, sans-serif" font-size="10" fill="#111">Slope vector</text>
+    <line x1="280" y1="288" x2="280" y2="300" stroke="#1e4f8a" stroke-width="2"/><polygon points="277,290 280,282 283,290" fill="#1e4f8a"/><text x="292" y="298" font-family="Inter, sans-serif" font-size="10" fill="#111">Aspect / Flow</text>
+    <line x1="410" y1="294" x2="440" y2="294" stroke="#165d34" stroke-width="1" opacity="0.6"/><text x="448" y="298" font-family="Inter, sans-serif" font-size="10" fill="#111">Contour lines</text>
+  </svg>
+  <p class="diagram-caption">Figure: Terrain cross-section with DEM grid overlay. Slope measures steepness, aspect indicates downhill direction, and flow accumulation traces water paths from ridges to valleys—the fundamental derivatives for Central Asian terrain analysis.</p>
+</div>
+
 ## DEM types: DSM vs DTM vs DEM
 
 A **Digital Elevation Model (DEM)** is a gridded elevation representation. More specific terms:
