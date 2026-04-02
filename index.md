@@ -5,28 +5,63 @@ description: "A math-first learning site about treasure hunting technology, X-ra
 ---
 
 <div class="hero">
+  <div class="hero-pattern"></div>
   <div class="eyebrow">Curated series</div>
   <h1>Hidden Signals of Central Asia</h1>
   <p class="lead">An editorial, math-first collection of tutorials on SAR, electromagnetic survey, ground-penetrating radar, and X-ray fluorescence for reading patterns that ordinary imagery and intuition often miss.</p>
   <div class="hero-actions">
-    <a class="cta-button" href="{{ '/tutorials/sar-remote-sensing/' | relative_url }}">Enter the SAR gallery</a>
-    <a class="cta-button cta-secondary" href="{{ '/tutorials/treasure-hunting/' | relative_url }}">Enter the field methods gallery</a>
-    <a class="cta-button cta-secondary" href="{{ '/field-atlas/' | relative_url }}">Open the field atlas</a>
+    <a class="cta-button" href="{{ '/tutorials/sar-remote-sensing/' | relative_url }}">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -2px; margin-right: 4px;"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>Enter the SAR gallery
+    </a>
+    <a class="cta-button cta-secondary" href="{{ '/tutorials/treasure-hunting/' | relative_url }}">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -2px; margin-right: 4px;"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>Enter the field methods gallery
+    </a>
+    <a class="cta-button cta-secondary" href="{{ '/field-atlas/' | relative_url }}">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -2px; margin-right: 4px;"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>Open the field atlas
+    </a>
+  </div>
+</div>
+
+<div class="stats-bar">
+  <div class="stat-item">
+    <span class="stat-number">38</span>
+    <span class="stat-label">Tutorials</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-number">1140</span>
+    <span class="stat-label">Exercises</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-number">16</span>
+    <span class="stat-label">Field Methods</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-number">22</span>
+    <span class="stat-label">Remote Sensing</span>
   </div>
 </div>
 
 <div class="feature-grid">
   <div class="feature-card">
+    <div class="topic-icon topic-icon-radar">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+    </div>
     <div class="eyebrow">Sensor logic</div>
     <h2>Radar, X-ray, and conductivity as evidence</h2>
     <p>Each tutorial explains what the instrument truly measures, what it can only suggest indirectly, and where interpretation usually goes wrong.</p>
   </div>
   <div class="feature-card">
+    <div class="topic-icon topic-icon-earth">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+    </div>
     <div class="eyebrow">Central Asia</div>
     <h2>Deserts, deltas, mountains, and Silk Road landscapes</h2>
     <p>The examples are rooted in irrigation systems, paleochannels, burial landscapes, alluvial fans, mining regions, and dryland archaeology.</p>
   </div>
   <div class="feature-card">
+    <div class="topic-icon topic-icon-nature">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+    </div>
     <div class="eyebrow">Mathematics</div>
     <h2>Learn to reason, not just click</h2>
     <p>Every flagship tutorial is built around units, ratios, wave behavior, signal comparison, and 30 graded exercises with solutions.</p>

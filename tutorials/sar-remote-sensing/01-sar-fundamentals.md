@@ -14,6 +14,33 @@ Synthetic Aperture Radar is powerful because it measures something ordinary phot
 
 This matters in Central Asia because terrain is dramatic, clouds are not always cooperative, and many subtle patterns become clear only when you understand how radar sees the ground.
 
+<div class="learning-objectives">
+  <div class="learning-objectives-header">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1e4f8a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    <h3>What you will learn</h3>
+  </div>
+  <ul>
+    <li>How synthetic aperture creates high-resolution imagery from a moving sensor</li>
+    <li>The radar equation and what controls received power</li>
+    <li>SAR geometry: slant range, ground range, incidence angle, and look direction</li>
+    <li>Layover, shadow, and foreshortening in mountainous Central Asian terrain</li>
+    <li>Range and azimuth resolution and what limits them</li>
+    <li>Speckle: why SAR images look grainy and what that means physically</li>
+  </ul>
+</div>
+
+<div class="prerequisites">
+  <div class="prerequisites-header">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8b5e00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+    <h3>Prerequisites</h3>
+  </div>
+  <ul>
+    <li>Basic trigonometry and wave concepts</li>
+    <li>Familiarity with the idea of electromagnetic radiation</li>
+    <li>No prior SAR or remote sensing experience needed</li>
+  </ul>
+</div>
+
 <div class="info-box tip">
   <strong>Key idea</strong>
   A SAR image is not a simple picture. It is a measurement of microwave backscatter shaped by geometry, wavelength, polarization, and processing.
@@ -44,6 +71,77 @@ where:
 For interpretation, the key point is that received power depends very strongly on distance and on target scattering behavior.
 
 ## SAR geometry
+
+<div class="concept-diagram">
+  <svg viewBox="0 0 620 320" xmlns="http://www.w3.org/2000/svg" style="max-width: 580px;">
+    <!-- Sky background gradient -->
+    <rect x="0" y="0" width="620" height="120" fill="#f0f4fa" opacity="0.5"/>
+    
+    <!-- Satellite -->
+    <rect x="80" y="30" width="40" height="25" rx="3" fill="#1e4f8a" stroke="#111" stroke-width="1.5"/>
+    <line x1="60" y1="42" x2="80" y2="42" stroke="#1e4f8a" stroke-width="2"/>
+    <line x1="120" y1="42" x2="140" y2="42" stroke="#1e4f8a" stroke-width="2"/>
+    <rect x="55" y="36" width="10" height="12" fill="#4a90d9" stroke="#111" stroke-width="1"/>
+    <rect x="135" y="36" width="10" height="12" fill="#4a90d9" stroke="#111" stroke-width="1"/>
+    <text x="100" y="20" text-anchor="middle" fill="#1e4f8a" font-size="11" font-weight="700" font-family="Inter, sans-serif">SATELLITE</text>
+    
+    <!-- Flight direction arrow -->
+    <line x1="30" y1="42" x2="10" y2="42" stroke="#68625b" stroke-width="1.5" marker-end="url(#flightArrow)"/>
+    <text x="20" y="58" text-anchor="middle" fill="#68625b" font-size="9" font-family="Inter, sans-serif">Flight</text>
+    <text x="20" y="68" text-anchor="middle" fill="#68625b" font-size="9" font-family="Inter, sans-serif">direction</text>
+    
+    <!-- Ground surface -->
+    <path d="M0,240 L160,240 L220,200 L320,170 L380,210 L450,240 L620,240" fill="none" stroke="#8b5e00" stroke-width="2"/>
+    <path d="M0,240 L160,240 L220,200 L320,170 L380,210 L450,240 L620,240 L620,320 L0,320 Z" fill="#f3efe8" stroke="none"/>
+    
+    <!-- Mountain -->
+    <path d="M200,240 L280,160 L360,240" fill="#e8dfd2" stroke="#8b5e00" stroke-width="1.5"/>
+    
+    <!-- Radar beam -->
+    <polygon points="100,55 280,160 450,240" fill="#1e4f8a" fill-opacity="0.08" stroke="none"/>
+    <line x1="100" y1="55" x2="280" y2="160" stroke="#1e4f8a" stroke-width="1.5" stroke-dasharray="6,3"/>
+    <line x1="100" y1="55" x2="450" y2="240" stroke="#1e4f8a" stroke-width="1.5" stroke-dasharray="6,3"/>
+    
+    <!-- Slant range label -->
+    <line x1="100" y1="55" x2="370" y2="215" stroke="#d92b1f" stroke-width="2"/>
+    <text x="250" y="120" fill="#d92b1f" font-size="11" font-weight="700" font-family="Inter, sans-serif" transform="rotate(30, 250, 120)">Slant range R</text>
+    
+    <!-- Incidence angle -->
+    <line x1="370" y1="150" x2="370" y2="240" stroke="#68625b" stroke-width="1" stroke-dasharray="3,3"/>
+    <path d="M370,190 Q380,195 375,205" fill="none" stroke="#165d34" stroke-width="1.5"/>
+    <text x="390" y="200" fill="#165d34" font-size="10" font-weight="600" font-family="Inter, sans-serif">θ</text>
+    <text x="390" y="212" fill="#68625b" font-size="9" font-family="Inter, sans-serif">Incidence</text>
+    <text x="390" y="222" fill="#68625b" font-size="9" font-family="Inter, sans-serif">angle</text>
+    
+    <!-- Ground range -->
+    <line x1="280" y1="258" x2="450" y2="258" stroke="#8b5e00" stroke-width="2" marker-start="url(#gndArrowL)" marker-end="url(#gndArrowR)"/>
+    <text x="365" y="275" text-anchor="middle" fill="#8b5e00" font-size="11" font-weight="700" font-family="Inter, sans-serif">Ground range</text>
+    
+    <!-- Foreshortening zone -->
+    <rect x="220" y="155" width="70" height="18" rx="3" fill="#d92b1f" fill-opacity="0.1" stroke="#d92b1f" stroke-width="1"/>
+    <text x="255" y="167" text-anchor="middle" fill="#d92b1f" font-size="9" font-weight="700" font-family="Inter, sans-serif">FORESHORTENING</text>
+    
+    <!-- Shadow zone -->
+    <rect x="320" y="175" width="50" height="30" fill="#111" fill-opacity="0.15"/>
+    <text x="345" y="195" text-anchor="middle" fill="#111" font-size="9" font-weight="700" font-family="Inter, sans-serif">SHADOW</text>
+    
+    <!-- Info box -->
+    <rect x="470" y="60" width="140" height="95" rx="6" fill="#fffdf9" stroke="#1f1f1f" stroke-width="1"/>
+    <text x="540" y="80" text-anchor="middle" fill="#d92b1f" font-size="9" font-weight="800" font-family="Inter, sans-serif" letter-spacing="0.1em">KEY CONCEPTS</text>
+    <text x="480" y="100" fill="#111" font-size="10" font-family="Inter, sans-serif">• Side-looking geometry</text>
+    <text x="480" y="115" fill="#111" font-size="10" font-family="Inter, sans-serif">• Slant vs ground range</text>
+    <text x="480" y="130" fill="#111" font-size="10" font-family="Inter, sans-serif">• Foreshortening</text>
+    <text x="480" y="145" fill="#111" font-size="10" font-family="Inter, sans-serif">• Radar shadow</text>
+    
+    <!-- Arrow markers -->
+    <defs>
+      <marker id="flightArrow" markerWidth="8" markerHeight="6" refX="0" refY="3" orient="auto"><path d="M8,0 L0,3 L8,6" fill="#68625b"/></marker>
+      <marker id="gndArrowL" markerWidth="6" markerHeight="6" refX="6" refY="3" orient="auto"><path d="M6,0 L0,3 L6,6" fill="#8b5e00"/></marker>
+      <marker id="gndArrowR" markerWidth="6" markerHeight="6" refX="0" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6" fill="#8b5e00"/></marker>
+    </defs>
+  </svg>
+  <div class="diagram-caption">Figure 1: SAR imaging geometry — side-looking radar creates foreshortening on slopes facing the sensor and shadow behind steep terrain. The incidence angle θ determines how slant range maps to ground range.</div>
+</div>
 
 SAR is side-looking. This creates several important concepts:
 

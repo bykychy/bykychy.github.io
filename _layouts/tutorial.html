@@ -6,6 +6,8 @@
   <title>{{ page.title }} — {{ site.title }}</title>
   <meta name="description" content="{{ page.description | default: site.description }}">
   <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <script>
     MathJax = {
       tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] },
@@ -17,11 +19,19 @@
 <body class="page-tutorial">
   <nav class="top-nav">
     <div class="nav-container">
-      <a href="{{ '/' | relative_url }}" class="nav-logo">Central Asia Signals</a>
+      <a href="{{ '/' | relative_url }}" class="nav-logo">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -3px; margin-right: 6px;"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>Central Asia Signals
+      </a>
       <div class="nav-links">
-        <a href="{{ '/tutorials/treasure-hunting/' | relative_url }}">Treasure Hunting</a>
-        <a href="{{ '/tutorials/sar-remote-sensing/' | relative_url }}">SAR & Remote Sensing</a>
-        <a href="{{ '/field-atlas/' | relative_url }}">Field Atlas</a>
+        <a href="{{ '/tutorials/treasure-hunting/' | relative_url }}">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -2px; margin-right: 3px;"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>Treasure Hunting
+        </a>
+        <a href="{{ '/tutorials/sar-remote-sensing/' | relative_url }}">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -2px; margin-right: 3px;"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>SAR & Remote Sensing
+        </a>
+        <a href="{{ '/field-atlas/' | relative_url }}">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -2px; margin-right: 3px;"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>Field Atlas
+        </a>
       </div>
     </div>
   </nav>
@@ -63,7 +73,9 @@
 
   <main class="container site-main">
     <article class="tutorial-header">
-      <div class="eyebrow">Curated tutorial</div>
+      <div class="eyebrow">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -2px; margin-right: 4px;"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>Curated tutorial
+      </div>
       <div class="breadcrumb">
         <a href="{{ '/' | relative_url }}">Home</a> &rsaquo;
         {% if page.category == 'treasure-hunting' %}
@@ -79,10 +91,21 @@
       {% endif %}
       <div class="meta-strip">
         {% if page.difficulty %}
-          <span class="badge badge-{{ page.difficulty }}">{{ page.difficulty | capitalize }}</span>
+          <span class="badge badge-{{ page.difficulty }}">
+            {% if page.difficulty == 'beginner' %}
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -1px; margin-right: 3px;"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+            {% elsif page.difficulty == 'intermediate' %}
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -1px; margin-right: 3px;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            {% elsif page.difficulty == 'advanced' %}
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -1px; margin-right: 3px;"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+            {% endif %}
+            {{ page.difficulty | capitalize }}
+          </span>
         {% endif %}
         {% if page.estimated_time %}
-          <span class="badge badge-time">{{ page.estimated_time }}</span>
+          <span class="badge badge-time">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -1px; margin-right: 3px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>{{ page.estimated_time }}
+          </span>
         {% endif %}
       </div>
       {% if page.order and series_pages.size > 0 %}
@@ -99,19 +122,27 @@
           </div>
           <div class="tutorial-cover-grid">
             <div class="cover-cell">
-              <span class="cover-key">Series</span>
+              <span class="cover-key">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -1px; margin-right: 3px;"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>Series
+              </span>
               <strong>{{ series_title }}</strong>
             </div>
             <div class="cover-cell">
-              <span class="cover-key">Focus</span>
+              <span class="cover-key">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -1px; margin-right: 3px;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>Focus
+              </span>
               <strong>{{ series_signal_a }}</strong>
             </div>
             <div class="cover-cell">
-              <span class="cover-key">Method</span>
+              <span class="cover-key">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -1px; margin-right: 3px;"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Method
+              </span>
               <strong>{{ series_signal_b }}</strong>
             </div>
             <div class="cover-cell">
-              <span class="cover-key">Outcome</span>
+              <span class="cover-key">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -1px; margin-right: 3px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>Outcome
+              </span>
               <strong>{{ series_signal_c }}</strong>
             </div>
           </div>
@@ -123,7 +154,9 @@
       <aside class="toc-sidebar">
         {% if series_pages.size > 0 %}
           <div class="series-panel">
-            <div class="eyebrow">Reading path</div>
+            <div class="eyebrow">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -1px; margin-right: 3px;"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>Reading path
+            </div>
             <p class="series-panel-title">{{ series_title }}</p>
             <ol class="series-list">
               {% for doc in series_pages %}
@@ -138,7 +171,9 @@
           </div>
         {% endif %}
         <div class="toc-panel">
-          <div class="eyebrow">On this page</div>
+          <div class="eyebrow">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -1px; margin-right: 3px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>On this page
+          </div>
           <div id="toc"></div>
         </div>
       </aside>
@@ -151,7 +186,9 @@
       <nav class="sequence-nav" aria-label="Tutorial sequence">
         {% if previous_page %}
           <div class="sequence-card">
-            <p class="sequence-label">Previous</p>
+            <p class="sequence-label">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -1px; margin-right: 3px;"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>Previous
+            </p>
             <a class="sequence-link" href="{{ previous_page.url | relative_url }}">{{ previous_page.title }}</a>
             <p>Return to the earlier exhibit in this sequence.</p>
           </div>
@@ -160,14 +197,18 @@
         {% endif %}
 
         <div class="sequence-card center-card">
-          <p class="sequence-label">Series gallery</p>
+          <p class="sequence-label">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -1px; margin-right: 3px;"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Series gallery
+          </p>
           <a class="sequence-link" href="{{ series_url | relative_url }}">{{ series_title }}</a>
           <p>Jump back to the overview or continue the curated route.</p>
         </div>
 
         {% if next_page %}
           <div class="sequence-card">
-            <p class="sequence-label">Next</p>
+            <p class="sequence-label">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -1px; margin-right: 3px;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>Next
+            </p>
             <a class="sequence-link" href="{{ next_page.url | relative_url }}">{{ next_page.title }}</a>
             <p>Continue to the next exhibit in this sequence.</p>
           </div>
@@ -181,7 +222,9 @@
   <footer class="site-footer">
     <div class="container footer-inner">
       <div>
-        <p class="footer-mark">Central Asia Signals</p>
+        <p class="footer-mark">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -2px; margin-right: 4px;"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>Central Asia Signals
+        </p>
         <p>Built for learners who want precise, evidence-based reading of hidden patterns.</p>
       </div>
       <ul class="footer-links">
@@ -193,6 +236,10 @@
   </footer>
 
   <div class="reading-progress" id="reading-progress"></div>
+
+  <button class="scroll-to-top" id="scroll-to-top" aria-label="Scroll to top">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+  </button>
 
   <script>
     // Table of contents generation
@@ -246,6 +293,19 @@
       });
     }, observerOptions);
     headings.forEach(h => observer.observe(h));
+
+    // Scroll-to-top button
+    const scrollBtn = document.getElementById('scroll-to-top');
+    window.addEventListener('scroll', () => {
+      if (window.pageYOffset > 400) {
+        scrollBtn.classList.add('visible');
+      } else {
+        scrollBtn.classList.remove('visible');
+      }
+    });
+    scrollBtn.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
   </script>
 </body>
 </html>

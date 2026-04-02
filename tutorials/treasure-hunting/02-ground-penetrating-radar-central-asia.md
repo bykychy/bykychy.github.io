@@ -14,6 +14,88 @@ Ground-penetrating radar (GPR) is one of the clearest ways to infer shallow geom
 
 That makes it extremely attractive in Central Asia, especially in dry and coarse soils where radar attenuation can be low. In the right conditions, GPR is a powerful bridge between remote sensing and excavation.
 
+<div class="learning-objectives">
+  <div class="learning-objectives-header">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1e4f8a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    <h3>What you will learn</h3>
+  </div>
+  <ul>
+    <li>How GPR transmits and receives electromagnetic pulses to image subsurface geometry</li>
+    <li>The relationship between travel time, wave velocity, and depth estimation</li>
+    <li>How dielectric constant controls radar wave speed in different Central Asian soils</li>
+    <li>Interpreting hyperbolic reflections, planar interfaces, and diffraction patterns</li>
+    <li>Practical survey design for archaeological prospection in dryland environments</li>
+  </ul>
+</div>
+
+<div class="prerequisites">
+  <div class="prerequisites-header">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8b5e00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+    <h3>Prerequisites</h3>
+  </div>
+  <ul>
+    <li>Basic wave concepts (wavelength, frequency, velocity)</li>
+    <li>Understanding of reflection at interfaces</li>
+    <li>Familiarity with the electromagnetic survey tutorial is helpful but not required</li>
+  </ul>
+</div>
+
+<div class="concept-diagram">
+  <svg viewBox="0 0 600 300" xmlns="http://www.w3.org/2000/svg" style="max-width: 560px;">
+    <!-- Ground surface -->
+    <rect x="40" y="80" width="520" height="4" rx="2" fill="#8b5e00"/>
+    <text x="575" y="85" fill="#8b5e00" font-size="10" font-family="Inter, sans-serif" font-weight="600">Surface</text>
+    
+    <!-- Air -->
+    <text x="50" y="60" fill="#68625b" font-size="10" font-family="Inter, sans-serif">Air (v = c)</text>
+    
+    <!-- Soil layer -->
+    <rect x="40" y="84" width="520" height="190" fill="#f3efe8" stroke="none"/>
+    <text x="50" y="105" fill="#68625b" font-size="10" font-family="Inter, sans-serif">Soil (v = c/√ε<tspan font-size="8" dy="2">r</tspan><tspan dy="-2">)</tspan></text>
+    
+    <!-- GPR antenna -->
+    <rect x="180" y="60" width="50" height="16" rx="3" fill="#1e4f8a" stroke="#111" stroke-width="1.5"/>
+    <text x="205" y="53" text-anchor="middle" fill="#1e4f8a" font-size="10" font-weight="700" font-family="Inter, sans-serif">GPR ANTENNA</text>
+    <text x="205" y="72" text-anchor="middle" fill="#fff" font-size="8" font-weight="700" font-family="Inter, sans-serif">TX | RX</text>
+    
+    <!-- Transmitted pulse (going down) -->
+    <line x1="195" y1="80" x2="160" y2="170" stroke="#1e4f8a" stroke-width="1.5" stroke-dasharray="5,3"/>
+    <line x1="215" y1="80" x2="250" y2="170" stroke="#1e4f8a" stroke-width="1.5" stroke-dasharray="5,3"/>
+    <text x="140" y="130" fill="#1e4f8a" font-size="9" font-family="Inter, sans-serif" transform="rotate(-30, 140, 130)">Transmitted</text>
+    
+    <!-- Buried wall (reflector) -->
+    <rect x="145" y="170" width="120" height="30" rx="2" fill="#d92b1f" fill-opacity="0.15" stroke="#d92b1f" stroke-width="2"/>
+    <text x="205" y="190" text-anchor="middle" fill="#d92b1f" font-size="10" font-weight="700" font-family="Inter, sans-serif">BURIED WALL</text>
+    
+    <!-- Reflected pulses (going back up) -->
+    <line x1="165" y1="170" x2="195" y2="80" stroke="#d92b1f" stroke-width="1.5" stroke-dasharray="4,3"/>
+    <line x1="245" y1="170" x2="215" y2="80" stroke="#d92b1f" stroke-width="1.5" stroke-dasharray="4,3"/>
+    <text x="262" y="130" fill="#d92b1f" font-size="9" font-family="Inter, sans-serif" transform="rotate(30, 262, 130)">Reflected</text>
+    
+    <!-- Point scatterer (creates hyperbola) -->
+    <circle cx="420" cy="200" r="6" fill="#165d34" stroke="#165d34" stroke-width="1.5"/>
+    <text x="420" y="225" text-anchor="middle" fill="#165d34" font-size="9" font-weight="700" font-family="Inter, sans-serif">Point target</text>
+    
+    <!-- Hyperbola -->
+    <path d="M340,130 Q380,195 420,200 Q460,195 500,130" fill="none" stroke="#165d34" stroke-width="2" stroke-dasharray="4,2"/>
+    <text x="510" y="135" fill="#165d34" font-size="9" font-family="Inter, sans-serif">Hyperbola</text>
+    <text x="510" y="147" fill="#165d34" font-size="9" font-family="Inter, sans-serif">in radargram</text>
+    
+    <!-- Depth arrow -->
+    <line x1="80" y1="84" x2="80" y2="190" stroke="#68625b" stroke-width="1.2"/>
+    <polygon points="80,190 77,182 83,182" fill="#68625b"/>
+    <polygon points="80,84 77,92 83,92" fill="#68625b"/>
+    <text x="68" y="145" fill="#68625b" font-size="9" font-family="Inter, sans-serif" transform="rotate(-90, 68, 145)">depth = vt/2</text>
+    
+    <!-- Formula box -->
+    <rect x="410" y="50" width="155" height="65" rx="6" fill="#fffdf9" stroke="#1f1f1f" stroke-width="1"/>
+    <text x="487" y="68" text-anchor="middle" fill="#d92b1f" font-size="9" font-weight="800" font-family="Inter, sans-serif" letter-spacing="0.1em">DEPTH EQUATION</text>
+    <text x="487" y="92" text-anchor="middle" fill="#111" font-size="15" font-family="Georgia, serif" font-style="italic">d = vt / 2</text>
+    <text x="487" y="107" text-anchor="middle" fill="#68625b" font-size="9" font-family="Inter, sans-serif">v = c / √ε<tspan font-size="7" dy="2">r</tspan></text>
+  </svg>
+  <div class="diagram-caption">Figure 1: GPR operating principle — the antenna transmits a pulse that reflects from subsurface interfaces. Travel time and velocity give depth. Point targets create hyperbolic patterns in the radargram.</div>
+</div>
+
 <div class="info-box tip">
   <strong>Key idea</strong>
   GPR does not measure depth directly. It measures travel time. Depth only appears after you estimate wave speed in the ground.

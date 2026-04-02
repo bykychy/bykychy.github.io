@@ -6,17 +6,25 @@ permalink: /field-atlas/
 ---
 
 <div class="hero">
+  <div class="hero-pattern"></div>
   <div class="eyebrow">Field atlas</div>
   <h1>Central Asia Through Hidden Signals</h1>
   <p class="lead">Use this atlas to enter the collection by landscape problem instead of by instrument. Each route connects terrain, sensing logic, and the tutorials most useful for that question.</p>
   <div class="hero-actions">
-    <a class="cta-button" href="{{ '/tutorials/sar-remote-sensing/' | relative_url }}">Browse radar sequence</a>
-    <a class="cta-button cta-secondary" href="{{ '/tutorials/treasure-hunting/' | relative_url }}">Browse field methods</a>
+    <a class="cta-button" href="{{ '/tutorials/sar-remote-sensing/' | relative_url }}">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -2px; margin-right: 4px;"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>Browse radar sequence
+    </a>
+    <a class="cta-button cta-secondary" href="{{ '/tutorials/treasure-hunting/' | relative_url }}">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -2px; margin-right: 4px;"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>Browse field methods
+    </a>
   </div>
 </div>
 
 <div class="atlas-grid">
   <div class="atlas-card">
+    <div class="topic-icon topic-icon-radar">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M2 12h4"/><path d="M18 12h4"/><path d="M12 2v4"/><path d="M12 18v4"/></svg>
+    </div>
     <div class="eyebrow">Landscape case</div>
     <h2>Dry channels, irrigation, and water memory</h2>
     <p>Start here if you want to read former canals, wetness retention, delta structure, or paleochannel traces across plains and oases.</p>
@@ -46,6 +54,9 @@ permalink: /field-atlas/
   </div>
 
   <div class="atlas-card">
+    <div class="topic-icon topic-icon-earth">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 10c-.83 0-1.5-.67-1.5-1.5v-5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5v5c0 .83-.67 1.5-1.5 1.5z"/><path d="M20.5 10H22a2 2 0 0 1 0 4h-1.5"/><path d="M3.5 10H2a2 2 0 0 0 0 4h1.5"/><path d="m12 22-2-2.5"/><path d="m12 22 2-2.5"/><path d="M8 22h8"/><path d="M12 11v5"/></svg>
+    </div>
     <div class="eyebrow">Landscape case</div>
     <h2>Mountain fronts, slope risk, and deformation</h2>
     <p>Use this route for landslides, unstable roads, fault-controlled landforms, glacier margins, and motion in high-relief terrain.</p>
@@ -75,6 +86,9 @@ permalink: /field-atlas/
   </div>
 
   <div class="atlas-card">
+    <div class="topic-icon topic-icon-field">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+    </div>
     <div class="eyebrow">Site case</div>
     <h2>Buried geometry and archaeological prospection</h2>
     <p>Enter here if the question is whether hidden walls, ditches, mound structure, or engineered surfaces may exist beneath the ground.</p>
@@ -108,6 +122,9 @@ permalink: /field-atlas/
   </div>
 
   <div class="atlas-card">
+    <div class="topic-icon topic-icon-field">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+    </div>
     <div class="eyebrow">Material case</div>
     <h2>Craft, metallurgy, and material signatures</h2>
     <p>Follow this route when the central question is what a sample, fragment, slag scatter, or soil enrichment is made of.</p>
@@ -141,6 +158,9 @@ permalink: /field-atlas/
   </div>
 
   <div class="atlas-card">
+    <div class="topic-icon topic-icon-nature">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8C8 10 5.9 16.17 3.82 21.34l1.89.66L12 14"/><path d="M8 2c1.64 2.22 2.43 4.77 2.76 7.4"/><path d="M14 4c-1.08 2.44-1.37 5.16-1.16 7.81"/><path d="M18 6c-.59 2.66-.43 5.46.25 8.05"/></svg>
+    </div>
     <div class="eyebrow">Landscape case</div>
     <h2>Vegetation, agriculture, and land cover mapping</h2>
     <p>Use this route for crop monitoring, rangeland assessment, vegetation health, and land cover classification across Central Asian landscapes.</p>
@@ -170,6 +190,9 @@ permalink: /field-atlas/
   </div>
 
   <div class="atlas-card">
+    <div class="topic-icon topic-icon-radar">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+    </div>
     <div class="eyebrow">Technical case</div>
     <h2>Survey integration and precision positioning</h2>
     <p>Enter here when the goal is accurate georeferencing, multi-method integration, or building consistent spatial datasets.</p>
